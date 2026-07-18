@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+/* Bengali typography: serif display + Siliguri body, with roomier leading. */
+:lang(bn) {
+  --font-display: "Noto Serif Bengali", "Instrument Serif", serif;
+  --font-body: "Hind Siliguri", "Inter", sans-serif;
+}
+
+body {
+  @apply bg-paper font-sans text-ink antialiased;
+  font-family: var(--font-body);
+}
+
+:lang(bn) .font-display {
+  letter-spacing: 0 !important;
+  line-height: 1.2;
+}
+
+:lang(bn) .label-caps {
+  letter-spacing: 0.04em;
+  font-size: 13px;
+}
+
+::selection {
+  @apply bg-coral text-white;
+}
+
+@layer components {
+  .label-caps {
+    @apply text-[11px] font-semibold uppercase tracking-caps;
+  }
+
+  .hairline {
+    @apply border-ink/15;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-navy px-7 py-3.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-coral;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 border border-ink/25 px-7 py-3.5 text-sm font-semibold text-ink transition-colors duration-200 hover:border-coral hover:text-coral;
+  }
+}
