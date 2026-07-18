@@ -28,7 +28,7 @@ export default function BookSession() {
             rel="noreferrer"
             className="flex aspect-[16/7] items-center justify-center border hairline bg-parchment/40 px-6 text-center transition-colors hover:border-coral"
           >
-            <p className="font-display text-xl italic text-ink/50">{t.book.placeholder}</p>
+            <p className="font-display text-xl text-ink/50">{t.book.placeholder}</p>
           </a>
         )}
       </div>

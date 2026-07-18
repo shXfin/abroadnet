@@ -12,20 +12,18 @@ const en = {
     close: "Close",
   },
   hero: {
-    kicker: "Study abroad consultancy · Dhaka to the world",
-    titleA: "Dream to",
-    titleB: "study abroad.",
-    sub: "From selecting the right course to your first day at the university — Abroad Net stands beside you at every step.",
+    kicker: "Dhaka → Kuala Lumpur · Bucharest",
+    titleLines: ["Dream to", "study abroad."],
+    sub: "Malaysia & Romania, handled end to end.",
     ctaPrimary: "Start your journey",
     ctaSecondary: "Free 1-to-1 session",
-    trust: "100% recommended · 17 reviews on Facebook",
+    strip: ["1.8K+ students", "16 partner universities", "100% recommended"],
+    dhk: "DHK · Dhaka",
+    kul: "KUL · Malaysia",
+    otp: "OTP · Romania",
+    chipMalaysia: "16 partner universities",
+    chipRomania: "EU-recognized degrees",
   },
-  stats: [
-    { value: "2", label: "Destinations, done properly" },
-    { value: "16+", label: "Partner universities in Malaysia" },
-    { value: "1.8K+", label: "Students in our community" },
-    { value: "60 min", label: "First consultation, free" },
-  ],
   moments: {
     kicker: "Live from our Facebook page",
     title: "See the journeys as they happen.",
@@ -80,12 +78,6 @@ const en = {
     country: "Malaysia",
     intro:
       "World-ranked universities, English-taught programs, and living costs that make sense — Malaysia is Asia's smartest study destination for Bangladeshi students.",
-    facts: [
-      { label: "Intakes", value: "Feb · Jul · Sep" },
-      { label: "Tuition from", value: "$3,000/yr" },
-      { label: "Visa route", value: "EMGS" },
-      { label: "Language", value: "English" },
-    ],
     steps: [
       {
         title: "Free consultation",
@@ -117,12 +109,6 @@ const en = {
     country: "Romania",
     intro:
       "An EU-recognized degree, low tuition, and a foothold in Europe — Romania is the continent's best-kept study secret.",
-    facts: [
-      { label: "Intakes", value: "Oct · Feb" },
-      { label: "Tuition from", value: "€2,000/yr" },
-      { label: "Visa route", value: "Type D" },
-      { label: "Degrees", value: "EU-wide" },
-    ],
     steps: [
       {
         title: "Free consultation",
@@ -221,20 +207,18 @@ const bn: typeof en = {
     close: "বন্ধ",
   },
   hero: {
-    kicker: "স্টাডি অ্যাব্রোড কনসালটেন্সি · ঢাকা থেকে বিশ্বে",
-    titleA: "স্বপ্ন যখন",
-    titleB: "বিদেশে পড়া।",
-    sub: "সঠিক কোর্স বাছাই থেকে বিশ্ববিদ্যালয়ে আপনার প্রথম দিন পর্যন্ত — প্রতিটি ধাপে অ্যাব্রোড নেট আপনার পাশে।",
+    kicker: "ঢাকা → কুয়ালালামপুর · বুখারেস্ট",
+    titleLines: ["স্বপ্ন এবার", "বিদেশে।"],
+    sub: "মালয়েশিয়া ও রোমানিয়া — শুরু থেকে শেষ, আমাদের দায়িত্বে।",
     ctaPrimary: "যাত্রা শুরু করুন",
     ctaSecondary: "ফ্রি ওয়ান-টু-ওয়ান সেশন",
-    trust: "১০০% রেকমেন্ডেড · ফেসবুকে ১৭টি রিভিউ",
+    strip: ["১.৮ হাজার+ শিক্ষার্থী", "১৬টি পার্টনার বিশ্ববিদ্যালয়", "১০০% রেকমেন্ডেড"],
+    dhk: "DHK · ঢাকা",
+    kul: "KUL · মালয়েশিয়া",
+    otp: "OTP · রোমানিয়া",
+    chipMalaysia: "১৬টি পার্টনার বিশ্ববিদ্যালয়",
+    chipRomania: "ইইউ-স্বীকৃত ডিগ্রি",
   },
-  stats: [
-    { value: "২", label: "গন্তব্য — যত্নে বাছাই করা" },
-    { value: "১৬+", label: "মালয়েশিয়ায় পার্টনার বিশ্ববিদ্যালয়" },
-    { value: "১.৮ হাজার+", label: "আমাদের কমিউনিটির শিক্ষার্থী" },
-    { value: "৬০ মিনিট", label: "প্রথম পরামর্শ সম্পূর্ণ ফ্রি" },
-  ],
   moments: {
     kicker: "আমাদের ফেসবুক পেজ থেকে সরাসরি",
     title: "যাত্রাগুলো দেখুন, যেমনটা ঘটছে।",
@@ -289,12 +273,6 @@ const bn: typeof en = {
     country: "মালয়েশিয়া",
     intro:
       "বিশ্ব র‍্যাঙ্কিংয়ে থাকা বিশ্ববিদ্যালয়, ইংরেজি মাধ্যমের প্রোগ্রাম, আর সাধ্যের মধ্যে জীবনযাত্রার খরচ — বাংলাদেশি শিক্ষার্থীদের জন্য মালয়েশিয়া এশিয়ার সেরা গন্তব্য।",
-    facts: [
-      { label: "ইনটেক", value: "ফেব্রু · জুলাই · সেপ্টে" },
-      { label: "টিউশন শুরু", value: "$৩,০০০/বছর" },
-      { label: "ভিসা রুট", value: "EMGS" },
-      { label: "ভাষা", value: "ইংরেজি" },
-    ],
     steps: [
       {
         title: "ফ্রি পরামর্শ",
@@ -326,12 +304,6 @@ const bn: typeof en = {
     country: "রোমানিয়া",
     intro:
       "ইউরোপীয় ইউনিয়ন স্বীকৃত ডিগ্রি, কম টিউশন, আর ইউরোপে পা রাখার সুযোগ — রোমানিয়া ইউরোপের সেরা লুকানো রত্ন।",
-    facts: [
-      { label: "ইনটেক", value: "অক্টো · ফেব্রু" },
-      { label: "টিউশন শুরু", value: "€২,০০০/বছর" },
-      { label: "ভিসা রুট", value: "টাইপ D" },
-      { label: "ডিগ্রি", value: "সমগ্র ইইউ" },
-    ],
     steps: [
       {
         title: "ফ্রি পরামর্শ",

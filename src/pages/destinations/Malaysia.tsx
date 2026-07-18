@@ -9,7 +9,6 @@ export default function Malaysia() {
       country={t.malaysia.country}
       code="KUL"
       intro={t.malaysia.intro}
-      facts={t.malaysia.facts}
       steps={t.malaysia.steps}
       partnerUniversities={MALAYSIA_UNIVERSITIES}
     />

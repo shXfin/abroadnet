@@ -30,7 +30,7 @@ export default function SuccessStories() {
               <div key={i} className="flex aspect-[4/5] flex-col justify-between bg-paper p-8">
                 <span className="font-mono text-xs text-ink/30">STUDENT 0{i}</span>
                 <div>
-                  <p className="font-display text-2xl italic text-ink/40">
+                  <p className="font-display text-2xl text-ink/40">
                     {t.students.placeholderQuote}
                   </p>
                   <p className="mt-4 text-xs text-ink/40">{t.students.placeholderMeta}</p>
@@ -42,7 +42,7 @@ export default function SuccessStories() {
           <div className="grid gap-px border hairline bg-ink/15 md:grid-cols-3">
             {STORIES.map((story) => (
               <figure key={story.name} className="flex flex-col justify-between bg-paper p-8">
-                <blockquote className="font-display text-2xl italic">"{story.quote}"</blockquote>
+                <blockquote className="font-display text-2xl">"{story.quote}"</blockquote>
                 <figcaption className="mt-6 text-sm">
                   <p className="font-semibold text-navy">{story.name}</p>
                   <p className="text-ink/50">

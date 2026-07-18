@@ -6,7 +6,6 @@ type Props = {
   country: string;
   code: string;
   intro: string;
-  facts: { label: string; value: string }[];
   steps: { title: string; description: string }[];
   partnerUniversities: string[];
 };
@@ -15,7 +14,6 @@ export default function DestinationSteps({
   country,
   code,
   intro,
-  facts,
   steps,
   partnerUniversities,
 }: Props) {
@@ -29,15 +27,6 @@ export default function DestinationSteps({
         </p>
         <h1 className="mt-4 font-display text-6xl tracking-tight md:text-8xl">{country}</h1>
         <p className="mt-8 max-w-xl text-base leading-relaxed text-ink/70">{intro}</p>
-
-        <div className="mt-12 grid grid-cols-2 gap-px border hairline bg-ink/15 md:grid-cols-4">
-          {facts.map((fact) => (
-            <div key={fact.label} className="bg-paper p-5">
-              <p className="label-caps text-ink/40">{fact.label}</p>
-              <p className="mt-2 font-display text-2xl text-navy">{fact.value}</p>
-            </div>
-          ))}
-        </div>
       </section>
 
       <section className="border-y hairline bg-parchment/40 py-20">

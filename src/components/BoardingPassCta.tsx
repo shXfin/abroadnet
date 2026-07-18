@@ -30,7 +30,7 @@ export default function BoardingPassCta() {
           <div className="flex h-full flex-col justify-between text-sm">
             <div>
               <p className="label-caps text-white/40">{t.pass.passenger}</p>
-              <p className="mt-1 font-display text-xl italic">{t.pass.passengerName}</p>
+              <p className="mt-1 font-display text-xl">{t.pass.passengerName}</p>
             </div>
             <div>
               <p className="label-caps text-white/40">{t.pass.fromTo}</p>

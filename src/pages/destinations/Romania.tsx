@@ -9,7 +9,6 @@ export default function Romania() {
       country={t.romania.country}
       code="OTP"
       intro={t.romania.intro}
-      facts={t.romania.facts}
       steps={t.romania.steps}
       partnerUniversities={ROMANIA_UNIVERSITIES}
     />

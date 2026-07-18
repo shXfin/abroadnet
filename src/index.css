@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 }
 
-/* Bengali typography: serif display + Siliguri body, with roomier leading. */
+/* Bengali typography: bold Anek Bangla display + Siliguri body. */
 :lang(bn) {
-  --font-display: "Noto Serif Bengali", "Instrument Serif", serif;
+  --font-display: "Anek Bangla", "Bricolage Grotesque", sans-serif;
   --font-body: "Hind Siliguri", "Inter", sans-serif;
 }
 
@@ -18,9 +18,21 @@ body {
   font-family: var(--font-body);
 }
 
+.font-display {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
 :lang(bn) .font-display {
-  letter-spacing: 0 !important;
-  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+/* Accent words: coral, never italic. */
+em {
+  font-style: normal;
+  @apply text-coral;
 }
 
 :lang(bn) .label-caps {
@@ -42,10 +54,51 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-navy px-7 py-3.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-coral;
+    @apply inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-coral;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 border border-ink/25 px-7 py-3.5 text-sm font-semibold text-ink transition-colors duration-200 hover:border-coral hover:text-coral;
+    @apply inline-flex items-center gap-2 rounded-full border-2 border-ink/20 px-7 py-3.5 text-sm font-bold text-ink transition-colors duration-200 hover:border-coral hover:text-coral;
+  }
+}
+
+/* Flight route hero */
+@keyframes draw-route {
+  from {
+    stroke-dashoffset: 1200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.route-path {
+  stroke-dasharray: 7 9;
+  animation: draw-route 2.4s ease-out forwards;
+}
+
+@keyframes node-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.node-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: node-pulse 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-path,
+  .node-pulse,
+  .animate-marquee {
+    animation: none;
   }
 }

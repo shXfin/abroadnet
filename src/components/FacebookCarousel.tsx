@@ -92,7 +92,7 @@ export default function FacebookCarousel() {
               >
                 <span className="font-mono text-xs text-ink/30">REEL 0{i}</span>
                 <div>
-                  <p className="font-display text-2xl italic text-ink/60">{t.moments.follow}</p>
+                  <p className="font-display text-2xl text-ink/60">{t.moments.follow}</p>
                   <p className="mt-2 text-xs text-ink/40">facebook.com/abroadnet25</p>
                 </div>
               </a>
