@@ -5,6 +5,7 @@ import Ticker from "../components/Ticker";
 import BoardingPassCta from "../components/BoardingPassCta";
 import FacebookCarousel from "../components/FacebookCarousel";
 import JourneyTimeline from "../components/JourneyTimeline";
+import AssessmentQuiz from "../components/AssessmentQuiz";
 import { useLang } from "../i18n";
 
 export default function Home() {
@@ -13,6 +14,13 @@ export default function Home() {
   return (
     <>
       <Hero />
+
+      {/* The assessment: right under the hero, not hidden behind a button */}
+      <section id="assessment" className="border-t hairline bg-parchment/20 px-6 py-16">
+        <div className="mx-auto max-w-5xl">
+          <AssessmentQuiz />
+        </div>
+      </section>
 
       <Ticker />
 

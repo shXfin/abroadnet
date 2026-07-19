@@ -4,8 +4,18 @@ import Logo from "./Logo";
 import { useLang } from "../i18n";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const id = hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
   return null;
 }
 
@@ -112,7 +122,7 @@ export default function Layout() {
               {t.nav.freeSession}
             </Link>
             <LangToggle />
-            <Link to="/onboarding" className="btn-primary !px-5 !py-2.5">
+            <Link to="/#assessment" className="btn-primary !px-5 !py-2.5">
               {t.nav.getMatched}
             </Link>
           </nav>
@@ -133,7 +143,7 @@ export default function Layout() {
                 { to: "/success-stories", label: t.nav.students },
                 { to: "/about", label: t.nav.about },
                 { to: "/book-session", label: t.nav.freeSession },
-                { to: "/onboarding", label: t.nav.getMatched },
+                { to: "/#assessment", label: t.nav.getMatched },
               ].map((link) => (
                 <Link
                   key={link.to}

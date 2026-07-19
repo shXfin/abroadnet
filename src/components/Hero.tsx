@@ -232,9 +232,9 @@ export default function Hero() {
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-ink/70 md:text-lg">{t.hero.sub}</p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link to="/onboarding" className="btn-primary">
+            <a href="#assessment" className="btn-primary">
               {t.hero.ctaPrimary} →
-            </Link>
+            </a>
             <Link to="/book-session" className="btn-ghost">
               {t.hero.ctaSecondary}
             </Link>
