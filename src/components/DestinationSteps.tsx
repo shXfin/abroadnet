@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import BoardingPassCta from "./BoardingPassCta";
 import { useLang } from "../i18n";
@@ -8,6 +9,7 @@ type Props = {
   intro: string;
   steps: { title: string; description: string }[];
   partnerUniversities: string[];
+  extra?: ReactNode;
 };
 
 export default function DestinationSteps({
@@ -16,6 +18,7 @@ export default function DestinationSteps({
   intro,
   steps,
   partnerUniversities,
+  extra,
 }: Props) {
   const { t } = useLang();
 
@@ -50,6 +53,8 @@ export default function DestinationSteps({
           </ol>
         </div>
       </section>
+
+      {extra}
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="label-caps text-ink/50">{t.destination.unisKicker}</p>

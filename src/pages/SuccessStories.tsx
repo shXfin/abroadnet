@@ -1,14 +1,68 @@
+import { useState } from "react";
 import { useLang } from "../i18n";
 
 type Story = {
   name: string;
   destination: string;
   university: string;
-  quote: string;
+  outcome: "visaApproved" | "arrived";
+  photo: string;
 };
 
-// TODO: fill with real students — name, university, quote, photo, proof (visa/offer letter).
-const STORIES: Story[] = [];
+// Real placements, confirmed from the client's own marketing materials.
+// Captions state the outcome factually rather than inventing quotes for real people.
+const STORIES: Story[] = [
+  {
+    name: "Md Rakibul Islam",
+    destination: "Georgia",
+    university: "Alte University",
+    outcome: "visaApproved",
+    photo: "/photos/georgia-visa-rakibul.jpg",
+  },
+  {
+    name: "Imran Hossain Shanto",
+    destination: "Malaysia",
+    university: "Mahsa Avenue International College",
+    outcome: "arrived",
+    photo: "/photos/malaysia-arrival-imran.jpg",
+  },
+  {
+    name: "Md Ruhel Miah",
+    destination: "Malaysia",
+    university: "Mahsa Avenue International College",
+    outcome: "arrived",
+    photo: "/photos/malaysia-arrival-ruhel.jpg",
+  },
+  {
+    name: "Mehedi Hasan Supto",
+    destination: "Romania",
+    university: "West University of Timișoara · Bachelor of Informatics",
+    outcome: "visaApproved",
+    photo: "/photos/romania-visa-mehedi.jpg",
+  },
+  {
+    name: "Sunny Saleh",
+    destination: "Malaysia",
+    university: "Universiti Tun Abdul Razak · Bachelor of Computer Science",
+    outcome: "visaApproved",
+    photo: "/photos/malaysia-visa-sunny.jpg",
+  },
+];
+
+function StoryPhoto({ story }: { story: Story }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return <span className="font-mono text-xs text-ink/30">PHOTO PENDING</span>;
+  }
+  return (
+    <img
+      src={story.photo}
+      alt={story.name}
+      className="h-full w-full object-cover"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 export default function SuccessStories() {
   const { t } = useLang();
@@ -24,35 +78,24 @@ export default function SuccessStories() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-24">
-        {STORIES.length === 0 ? (
-          <div className="grid gap-px border hairline bg-ink/15 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex aspect-[4/5] flex-col justify-between bg-paper p-8">
-                <span className="font-mono text-xs text-ink/30">STUDENT 0{i}</span>
-                <div>
-                  <p className="font-display text-2xl text-ink/40">
-                    {t.students.placeholderQuote}
-                  </p>
-                  <p className="mt-4 text-xs text-ink/40">{t.students.placeholderMeta}</p>
-                </div>
+        <div className="grid gap-px border hairline bg-ink/15 sm:grid-cols-2 md:grid-cols-3">
+          {STORIES.map((story) => (
+            <figure key={story.name} className="flex flex-col bg-paper">
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-parchment/40">
+                <StoryPhoto story={story} />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid gap-px border hairline bg-ink/15 md:grid-cols-3">
-            {STORIES.map((story) => (
-              <figure key={story.name} className="flex flex-col justify-between bg-paper p-8">
-                <blockquote className="font-display text-2xl">"{story.quote}"</blockquote>
-                <figcaption className="mt-6 text-sm">
-                  <p className="font-semibold text-navy">{story.name}</p>
-                  <p className="text-ink/50">
-                    {story.university} · {story.destination}
-                  </p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        )}
+              <figcaption className="p-6">
+                <p className="label-caps text-coral">
+                  {story.outcome === "visaApproved" ? t.students.outcomeVisaApproved : t.students.outcomeArrived}
+                </p>
+                <p className="mt-2 font-semibold text-navy">{story.name}</p>
+                <p className="text-sm text-ink/50">
+                  {story.university} · {story.destination}
+                </p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
     </>
   );

@@ -5,7 +5,7 @@ export default function Ticker() {
   const row = MALAYSIA_UNIVERSITIES.map((uni) => (
     <span key={uni} className="flex items-center gap-6 pr-6">
       <span className="whitespace-nowrap font-display text-lg">{uni}</span>
-      <span className="text-coral">✦</span>
+      <span className="text-coral">·</span>
     </span>
   ));
 

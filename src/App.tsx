@@ -5,8 +5,11 @@ import About from "./pages/About";
 import SuccessStories from "./pages/SuccessStories";
 import Apply from "./pages/Apply";
 import BookSession from "./pages/BookSession";
+import Onboarding from "./pages/Onboarding";
 import Malaysia from "./pages/destinations/Malaysia";
 import Romania from "./pages/destinations/Romania";
+import Georgia from "./pages/destinations/Georgia";
+import China from "./pages/destinations/China";
 
 export default function App() {
   return (
@@ -15,9 +18,12 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="destinations/malaysia" element={<Malaysia />} />
         <Route path="destinations/romania" element={<Romania />} />
+        <Route path="destinations/georgia" element={<Georgia />} />
+        <Route path="destinations/china" element={<China />} />
         <Route path="success-stories" element={<SuccessStories />} />
         <Route path="about" element={<About />} />
         <Route path="apply" element={<Apply />} />
+        <Route path="onboarding" element={<Onboarding />} />
         <Route path="book-session" element={<BookSession />} />
       </Route>
     </Routes>

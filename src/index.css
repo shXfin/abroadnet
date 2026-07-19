@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
 }
 
 /* Bengali typography: bold Anek Bangla display + Siliguri body. */
 :lang(bn) {
-  --font-display: "Anek Bangla", "Bricolage Grotesque", sans-serif;
-  --font-body: "Hind Siliguri", "Inter", sans-serif;
+  --font-display: "Anek Bangla", "Manrope", sans-serif;
+  --font-body: "Hind Siliguri", "Manrope", sans-serif;
 }
 
 body {
@@ -95,9 +95,25 @@ em {
   animation: node-pulse 2.6s ease-in-out infinite;
 }
 
+@keyframes kite-sway {
+  from {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+  to {
+    transform: translate(9px, -13px) rotate(5deg);
+  }
+}
+
+.kite-sway {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: kite-sway 5s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .route-path,
   .node-pulse,
+  .kite-sway,
   .animate-marquee {
     animation: none;
   }

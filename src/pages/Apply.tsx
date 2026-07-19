@@ -93,6 +93,8 @@ export default function Apply() {
             </option>
             <option value="malaysia">{t.apply.malaysia}</option>
             <option value="romania">{t.apply.romania}</option>
+            <option value="georgia">{t.apply.georgia}</option>
+            <option value="china">{t.apply.china}</option>
             <option value="undecided">{t.apply.undecided}</option>
           </select>
         </div>
