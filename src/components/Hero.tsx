@@ -143,9 +143,9 @@ function FlightRoutes() {
         <g transform={`translate(${HOME.x},${HOME.y})`}>
           <circle r="20" fill="#006A4E" opacity="0.3" className="node-pulse" />
           <circle r="4" fill="#1C1740" />
-          <line x1="0" y1="0" x2="0" y2="-40" stroke="#1C1740" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M0,-40 C 11,-44 22,-37 36,-41 L36,-17 C 22,-13 11,-20 0,-16 Z" fill="#006A4E" />
-          <circle cx="15" cy="-28.5" r="6" fill="#F42A41" />
+          <line x1="0" y1="0" x2="0" y2="-42" stroke="#1C1740" strokeWidth="2.5" strokeLinecap="round" />
+          <rect x="0" y="-42" width="34" height="22" fill="#006A4E" />
+          <circle cx="15" cy="-31" r="6.5" fill="#F42A41" />
         </g>
 
         {/* Destinations */}
