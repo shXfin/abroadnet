@@ -35,21 +35,16 @@ const en = {
     visa: "VISA ✓",
   },
   why: {
-    kicker: "Why Abroad Net",
-    title: "Counselors who've done this a thousand times.",
-    points: [
-      {
-        title: "One counselor, start to finish",
-        copy: "The same person who plans your route files your visa and waves you off at the airport.",
-      },
-      {
-        title: "No surprises, no hidden fees",
-        copy: "Every cost, from tuition and deposits to our fee, is on the table before you commit to anything.",
-      },
-      {
-        title: "Real placements, on record",
-        copy: "1.8K+ students in our community and a 100% recommend rate on Facebook. Ask any of them.",
-      },
+    kicker: "The journey",
+    title: "One counselor, every step, start to finish.",
+    steps: [
+      { label: "Consult", copy: "We sit down and map your goals, budget, and destination." },
+      { label: "Document", copy: "Transcripts, passport, SOP, and the visa file, prepared together." },
+      { label: "Fly", copy: "Tickets booked, visa in hand, you board with everything sorted." },
+      { label: "Arrive", copy: "You land. Nothing about the airport is unfamiliar." },
+      { label: "We receive", copy: "A real person meets you at arrivals and gets you settled." },
+      { label: "Study", copy: "Classes, campus, city, all of it starts to feel like home." },
+      { label: "After help", copy: "We stay reachable for whatever comes up, long after you've landed." },
     ],
   },
   spotlight: {
@@ -370,21 +365,16 @@ const bn: typeof en = {
     visa: "ভিসা ✓",
   },
   why: {
-    kicker: "কেন অ্যাব্রোড নেট",
-    title: "যে কাউন্সেলররা এই পথ হাজারবার পাড়ি দিয়েছেন।",
-    points: [
-      {
-        title: "একজন কাউন্সেলর, শুরু থেকে শেষ",
-        copy: "যিনি আপনার রুট পরিকল্পনা করেন, তিনিই ভিসা ফাইল করেন, আর এয়ারপোর্টে বিদায় জানান।",
-      },
-      {
-        title: "কোনো লুকানো খরচ নেই",
-        copy: "টিউশন, ডিপোজিট, আমাদের ফি, প্রতিটি খরচ আগেই টেবিলে। তারপর সিদ্ধান্ত আপনার।",
-      },
-      {
-        title: "বাস্তব প্লেসমেন্ট, রেকর্ডে",
-        copy: "আমাদের কমিউনিটিতে ১.৮ হাজার+ শিক্ষার্থী, ফেসবুকে ১০০% রেকমেন্ড রেট। যে কাউকে জিজ্ঞেস করুন।",
-      },
+    kicker: "যাত্রাপথ",
+    title: "একজন কাউন্সেলর, প্রতিটি ধাপে, শুরু থেকে শেষ পর্যন্ত।",
+    steps: [
+      { label: "পরামর্শ", copy: "আপনার লক্ষ্য, বাজেট আর গন্তব্য নিয়ে একসাথে বসে পরিকল্পনা।" },
+      { label: "ডকুমেন্ট", copy: "ট্রান্সক্রিপ্ট, পাসপোর্ট, এসওপি আর ভিসা ফাইল, একসাথে প্রস্তুত।" },
+      { label: "যাত্রা", copy: "টিকিট বুক, ভিসা হাতে, সবকিছু গুছিয়ে আপনি রওনা হন।" },
+      { label: "পৌঁছানো", copy: "আপনি পৌঁছান। এয়ারপোর্টের কিছুই অচেনা লাগে না।" },
+      { label: "আমরা গ্রহণ করি", copy: "সত্যিকারের একজন মানুষ এয়ারপোর্টে অপেক্ষা করেন, গুছিয়ে দেন সবকিছু।" },
+      { label: "পড়াশোনা", copy: "ক্লাস, ক্যাম্পাস, শহর, সবকিছু ধীরে ধীরে আপন হয়ে ওঠে।" },
+      { label: "পরবর্তী সহায়তা", copy: "পৌঁছানোর পরও যেকোনো প্রয়োজনে আমরা পাশে থাকি।" },
     ],
   },
   spotlight: {

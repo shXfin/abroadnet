@@ -4,6 +4,7 @@ import StudentSpotlight from "../components/StudentSpotlight";
 import Ticker from "../components/Ticker";
 import BoardingPassCta from "../components/BoardingPassCta";
 import FacebookCarousel from "../components/FacebookCarousel";
+import JourneyTimeline from "../components/JourneyTimeline";
 import { useLang } from "../i18n";
 
 export default function Home() {
@@ -18,20 +19,7 @@ export default function Home() {
       {/* Facebook carousel, right beneath the hero */}
       <FacebookCarousel />
 
-      {/* Why us */}
-      <section className="mx-auto max-w-6xl px-6 pt-20">
-        <p className="label-caps text-ink/50">{t.why.kicker}</p>
-        <h2 className="mt-3 max-w-2xl font-display text-4xl md:text-5xl">{t.why.title}</h2>
-        <div className="mt-12 grid gap-10 md:grid-cols-3">
-          {t.why.points.map((point, i) => (
-            <div key={point.title} className="border-t-2 border-ink/10 pt-6">
-              <span className="font-mono text-sm text-coral">0{i + 1}</span>
-              <h3 className="mt-3 font-display text-2xl">{point.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink/60">{point.copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <JourneyTimeline />
 
       <StudentSpotlight />
 
@@ -63,23 +51,6 @@ export default function Home() {
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="bg-navy py-24 text-white">
-        <div className="mx-auto max-w-6xl px-6">
-          <p className="label-caps text-coral">{t.process.kicker}</p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl md:text-5xl">{t.process.title}</h2>
-          <div className="mt-16 grid gap-12 md:grid-cols-3">
-            {t.process.steps.map((step, i) => (
-              <div key={step.title} className="border-t-2 border-white/20 pt-6">
-                <span className="font-mono text-sm text-coral">0{i + 1}</span>
-                <h3 className="mt-3 font-display text-3xl">{step.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-white/60">{step.copy}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
