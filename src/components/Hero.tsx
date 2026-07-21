@@ -7,12 +7,16 @@ import { assetPath } from "../lib/assetPath";
 const HOME = { x: 96, y: 432 };
 
 // Real students, placed in the map's empty gaps. Same white card + shadow
-// language as the destination flag cards, framed as small photo chips
-// rather than circular avatars.
+// language as the destination flag cards, framed as photo chips rather
+// than circular avatars.
+const PHOTO_CARD_W = 70;
+const PHOTO_CARD_H = 90;
+const PHOTO_PAD = 4;
+
 const STUDENT_PHOTOS = [
-  { src: "photos/malaysia-arrival-imran.jpg", x: 128, y: 224, align: "xMidYMid" as const },
-  { src: "photos/georgia-visa-rakibul.jpg", x: 574, y: 214, align: "xMaxYMid" as const },
-  { src: "photos/malaysia-visa-sunny.jpg", x: 494, y: 428, align: "xMidYTop" as const },
+  { src: "photos/malaysia-arrival-imran.jpg", x: 140, y: 234, align: "xMidYMid" as const },
+  { src: "photos/georgia-visa-rakibul.jpg", x: 592, y: 218, align: "xMaxYMid" as const },
+  { src: "photos/malaysia-visa-sunny.jpg", x: 494, y: 448, align: "xMidYTop" as const },
 ];
 
 /** Splits a "CODE · Country" translation string into its parts; the airport
@@ -48,7 +52,13 @@ function FlightRoutes() {
           </filter>
           {STUDENT_PHOTOS.map((p, i) => (
             <clipPath key={`clip-${i}`} id={`student-clip-${i}`}>
-              <rect x={p.x - 19} y={p.y - 25} width="38" height="50" rx="6" />
+              <rect
+                x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
+                y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
+                width={PHOTO_CARD_W - PHOTO_PAD * 2}
+                height={PHOTO_CARD_H - PHOTO_PAD * 2}
+                rx="10"
+              />
             </clipPath>
           ))}
         </defs>
@@ -212,11 +222,11 @@ function FlightRoutes() {
         {STUDENT_PHOTOS.map((p, i) => (
           <g key={`student-${i}`}>
             <rect
-              x={p.x - 22}
-              y={p.y - 28}
-              width="44"
-              height="56"
-              rx="8"
+              x={p.x - PHOTO_CARD_W / 2}
+              y={p.y - PHOTO_CARD_H / 2}
+              width={PHOTO_CARD_W}
+              height={PHOTO_CARD_H}
+              rx="12"
               fill="white"
               fillOpacity="0.95"
               stroke="#241E5E"
@@ -226,19 +236,19 @@ function FlightRoutes() {
             />
             <image
               href={assetPath(p.src)}
-              x={p.x - 19}
-              y={p.y - 25}
-              width="38"
-              height="50"
+              x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
+              y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
+              width={PHOTO_CARD_W - PHOTO_PAD * 2}
+              height={PHOTO_CARD_H - PHOTO_PAD * 2}
               preserveAspectRatio={`${p.align} slice`}
               clipPath={`url(#student-clip-${i})`}
             />
             <rect
-              x={p.x - 19}
-              y={p.y - 25}
-              width="38"
-              height="50"
-              rx="6"
+              x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
+              y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
+              width={PHOTO_CARD_W - PHOTO_PAD * 2}
+              height={PHOTO_CARD_H - PHOTO_PAD * 2}
+              rx="10"
               fill="none"
               stroke="#241E5E"
               strokeOpacity="0.08"
@@ -330,7 +340,7 @@ export default function Hero() {
       </div>
 
       {/* The assessment, part of the same hero block, not a separate section */}
-      <div id="assessment" className="mx-auto max-w-5xl px-6 pb-20 pt-6 lg:pt-2">
+      <div id="assessment" className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2">
         <AssessmentQuiz />
       </div>
     </section>
