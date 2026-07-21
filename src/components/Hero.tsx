@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import { useLang } from "../i18n";
+import { assetPath } from "../lib/assetPath";
 
 const HOME = { x: 96, y: 432 };
+
+// Real students, placed in the map's empty gaps. Same white card + shadow
+// language as the destination flag cards, framed as small photo chips
+// rather than circular avatars.
+const STUDENT_PHOTOS = [
+  { src: "photos/malaysia-arrival-imran.jpg", x: 128, y: 224, align: "xMidYMid" as const },
+  { src: "photos/georgia-visa-rakibul.jpg", x: 574, y: 214, align: "xMaxYMid" as const },
+  { src: "photos/malaysia-visa-sunny.jpg", x: 494, y: 428, align: "xMidYTop" as const },
+];
 
 /** Splits a "CODE · Country" translation string into its parts; the airport
  * code stays Latin in both languages, only the country name is translated. */
@@ -35,6 +45,11 @@ function FlightRoutes() {
           <filter id="cs" x="-30%" y="-80%" width="160%" height="300%">
             <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#241E5E" floodOpacity="0.11" />
           </filter>
+          {STUDENT_PHOTOS.map((p, i) => (
+            <clipPath key={`clip-${i}`} id={`student-clip-${i}`}>
+              <rect x={p.x - 19} y={p.y - 25} width="38" height="50" rx="6" />
+            </clipPath>
+          ))}
         </defs>
 
         {/* Sky atmosphere */}
@@ -191,6 +206,45 @@ function FlightRoutes() {
         <text x="497" y="381" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {my.country}</text>
         <text x="557" y="381" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
         <line x1="578" y1="376" x2="574" y2="378" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+
+        {/* Real students, framed as photo chips in the map's empty gaps */}
+        {STUDENT_PHOTOS.map((p, i) => (
+          <g key={`student-${i}`}>
+            <rect
+              x={p.x - 22}
+              y={p.y - 28}
+              width="44"
+              height="56"
+              rx="8"
+              fill="white"
+              fillOpacity="0.95"
+              stroke="#241E5E"
+              strokeOpacity="0.07"
+              strokeWidth="0.8"
+              filter="url(#cs)"
+            />
+            <image
+              href={assetPath(p.src)}
+              x={p.x - 19}
+              y={p.y - 25}
+              width="38"
+              height="50"
+              preserveAspectRatio={`${p.align} slice`}
+              clipPath={`url(#student-clip-${i})`}
+            />
+            <rect
+              x={p.x - 19}
+              y={p.y - 25}
+              width="38"
+              height="50"
+              rx="6"
+              fill="none"
+              stroke="#241E5E"
+              strokeOpacity="0.08"
+              strokeWidth="1"
+            />
+          </g>
+        ))}
 
         {/* Home node — map pin */}
         <circle cx={HOME.x} cy="400" r="34" fill="#006A4E" fillOpacity="0.08" className="home-ring" />
