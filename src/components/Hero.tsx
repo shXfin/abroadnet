@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
+import AssessmentQuiz from "./AssessmentQuiz";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 
@@ -323,10 +324,14 @@ export default function Hero() {
               {t.hero.ctaSecondary}
             </Link>
           </div>
-          <p className="mt-8 text-sm font-medium text-ink/45">{t.hero.strip.join("  ·  ")}</p>
         </div>
 
         <FlightRoutes />
+      </div>
+
+      {/* The assessment, part of the same hero block, not a separate section */}
+      <div id="assessment" className="mx-auto max-w-5xl px-6 pb-20 pt-6 lg:pt-2">
+        <AssessmentQuiz />
       </div>
     </section>
   );
