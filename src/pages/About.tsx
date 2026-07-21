@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
+import { assetPath } from "../lib/assetPath";
 
 function OfficePhoto() {
   const [failed, setFailed] = useState(false);
@@ -9,7 +10,7 @@ function OfficePhoto() {
   }
   return (
     <img
-      src="/photos/office-opening.jpg"
+      src={assetPath("photos/office-opening.jpg")}
       alt="Abroad Net office"
       className="h-full w-full object-cover"
       onError={() => setFailed(true)}

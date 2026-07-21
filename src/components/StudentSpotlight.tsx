@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
+import { assetPath } from "../lib/assetPath";
 
-const PHOTO_SRC = "/photos/georgia-visa-rakibul.jpg";
+const PHOTO_SRC = assetPath("photos/georgia-visa-rakibul.jpg");
 
 /**
  * Real-photo proof section, matching what both reference sites lead with

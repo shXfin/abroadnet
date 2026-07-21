@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLang } from "../i18n";
+import { assetPath } from "../lib/assetPath";
 
 type Story = {
   name: string;
@@ -17,35 +18,35 @@ const STORIES: Story[] = [
     destination: "Georgia",
     university: "Alte University",
     outcome: "visaApproved",
-    photo: "/photos/georgia-visa-rakibul.jpg",
+    photo: "photos/georgia-visa-rakibul.jpg",
   },
   {
     name: "Imran Hossain Shanto",
     destination: "Malaysia",
     university: "Mahsa Avenue International College",
     outcome: "arrived",
-    photo: "/photos/malaysia-arrival-imran.jpg",
+    photo: "photos/malaysia-arrival-imran.jpg",
   },
   {
     name: "Md Ruhel Miah",
     destination: "Malaysia",
     university: "Mahsa Avenue International College",
     outcome: "arrived",
-    photo: "/photos/malaysia-arrival-ruhel.jpg",
+    photo: "photos/malaysia-arrival-ruhel.jpg",
   },
   {
     name: "Mehedi Hasan Supto",
     destination: "Romania",
     university: "West University of Timișoara · Bachelor of Informatics",
     outcome: "visaApproved",
-    photo: "/photos/romania-visa-mehedi.jpg",
+    photo: "photos/romania-visa-mehedi.jpg",
   },
   {
     name: "Sunny Saleh",
     destination: "Malaysia",
     university: "Universiti Tun Abdul Razak · Bachelor of Computer Science",
     outcome: "visaApproved",
-    photo: "/photos/malaysia-visa-sunny.jpg",
+    photo: "photos/malaysia-visa-sunny.jpg",
   },
 ];
 
@@ -56,7 +57,7 @@ function StoryPhoto({ story }: { story: Story }) {
   }
   return (
     <img
-      src={story.photo}
+      src={assetPath(story.photo)}
       alt={story.name}
       className="h-full w-full object-cover"
       onError={() => setFailed(true)}
