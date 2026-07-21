@@ -95,25 +95,72 @@ em {
   animation: node-pulse 2.6s ease-in-out infinite;
 }
 
-@keyframes kite-sway {
-  from {
-    transform: translate(0, 0) rotate(-4deg);
+@keyframes home-glow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.1;
   }
-  to {
-    transform: translate(9px, -13px) rotate(5deg);
+  50% {
+    transform: scale(3.2);
+    opacity: 0;
   }
 }
 
-.kite-sway {
+.home-ring {
   transform-origin: center;
   transform-box: fill-box;
-  animation: kite-sway 5s ease-in-out infinite alternate;
+  animation: home-glow 3.5s ease-in-out infinite;
+}
+
+@keyframes kite-a {
+  from {
+    transform: translate(0, 0) rotate(-5deg);
+  }
+  to {
+    transform: translate(8px, -14px) rotate(6deg);
+  }
+}
+@keyframes kite-b {
+  from {
+    transform: translate(0, 0) rotate(3deg);
+  }
+  to {
+    transform: translate(-7px, -10px) rotate(-5deg);
+  }
+}
+@keyframes kite-c {
+  from {
+    transform: translate(0, 0) rotate(8deg);
+  }
+  to {
+    transform: translate(-5px, -12px) rotate(-3deg);
+  }
+}
+
+.kite-shake-a {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: kite-a 5s ease-in-out infinite alternate;
+}
+.kite-shake-b {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: kite-b 6.5s ease-in-out infinite alternate;
+}
+.kite-shake-c {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: kite-c 4.5s 2s ease-in-out infinite alternate;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .route-path,
   .node-pulse,
-  .kite-sway,
+  .home-ring,
+  .kite-shake-a,
+  .kite-shake-b,
+  .kite-shake-c,
   .animate-marquee {
     animation: none;
   }

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
-import StudentSpotlight from "../components/StudentSpotlight";
+import StudentStoriesGrid from "../components/StudentStoriesGrid";
 import Ticker from "../components/Ticker";
 import BoardingPassCta from "../components/BoardingPassCta";
 import FacebookCarousel from "../components/FacebookCarousel";
@@ -22,14 +22,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Proof, right after the assessment, not tucked behind a nav link */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <p className="label-caps text-coral">{t.students.kicker}</p>
+        <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+          {t.students.titleA} <em>{t.students.titleB}</em>
+        </h2>
+        <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">{t.students.sub}</p>
+        <div className="mt-10">
+          <StudentStoriesGrid />
+        </div>
+      </section>
+
       <Ticker />
 
       {/* Facebook carousel, right beneath the hero */}
       <FacebookCarousel />
 
       <JourneyTimeline />
-
-      <StudentSpotlight />
 
       {/* Destinations */}
       <section className="mx-auto max-w-6xl px-6 py-20">

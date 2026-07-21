@@ -4,59 +4,20 @@ import { useLang } from "../i18n";
 
 const HOME = { x: 96, y: 432 };
 
+/** Splits a "CODE · Country" translation string into its parts; the airport
+ * code stays Latin in both languages, only the country name is translated. */
+function splitLabel(label: string) {
+  const [code, country] = label.split(" · ");
+  return { code, country };
+}
+
 function FlightRoutes() {
   const { t } = useLang();
-
-  const destinations = [
-    {
-      id: "geo",
-      x: 230,
-      y: 66,
-      curve: "C 130,300 170,150 230,66",
-      label: t.hero.tbs,
-      anchor: "start" as const,
-      dy: -22,
-      planeColor: "#241E5E",
-      duration: "9s",
-      delay: "0.8s",
-    },
-    {
-      id: "ro",
-      x: 380,
-      y: 42,
-      curve: "C 190,300 280,110 380,42",
-      label: t.hero.otp,
-      anchor: "start" as const,
-      dy: -22,
-      planeColor: "#F0633B",
-      duration: "9.5s",
-      delay: "0s",
-    },
-    {
-      id: "cn",
-      x: 566,
-      y: 96,
-      curve: "C 300,380 460,230 566,96",
-      label: t.hero.pek,
-      anchor: "end" as const,
-      dy: -22,
-      planeColor: "#241E5E",
-      duration: "10.5s",
-      delay: "1.6s",
-    },
-    {
-      id: "my",
-      x: 582,
-      y: 380,
-      curve: "C 250,380 430,370 582,380",
-      label: t.hero.kul,
-      anchor: "end" as const,
-      dy: 38,
-      planeColor: "#F0633B",
-      duration: "7s",
-      delay: "0.4s",
-    },
-  ];
+  const geo = splitLabel(t.hero.tbs);
+  const ro = splitLabel(t.hero.otp);
+  const cn = splitLabel(t.hero.pek);
+  const my = splitLabel(t.hero.kul);
+  const dhk = splitLabel(t.hero.dhk);
 
   return (
     <div className="relative w-full">
@@ -66,6 +27,26 @@ function FlightRoutes() {
         role="img"
         aria-label="Flight routes from Dhaka to Malaysia, Romania, Georgia and China"
       >
+        <defs>
+          <radialGradient id="sky" cx="65%" cy="20%" r="70%">
+            <stop offset="0%" stopColor="#DDD8F0" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#F7F4EE" stopOpacity="0" />
+          </radialGradient>
+          <filter id="cs" x="-30%" y="-80%" width="160%" height="300%">
+            <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#241E5E" floodOpacity="0.11" />
+          </filter>
+        </defs>
+
+        {/* Sky atmosphere */}
+        <rect width="640" height="520" fill="url(#sky)" />
+
+        {/* Cloud puffs */}
+        <ellipse cx="514" cy="156" rx="64" ry="17" fill="#241E5E" fillOpacity="0.05" />
+        <ellipse cx="551" cy="151" rx="44" ry="13" fill="#241E5E" fillOpacity="0.05" />
+        <ellipse cx="480" cy="162" rx="36" ry="11" fill="#241E5E" fillOpacity="0.05" />
+        <ellipse cx="162" cy="135" rx="48" ry="13" fill="#241E5E" fillOpacity="0.038" />
+        <ellipse cx="196" cy="130" rx="34" ry="10" fill="#241E5E" fillOpacity="0.038" />
+
         {/* স্বপ্ন (dream), watermarked over the sky */}
         <text
           x="330"
@@ -74,107 +55,156 @@ function FlightRoutes() {
           fontSize="170"
           fontWeight="800"
           fill="#241E5E"
-          opacity="0.05"
+          fillOpacity="0.045"
           style={{ fontFamily: '"Anek Bangla", sans-serif' }}
           transform="rotate(-6 330 300)"
         >
           স্বপ্ন
         </text>
 
-        {/* The delta: rivers under home */}
-        <g fill="none" stroke="#241E5E" strokeLinecap="round">
-          <path d="M-10,470 C 90,455 170,475 250,462" strokeWidth="10" strokeOpacity="0.06" />
-          <path d="M-10,492 C 110,478 200,500 300,486" strokeWidth="14" strokeOpacity="0.05" />
-          <path d="M20,449 C 90,441 140,452 200,446" strokeWidth="6" strokeOpacity="0.07" />
-        </g>
+        {/* Delta rivers */}
+        <path d="M-10,470 C 90,455 170,475 250,462" fill="none" stroke="#241E5E" strokeWidth="10" strokeOpacity="0.05" strokeLinecap="round" />
+        <path d="M-10,492 C 110,478 200,500 300,486" fill="none" stroke="#241E5E" strokeWidth="14" strokeOpacity="0.04" strokeLinecap="round" />
+        <path d="M20,449 C 90,441 140,452 200,446" fill="none" stroke="#241E5E" strokeWidth="6" strokeOpacity="0.06" strokeLinecap="round" />
 
-        {destinations.map((d, i) => (
-          <path
-            key={d.id}
-            id={`route-${d.id}`}
-            d={`M${HOME.x},${HOME.y} ${d.curve}`}
-            fill="none"
-            stroke="#241E5E"
-            strokeOpacity="0.3"
-            strokeWidth="2.5"
-            className="route-path"
-            style={{ animationDelay: `${i * 0.25}s` }}
-          />
-        ))}
+        {/* Route glow (depth layer) */}
+        <path d="M96,432 C 130,300 170,150 230,66" fill="none" stroke="#241E5E" strokeWidth="9" strokeOpacity="0.055" strokeLinecap="round" />
+        <path d="M96,432 C 190,300 280,110 380,42" fill="none" stroke="#F0633B" strokeWidth="9" strokeOpacity="0.05" strokeLinecap="round" />
+        <path d="M96,432 C 300,380 460,230 566,96" fill="none" stroke="#241E5E" strokeWidth="9" strokeOpacity="0.055" strokeLinecap="round" />
+        <path d="M96,432 C 250,380 430,370 582,380" fill="none" stroke="#F0633B" strokeWidth="9" strokeOpacity="0.05" strokeLinecap="round" />
 
-        {destinations.map((d) => (
-          <path key={`plane-${d.id}`} d="M0,-7 L16,0 L0,7 L4,0 Z" fill={d.planeColor}>
-            <animateMotion
-              dur={d.duration}
-              begin={d.delay}
-              repeatCount="indefinite"
-              rotate="auto"
-              keyPoints="0;1;1"
-              keyTimes="0;0.6;1"
-              calcMode="linear"
-            >
-              <mpath href={`#route-${d.id}`} />
-            </animateMotion>
-          </path>
-        ))}
+        {/* Route dashes (animated draw) */}
+        <path id="route-geo" d="M96,432 C 130,300 170,150 230,66" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" />
+        <path id="route-ro" d="M96,432 C 190,300 280,110 380,42" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.25s" }} />
+        <path id="route-cn" d="M96,432 C 300,380 460,230 566,96" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.5s" }} />
+        <path id="route-my" d="M96,432 C 250,380 430,370 582,380" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.75s" }} />
 
-        {/* Shakrain kites in the sky */}
-        <g className="kite-sway">
-          <g transform="translate(300,195) rotate(14)">
-            <polygon points="0,-24 16,0 0,24 -16,0" fill="#F0633B" />
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="#F7F4EE" strokeWidth="1.6" />
-            <line x1="-16" y1="0" x2="16" y2="0" stroke="#F7F4EE" strokeWidth="1.6" />
-            <path d="M0,24 q -8,18 2,32 q 8,12 -2,26" fill="none" stroke="#F0633B" strokeWidth="1.8" strokeOpacity="0.7" />
-            <circle cx="-1" cy="46" r="2.6" fill="#241E5E" />
-            <circle cx="1" cy="70" r="2.6" fill="#241E5E" />
-          </g>
-        </g>
-        <g className="kite-sway" style={{ animationDelay: "1.6s", animationDuration: "6.5s" }}>
-          <g transform="translate(470,270) rotate(-10) scale(0.62)">
-            <polygon points="0,-24 16,0 0,24 -16,0" fill="#006A4E" />
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="#F7F4EE" strokeWidth="1.6" />
-            <line x1="-16" y1="0" x2="16" y2="0" stroke="#F7F4EE" strokeWidth="1.6" />
-            <path d="M0,24 q 8,18 -2,32 q -8,12 2,26" fill="none" stroke="#006A4E" strokeWidth="1.8" strokeOpacity="0.7" />
-            <circle cx="1" cy="46" r="2.6" fill="#F42A41" />
+        {/* Kite A — coral */}
+        <g className="kite-shake-a">
+          <g transform="translate(298,190) rotate(14)">
+            <polygon points="0,-28 20,0 0,28 -20,0" fill="#F0633B" />
+            <line x1="0" y1="-28" x2="0" y2="28" stroke="#F7F4EE" strokeWidth="2" />
+            <line x1="-20" y1="0" x2="20" y2="0" stroke="#F7F4EE" strokeWidth="2" />
+            <polygon points="0,-14 5,-8 0,-2 -5,-8" fill="#F7F4EE" fillOpacity="0.35" />
+            <polygon points="0,2 5,8 0,14 -5,8" fill="#F7F4EE" fillOpacity="0.35" />
+            <path d="M0,28 q -10,20 4,38 q 10,16 -4,30 q -8,12 3,20" fill="none" stroke="#F0633B" strokeWidth="2.2" strokeOpacity="0.6" />
+            <circle cx="-1" cy="54" r="3.2" fill="#241E5E" />
+            <circle cx="1" cy="80" r="2.8" fill="#241E5E" />
           </g>
         </g>
 
-        {/* Home: the flag of Bangladesh, flying over the rivers */}
-        <g transform={`translate(${HOME.x},${HOME.y})`}>
-          <circle r="20" fill="#006A4E" opacity="0.3" className="node-pulse" />
-          <circle r="4" fill="#1C1740" />
-          <line x1="0" y1="0" x2="0" y2="-42" stroke="#1C1740" strokeWidth="2.5" strokeLinecap="round" />
-          <rect x="0" y="-42" width="34" height="22" fill="#006A4E" />
-          <circle cx="15" cy="-31" r="6.5" fill="#F42A41" />
+        {/* Kite B — green */}
+        <g className="kite-shake-b">
+          <g transform="translate(468,266) rotate(-10) scale(0.65)">
+            <polygon points="0,-26 18,0 0,26 -18,0" fill="#006A4E" />
+            <line x1="0" y1="-26" x2="0" y2="26" stroke="#F7F4EE" strokeWidth="1.8" />
+            <line x1="-18" y1="0" x2="18" y2="0" stroke="#F7F4EE" strokeWidth="1.8" />
+            <path d="M0,26 q 8,18 -2,34 q -8,12 2,26" fill="none" stroke="#006A4E" strokeWidth="2" strokeOpacity="0.7" />
+            <circle cx="1" cy="48" r="3" fill="#F42A41" />
+            <circle cx="-1" cy="68" r="2.4" fill="#F42A41" />
+          </g>
         </g>
 
-        {/* Destinations */}
-        {destinations.map((d) => (
-          <g key={d.id}>
-            <circle cx={d.x} cy={d.y} r="16" fill="#F0633B" opacity="0.35" className="node-pulse" />
-            <circle cx={d.x} cy={d.y} r="6.5" fill="#F0633B" />
-            <circle cx={d.x} cy={d.y} r="6.5" fill="none" stroke="#F7F4EE" strokeWidth="2.5" />
-            <text
-              x={d.x}
-              y={d.y + d.dy}
-              textAnchor={d.anchor}
-              fontSize="17"
-              fontWeight="600"
-              fill="#1C1740"
-              opacity="0.75"
-            >
-              {d.label}
-              <tspan fill="#006A4E" fontWeight="700">
-                {" "}
-                ✓
-              </tspan>
-            </text>
+        {/* Kite C — tiny coral, fills upper-right void */}
+        <g className="kite-shake-c">
+          <g transform="translate(538,200) rotate(20) scale(0.44)">
+            <polygon points="0,-24 16,0 0,24 -16,0" fill="#F0633B" fillOpacity="0.8" />
+            <line x1="0" y1="-24" x2="0" y2="24" stroke="#F7F4EE" strokeWidth="1.8" />
+            <line x1="-16" y1="0" x2="16" y2="0" stroke="#F7F4EE" strokeWidth="1.8" />
+            <path d="M0,24 q 6,14 -2,26 q -5,8 2,14" fill="none" stroke="#F0633B" strokeWidth="1.8" strokeOpacity="0.6" />
+            <circle cx="1" cy="38" r="2.8" fill="#241E5E" />
           </g>
-        ))}
+        </g>
 
-        {/* Home label */}
-        <text x="96" y="474" textAnchor="start" fontSize="19" fontWeight="600" fill="#1C1740" opacity="0.75">
-          {t.hero.dhk}
+        {/* Planes (animated) */}
+        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#241E5E">
+          <animateMotion dur="9s" begin="0.8s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
+            <mpath href="#route-geo" />
+          </animateMotion>
+        </path>
+        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#F0633B">
+          <animateMotion dur="9.5s" begin="0s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
+            <mpath href="#route-ro" />
+          </animateMotion>
+        </path>
+        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#241E5E">
+          <animateMotion dur="10.5s" begin="1.6s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
+            <mpath href="#route-cn" />
+          </animateMotion>
+        </path>
+        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#F0633B">
+          <animateMotion dur="7s" begin="0.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
+            <mpath href="#route-my" />
+          </animateMotion>
+        </path>
+
+        {/* Georgia TBS (230,66) — card right */}
+        <circle cx="230" cy="66" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" />
+        <circle cx="230" cy="66" r="8" fill="#F0633B" />
+        <circle cx="230" cy="66" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
+        <rect x="244" y="48" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="254" y="55" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
+        <rect x="254" y="60.5" width="20" height="2.8" fill="#CC0000" />
+        <rect x="262" y="55" width="2.8" height="14" fill="#CC0000" />
+        <text x="280" y="67" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
+        <text x="304" y="67" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
+        <text x="353" y="67" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="244" y1="62" x2="238" y2="66" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+
+        {/* Romania OTP (380,42) — card right, above */}
+        <circle cx="380" cy="42" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.7s" }} />
+        <circle cx="380" cy="42" r="8" fill="#F0633B" />
+        <circle cx="380" cy="42" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
+        <rect x="392" y="8" width="142" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="402" y="15" width="7" height="14" rx="1.5" fill="#002B7F" />
+        <rect x="409" y="15" width="7" height="14" fill="#FCD116" />
+        <rect x="416" y="15" width="7" height="14" rx="1.5" fill="#CE1126" />
+        <text x="429" y="27" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{ro.code}</text>
+        <text x="452" y="27" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {ro.country}</text>
+        <text x="511" y="27" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="394" y1="36" x2="382" y2="40" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+
+        {/* China PEK (566,96) — card left */}
+        <circle cx="566" cy="96" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "1.4s" }} />
+        <circle cx="566" cy="96" r="8" fill="#F0633B" />
+        <circle cx="566" cy="96" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
+        <rect x="428" y="78" width="128" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="438" y="85" width="20" height="14" rx="1.5" fill="#DE2910" />
+        <text x="443" y="95" fontSize="9" fill="#FFDE00">★</text>
+        <text x="464" y="97" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{cn.code}</text>
+        <text x="487" y="97" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {cn.country}</text>
+        <text x="530" y="97" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="556" y1="92" x2="558" y2="95" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+
+        {/* Malaysia KUL (582,380) — card left */}
+        <circle cx="582" cy="380" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.35s" }} />
+        <circle cx="582" cy="380" r="8" fill="#F0633B" />
+        <circle cx="582" cy="380" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
+        <rect x="438" y="362" width="140" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="448" y="369" width="20" height="14" rx="1.5" fill="white" />
+        <rect x="448" y="369" width="20" height="2" fill="#CC0001" />
+        <rect x="448" y="373" width="20" height="2" fill="#CC0001" />
+        <rect x="448" y="377" width="20" height="2" fill="#CC0001" />
+        <rect x="448" y="381" width="20" height="2" fill="#CC0001" />
+        <rect x="448" y="369" width="10" height="7" fill="#010066" />
+        <text x="474" y="381" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{my.code}</text>
+        <text x="497" y="381" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {my.country}</text>
+        <text x="557" y="381" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="578" y1="376" x2="574" y2="378" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+
+        {/* Home node — map pin */}
+        <circle cx={HOME.x} cy="400" r="34" fill="#006A4E" fillOpacity="0.08" className="home-ring" />
+        <ellipse cx={HOME.x} cy="434" rx="10" ry="3.5" fill="#1C1740" fillOpacity="0.12" />
+        <path d="M76,400 A20,20 0 1,1 116,400 L96,432 Z" fill="#006A4E" />
+        <path d="M78,393 A20,20 0 0,1 114,393" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.18" strokeLinecap="round" />
+        <circle cx={HOME.x} cy="396" r="8" fill="#F42A41" />
+
+        {/* Home label card */}
+        <rect x="56" y="448" width="140" height="26" rx="13" fill="white" fillOpacity="0.9" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="66" y="455" width="18" height="12" rx="1.5" fill="#006A4E" />
+        <circle cx="75" cy="461" r="3.5" fill="#F42A41" />
+        <text x="91" y="465" fontSize="11" fontWeight="600" fill="#1C1740" fillOpacity="0.7" letterSpacing="0.04em">
+          {dhk.code} · {dhk.country}
         </text>
       </svg>
     </div>
