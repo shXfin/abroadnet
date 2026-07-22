@@ -7,17 +7,16 @@ import { assetPath } from "../lib/assetPath";
 const HOME = { x: 96, y: 432 };
 
 // Real students, placed in the map's empty gaps. Same white card + shadow
-// language as the destination flag cards, framed as photo chips rather
-// than circular avatars.
-const PHOTO_CARD_W = 70;
-const PHOTO_CARD_H = 90;
+// language as the destination flag cards, framed as photo chips sized to
+// each photo's own aspect ratio — never force-cropped.
 const PHOTO_PAD = 4;
+const PHOTO_HEIGHT = 76;
 
 const STUDENT_PHOTOS = [
-  { src: "photos/malaysia-arrival-imran.jpg", x: 140, y: 234, align: "xMidYMid" as const },
-  { src: "photos/georgia-visa-rakibul.jpg", x: 592, y: 218, align: "xMaxYMid" as const },
-  { src: "photos/malaysia-visa-sunny.jpg", x: 494, y: 448, align: "xMidYTop" as const },
-];
+  { src: "photos/romania-visa-mehedi.jpg", aspect: 820 / 850, x: 140, y: 230 },
+  { src: "photos/airport-pickup.jpg", aspect: 1044 / 950, x: 594, y: 214 },
+  { src: "photos/malaysia-arrival-ruhel-full.jpg", aspect: 1, x: 494, y: 448 },
+].map((p) => ({ ...p, w: p.aspect * PHOTO_HEIGHT, h: PHOTO_HEIGHT }));
 
 /** Splits a "CODE · Country" translation string into its parts; the airport
  * code stays Latin in both languages, only the country name is translated. */
@@ -52,13 +51,7 @@ function FlightRoutes() {
           </filter>
           {STUDENT_PHOTOS.map((p, i) => (
             <clipPath key={`clip-${i}`} id={`student-clip-${i}`}>
-              <rect
-                x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
-                y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
-                width={PHOTO_CARD_W - PHOTO_PAD * 2}
-                height={PHOTO_CARD_H - PHOTO_PAD * 2}
-                rx="10"
-              />
+              <rect x={p.x - p.w / 2} y={p.y - p.h / 2} width={p.w} height={p.h} rx="8" />
             </clipPath>
           ))}
         </defs>
@@ -168,14 +161,14 @@ function FlightRoutes() {
         <circle cx="230" cy="66" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" />
         <circle cx="230" cy="66" r="8" fill="#F0633B" />
         <circle cx="230" cy="66" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="244" y="48" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="254" y="55" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
-        <rect x="254" y="60.5" width="20" height="2.8" fill="#CC0000" />
-        <rect x="262" y="55" width="2.8" height="14" fill="#CC0000" />
-        <text x="280" y="67" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
-        <text x="304" y="67" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
-        <text x="353" y="67" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="244" y1="62" x2="238" y2="66" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+        <rect x="244" y="34" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="254" y="41" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
+        <rect x="254" y="46.5" width="20" height="2.8" fill="#CC0000" />
+        <rect x="262" y="41" width="2.8" height="14" fill="#CC0000" />
+        <text x="280" y="53" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
+        <text x="304" y="53" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
+        <text x="353" y="53" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="244" y1="48" x2="238" y2="66" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
 
         {/* Romania OTP (380,42) — card right, above */}
         <circle cx="380" cy="42" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.7s" }} />
@@ -218,15 +211,17 @@ function FlightRoutes() {
         <text x="557" y="381" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
         <line x1="578" y1="376" x2="574" y2="378" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
 
-        {/* Real students, framed as photo chips in the map's empty gaps */}
+        {/* Real students, framed as photo chips in the map's empty gaps.
+            Each frame matches its photo's own aspect ratio, so the whole
+            image shows — nothing is cropped. */}
         {STUDENT_PHOTOS.map((p, i) => (
           <g key={`student-${i}`}>
             <rect
-              x={p.x - PHOTO_CARD_W / 2}
-              y={p.y - PHOTO_CARD_H / 2}
-              width={PHOTO_CARD_W}
-              height={PHOTO_CARD_H}
-              rx="12"
+              x={p.x - p.w / 2 - PHOTO_PAD}
+              y={p.y - p.h / 2 - PHOTO_PAD}
+              width={p.w + PHOTO_PAD * 2}
+              height={p.h + PHOTO_PAD * 2}
+              rx="10"
               fill="white"
               fillOpacity="0.95"
               stroke="#241E5E"
@@ -236,19 +231,19 @@ function FlightRoutes() {
             />
             <image
               href={assetPath(p.src)}
-              x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
-              y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
-              width={PHOTO_CARD_W - PHOTO_PAD * 2}
-              height={PHOTO_CARD_H - PHOTO_PAD * 2}
-              preserveAspectRatio={`${p.align} slice`}
+              x={p.x - p.w / 2}
+              y={p.y - p.h / 2}
+              width={p.w}
+              height={p.h}
+              preserveAspectRatio="xMidYMid meet"
               clipPath={`url(#student-clip-${i})`}
             />
             <rect
-              x={p.x - PHOTO_CARD_W / 2 + PHOTO_PAD}
-              y={p.y - PHOTO_CARD_H / 2 + PHOTO_PAD}
-              width={PHOTO_CARD_W - PHOTO_PAD * 2}
-              height={PHOTO_CARD_H - PHOTO_PAD * 2}
-              rx="10"
+              x={p.x - p.w / 2}
+              y={p.y - p.h / 2}
+              width={p.w}
+              height={p.h}
+              rx="8"
               fill="none"
               stroke="#241E5E"
               strokeOpacity="0.08"
