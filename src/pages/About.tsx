@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLang } from "../i18n";
-import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
+import TeamSection from "../components/TeamSection";
 
 function OfficePhoto() {
   const [failed, setFailed] = useState(false);
@@ -19,7 +19,7 @@ function OfficePhoto() {
 }
 
 export default function About() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
 
   return (
     <>
@@ -47,22 +47,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="label-caps text-ink/50">{t.about.teamKicker}</p>
-        <h2 className="mt-3 font-display text-4xl">{t.about.teamTitle}</h2>
-        <div className="mt-10 grid gap-px border hairline bg-ink/15 sm:grid-cols-2 md:grid-cols-4">
-          {TEAM.map((member) => (
-            <div key={member.name} className="bg-paper p-6">
-              <p className="font-display text-xl text-navy">{member.name}</p>
-              <p className="mt-1 text-sm text-ink/60">{member.role[lang]}</p>
-              <p className="mt-3 text-sm text-ink/50">
-                {member.city}, {member.country}
-              </p>
-              <p className="mt-1 text-sm text-ink/50">{member.phone}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <TeamSection />
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="label-caps text-ink/50">{t.about.portfolioKicker}</p>

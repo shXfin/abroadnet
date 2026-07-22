@@ -275,6 +275,9 @@ const en = {
     portfolioCopy: "Placements by year, partner institutions, notable cases. The track record in numbers and documents.",
     teamKicker: "Talk to a real consultant",
     teamTitle: "Our team, wherever you're headed",
+    teamLead: "Meet the people behind it",
+    teamSub: "A small, senior team who have made this journey themselves, backed by consultants across four countries.",
+    teamMore: "and a wider team of consultants across Malaysia, Romania, Georgia & China.",
   },
   apply: {
     kicker: "Application form",
@@ -604,6 +607,9 @@ const bn: typeof en = {
     portfolioCopy: "বছরে বছরে প্লেসমেন্ট, পার্টনার প্রতিষ্ঠান, উল্লেখযোগ্য কেস। সংখ্যায় ও ডকুমেন্টে আমাদের ট্র্যাক রেকর্ড।",
     teamKicker: "সরাসরি কথা বলুন একজন কাউন্সেলরের সাথে",
     teamTitle: "আমাদের টিম, যেখানেই যেতে চান",
+    teamLead: "যারা এর পেছনে আছেন",
+    teamSub: "ছোট কিন্তু অভিজ্ঞ একটি টিম, যারা নিজেরাই এই পথ পাড়ি দিয়েছেন, সাথে চারটি দেশে ছড়িয়ে থাকা কাউন্সেলররা।",
+    teamMore: "এবং মালয়েশিয়া, রোমানিয়া, জর্জিয়া ও চীন জুড়ে আরও কাউন্সেলরদের একটি টিম।",
   },
   apply: {
     kicker: "আবেদন ফর্ম",
