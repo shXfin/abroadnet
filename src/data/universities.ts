@@ -1,23 +1,21 @@
-// Partner universities. Confirmed placements marked; rest pending final confirmation with the consultancy.
+// Official partner list, from Abroad Net's own "Study in Malaysia" guide.
 export const MALAYSIA_UNIVERSITIES = [
-  "Mahsa Avenue International College (MAIC)", // confirmed: real student arrivals
   "Universiti Tun Abdul Razak (UNIRAZAK)", // confirmed: real visa success
-  "MAHSA University",
+  "Mahsa Avenue International College (MAIC)", // confirmed: real student arrivals
   "Asia Pacific University (APU)",
-  "Monash University Malaysia",
+  "MAHSA University",
+  "University of Cyberjaya",
+  "INTI International University",
+  "SEGi University",
+  "UCSI University",
   "Taylor's University",
   "Sunway University",
-  "UCSI University",
-  "Management & Science University (MSU)",
-  "SEGi University",
-  "INTI International University",
-  "Multimedia University (MMU)",
-  "Limkokwing University",
-  "Universiti Malaya (UM)",
-  "Universiti Putra Malaysia (UPM)",
-  "Universiti Kebangsaan Malaysia (UKM)",
-  "Universiti Teknologi Malaysia (UTM)",
-  "Universiti Sains Malaysia (USM)",
+  "ALFA University",
+  "City University Malaysia",
+  "Lincoln University College",
+  "UNIMY",
+  "Veritas University College",
+  "Reliance College",
 ];
 
 export const ROMANIA_UNIVERSITIES = [
