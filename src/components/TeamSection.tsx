@@ -2,14 +2,39 @@ import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
 
-/** Leadership focus: the CEO as a wide feature card, two lead consultants
- * beside/under him, then a note that a wider team operates globally.
- * Card language matches the rest of the site (hairline borders, parchment,
- * coral caps) rather than a generic circular-avatar team grid. */
+function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" | "bn" }) {
+  return (
+    <div className="w-56 shrink-0 rounded-2xl bg-white/[0.04] p-5 ring-1 ring-white/10">
+      <div className="aspect-square overflow-hidden rounded-xl bg-white/10">
+        {member.photo && (
+          <img
+            src={assetPath(member.photo)}
+            alt={member.name}
+            className="h-full w-full object-cover object-top"
+          />
+        )}
+      </div>
+      <p className="label-caps mt-4 text-coral">{member.role[lang]}</p>
+      <p className="mt-1 font-display text-lg">{member.name}</p>
+      {member.phone && (
+        <a
+          href={`tel:${member.phone.replace(/\s/g, "")}`}
+          className="mt-1 block text-sm text-white/50 hover:text-white"
+        >
+          {member.phone}
+        </a>
+      )}
+    </div>
+  );
+}
+
+/** Leadership focus: the CEO as a wide feature card, then the rest of the
+ * team (senior consultant included) as an infinite, self-scrolling row —
+ * no scrollbar, no buttons, just a slow continuous drift that pauses on
+ * hover so names are easy to read. */
 export default function TeamSection() {
   const { t, lang } = useLang();
   const [ceo, ...rest] = TEAM;
-  const leads = rest.filter((m) => m.photo);
 
   return (
     <section className="border-y hairline bg-navy py-20 text-white">
@@ -37,47 +62,38 @@ export default function TeamSection() {
               <span>
                 {ceo.city}, {ceo.country}
               </span>
-              <a href={`tel:${ceo.phone.replace(/\s/g, "")}`} className="hover:text-white">
-                {ceo.phone}
-              </a>
+              {ceo.phone && (
+                <a href={`tel:${ceo.phone.replace(/\s/g, "")}`} className="hover:text-white">
+                  {ceo.phone}
+                </a>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Lead consultants */}
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
-          {leads.map((member) => (
-            <div
-              key={member.name}
-              className="flex items-center gap-5 rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10"
-            >
-              <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-white/10">
-                <img
-                  src={assetPath(member.photo!)}
-                  alt={member.name}
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
-              <div>
-                <p className="label-caps text-coral">{member.role[lang]}</p>
-                <p className="mt-1.5 font-display text-xl">{member.name}</p>
-                <p className="mt-1 text-sm text-white/50">
-                  {member.city}, {member.country}
-                </p>
-                <a
-                  href={`tel:${member.phone.replace(/\s/g, "")}`}
-                  className="text-sm text-white/50 hover:text-white"
-                >
-                  {member.phone}
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* The rest of the team, drifting in an infinite, self-scrolling row */}
+        <p className="label-caps mt-10 text-white/40">{t.about.teamMore}</p>
 
-        <p className="mt-8 text-sm text-white/45">
-          <span className="text-coral">✦</span> {t.about.teamMore}
-        </p>
+        <div
+          className="relative mt-4 overflow-hidden"
+          style={{
+            WebkitMaskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)",
+            maskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)",
+          }}
+        >
+          <div className="flex w-max gap-4 animate-marquee-slow hover:[animation-play-state:paused]">
+            <div className="flex gap-4">
+              {rest.map((member) => (
+                <TeamCard key={member.name} member={member} lang={lang} />
+              ))}
+            </div>
+            <div className="flex gap-4" aria-hidden="true">
+              {rest.map((member) => (
+                <TeamCard key={`${member.name}-dup`} member={member} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

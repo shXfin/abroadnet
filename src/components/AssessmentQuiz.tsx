@@ -198,9 +198,14 @@ export default function AssessmentQuiz() {
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/book-session" className="btn-primary">
+              <a
+                href={`https://wa.me/8801634353682?text=${encodeURIComponent(t.book.whatsappMessage)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary"
+              >
                 {t.quiz.bookSession} →
-              </Link>
+              </a>
               <Link to="/apply" className="btn-ghost">
                 {t.quiz.fullApplication}
               </Link>

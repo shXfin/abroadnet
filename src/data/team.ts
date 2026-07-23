@@ -1,16 +1,15 @@
 export type TeamMember = {
   name: string;
-  city: string;
-  country: string;
-  phone: string;
+  city?: string;
+  country?: string;
+  phone?: string;
   role: { en: string; bn: string };
   photo?: string;
   bio?: { en: string; bn: string };
 };
 
-// Real consultants, confirmed from the client's own marketing materials.
-// The three with photos are the leadership focus; more consultants operate
-// globally beyond these.
+// Real team, confirmed from the client's own marketing materials.
+// Order: founder/CEO, then the senior consultant, then the rest of the team.
 export const TEAM: TeamMember[] = [
   {
     name: "SM Faiaz Alam",
@@ -25,14 +24,6 @@ export const TEAM: TeamMember[] = [
     },
   },
   {
-    name: "Shafayat Uddin",
-    city: "Chandpur",
-    country: "Bangladesh",
-    phone: "+880 163 435 3683",
-    role: { en: "Consultant", bn: "কাউন্সেলর" },
-    photo: "photos/team-shafayat.jpg",
-  },
-  {
     name: "Arman Mojumdar",
     city: "Kuala Lumpur",
     country: "Malaysia",
@@ -41,10 +32,34 @@ export const TEAM: TeamMember[] = [
     photo: "photos/team-arman.jpg",
   },
   {
+    name: "Shafayat Uddin",
+    city: "Chandpur",
+    country: "Bangladesh",
+    phone: "+880 163 435 3683",
+    role: { en: "Consultant", bn: "কাউন্সেলর" },
+    photo: "photos/team-shafayat.jpg",
+  },
+  {
     name: "Saleh Ferdous Sunny",
     city: "Kuala Lumpur",
     country: "Malaysia",
     phone: "+60 11 606 69330",
-    role: { en: "Consultant", bn: "কাউন্সেলর" },
+    role: { en: "Media Manager, Malaysia", bn: "মিডিয়া ম্যানেজার, মালয়েশিয়া" },
+    photo: "photos/team-sunny.jpg",
+  },
+  {
+    name: "Abrar Islam Arian",
+    role: { en: "Marketing Head", bn: "মার্কেটিং হেড" },
+    photo: "photos/team-arian.jpg",
+  },
+  {
+    name: "Jobayada Joa",
+    role: { en: "Education Content Presenter", bn: "এডুকেশন কনটেন্ট প্রেজেন্টার" },
+    photo: "photos/team-jobayada.jpg",
+  },
+  {
+    name: "Mehedi Hasan Supto",
+    role: { en: "Media Manager, EU", bn: "মিডিয়া ম্যানেজার, ইউরোপ" },
+    photo: "photos/team-mehedi.jpg",
   },
 ];

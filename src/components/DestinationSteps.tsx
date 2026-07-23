@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import BoardingPassCta from "./BoardingPassCta";
 import { useLang } from "../i18n";
+import { assetPath } from "../lib/assetPath";
 
 type Props = {
   country: string;
@@ -10,6 +11,7 @@ type Props = {
   steps: { title: string; description: string }[];
   partnerUniversities: string[];
   extra?: ReactNode;
+  heroImage?: string;
 };
 
 export default function DestinationSteps({
@@ -19,17 +21,27 @@ export default function DestinationSteps({
   steps,
   partnerUniversities,
   extra,
+  heroImage,
 }: Props) {
   const { t } = useLang();
 
   return (
     <>
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-20">
-        <p className="label-caps text-coral">
-          {t.destination.kicker} · <span className="font-mono">{code}</span>
-        </p>
-        <h1 className="mt-4 font-display text-6xl tracking-tight md:text-8xl">{country}</h1>
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-ink/70">{intro}</p>
+        <div className={heroImage ? "grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center" : undefined}>
+          <div>
+            <p className="label-caps text-coral">
+              {t.destination.kicker} · <span className="font-mono">{code}</span>
+            </p>
+            <h1 className="mt-4 font-display text-6xl tracking-tight md:text-8xl">{country}</h1>
+            <p className="mt-8 max-w-xl text-base leading-relaxed text-ink/70">{intro}</p>
+          </div>
+          {heroImage && (
+            <div className="overflow-hidden rounded-2xl border hairline">
+              <img src={assetPath(heroImage)} alt="" className="block h-auto w-full" />
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="border-y hairline bg-parchment/40 py-20">
@@ -68,7 +80,7 @@ export default function DestinationSteps({
         </ul>
         <p className="mt-8 text-sm text-ink/50">
           <Link
-            to="/book-session"
+            to="/#assessment"
             className="underline decoration-coral underline-offset-4 hover:text-coral"
           >
             {t.destination.unisNote}

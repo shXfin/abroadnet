@@ -323,11 +323,11 @@ export default function Hero() {
           <div className="mt-8">
             <a
               href="#assessment"
-              className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
+              className="group inline-flex items-center whitespace-nowrap rounded-full bg-navy py-1 pl-4 pr-1 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5 md:py-2 md:pl-7 md:pr-2"
             >
-              <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
-              <span className="ml-4 flex items-center gap-1.5 rounded-full bg-coral py-2.5 pl-3 pr-4 text-xs font-bold uppercase tracking-caps text-white transition-colors group-hover:bg-white group-hover:text-coral">
-                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+              <span className="text-xs font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
+              <span className="ml-2 flex items-center gap-1 rounded-full bg-coral py-1.5 pl-2 pr-2.5 text-[9px] font-bold uppercase tracking-caps text-white transition-colors group-hover:bg-white group-hover:text-coral md:ml-4 md:gap-1.5 md:py-2.5 md:pl-3 md:pr-4 md:text-xs">
+                <svg viewBox="0 0 20 20" className="h-2.5 w-2.5 shrink-0 md:h-3.5 md:w-3.5" fill="currentColor" aria-hidden="true">
                   <path d="M10 1.5l1.9 5.3 5.3 1.9-5.3 1.9L10 16l-1.9-5.4L2.8 8.7l5.3-1.9z" />
                 </svg>
                 {t.hero.ctaSecondary}

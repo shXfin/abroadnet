@@ -16,20 +16,19 @@ type Item = {
   aspect: number; // natural width / height — used to lay out without cropping
   title: string;
   destination: string;
-  outcome?: "visaApproved" | "arrived";
   highlight?: boolean; // shown in the homepage's compact preview
 };
 
 // Real moments from the consultancy's own Facebook feed, used at their
 // natural aspect ratio (never cropped).
 const ITEMS: Item[] = [
-  { photo: "photos/malaysia-arrival-imran-full.jpg", aspect: 1, title: "Imran Hossain Shanto", destination: "Malaysia", outcome: "arrived", highlight: true },
-  { photo: "photos/romania-visa-mehedi.jpg", aspect: 820 / 850, title: "Mehedi Hasan Supto", destination: "Romania", outcome: "visaApproved", highlight: true },
+  { photo: "photos/malaysia-arrival-imran-full.jpg", aspect: 1, title: "Imran Hossain Shanto", destination: "Malaysia", highlight: true },
+  { photo: "photos/romania-visa-mehedi.jpg", aspect: 820 / 850, title: "Mehedi Hasan Supto", destination: "Romania", highlight: true },
   { photo: "photos/airport-pickup.jpg", aspect: 1044 / 950, title: "Airport pickup", destination: "Malaysia", highlight: true },
-  { photo: "photos/malaysia-arrival-ruhel-full.jpg", aspect: 1, title: "Md Ruhel Miah", destination: "Malaysia", outcome: "arrived" },
-  { photo: "photos/malaysia-arrival-duo.jpg", aspect: 1536 / 2048, title: "Arrived in Kuala Lumpur", destination: "Malaysia", outcome: "arrived" },
-  { photo: "photos/malaysia-arrival-trio.jpg", aspect: 1080 / 1440, title: "Landed in Malaysia", destination: "Malaysia", outcome: "arrived" },
-  { photo: "photos/malaysia-visa-sunny.jpg", aspect: 1550 / 815, title: "Sunny Saleh", destination: "Malaysia", outcome: "visaApproved" },
+  { photo: "photos/malaysia-arrival-ruhel-full.jpg", aspect: 1, title: "Md Ruhel Miah", destination: "Malaysia" },
+  { photo: "photos/malaysia-arrival-duo.jpg", aspect: 1536 / 2048, title: "Arrived in Kuala Lumpur", destination: "Malaysia" },
+  { photo: "photos/malaysia-arrival-trio.jpg", aspect: 1080 / 1440, title: "Landed in Malaysia", destination: "Malaysia" },
+  { photo: "photos/malaysia-visa-sunny.jpg", aspect: 1550 / 815, title: "Sunny Saleh", destination: "Malaysia" },
 ];
 
 function useContainerWidth() {
@@ -47,14 +46,7 @@ function useContainerWidth() {
 }
 
 function MomentCard({ item, width, height }: { item: Item; width: number; height: number }) {
-  const { t } = useLang();
   const [failed, setFailed] = useState(false);
-  const outcomeLabel =
-    item.outcome === "visaApproved"
-      ? t.students.outcomeVisaApproved
-      : item.outcome === "arrived"
-        ? t.students.outcomeArrived
-        : null;
 
   return (
     <figure className="overflow-hidden rounded-2xl border hairline bg-paper" style={{ width }}>
@@ -74,15 +66,7 @@ function MomentCard({ item, width, height }: { item: Item; width: number; height
         />
       )}
       <figcaption className="p-3">
-        {outcomeLabel && (
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-caps text-coral">
-            <span className="h-1.5 w-1.5 rounded-full bg-coral" />
-            {outcomeLabel}
-          </span>
-        )}
-        <p className={`truncate text-sm font-semibold text-navy ${outcomeLabel ? "mt-1.5" : ""}`}>
-          {item.title}
-        </p>
+        <p className="truncate text-sm font-semibold text-navy">{item.title}</p>
         <p className="text-xs text-ink/50">{item.destination}</p>
       </figcaption>
     </figure>

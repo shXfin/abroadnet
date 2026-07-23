@@ -42,6 +42,17 @@ function MalaysiaExtras() {
             ))}
           </div>
 
+          <p className="label-caps mt-14 text-ink/50">{m.studyGapKicker}</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/60">{m.studyGapNote}</p>
+          <div className="mt-6 grid gap-px border hairline bg-ink/15 sm:grid-cols-5">
+            {m.studyGap.map((row) => (
+              <div key={row.program} className="bg-paper p-6">
+                <p className="label-caps text-ink/40">{row.program}</p>
+                <p className="mt-2 font-display text-lg text-navy">{row.gap}</p>
+              </div>
+            ))}
+          </div>
+
           <p className="label-caps mt-14 text-ink/50">{m.programsKicker}</p>
           <div className="mt-6 grid gap-8 md:grid-cols-3">
             <div>
@@ -92,6 +103,7 @@ function MalaysiaExtras() {
             <p className="mt-2 font-display text-lg">{m.livingCostValue}</p>
           </div>
         </div>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">{m.scholarshipsNote}</p>
 
         <p className="label-caps mt-14 text-ink/50">{m.intakesKicker}</p>
         <div className="mt-4 flex flex-wrap gap-3">
@@ -107,6 +119,32 @@ function MalaysiaExtras() {
 
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-ink/60">{m.partTimeNote}</p>
       </section>
+
+      <section className="border-y hairline bg-parchment/40 py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <p className="label-caps text-ink/50">{m.creditTransferKicker}</p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{m.creditTransferTitle}</h2>
+
+          <div className="mt-10 grid gap-10 md:grid-cols-2">
+            <ul className="space-y-3 text-sm text-ink/70">
+              {m.creditTransferWho.map((who) => (
+                <li key={who} className="border-b hairline pb-3">
+                  {who}
+                </li>
+              ))}
+            </ul>
+            <div className="grid grid-cols-2 gap-px border hairline bg-ink/15">
+              {m.creditTransferBenefits.map((benefit) => (
+                <div key={benefit} className="bg-paper p-5">
+                  <p className="font-display text-base text-navy">{benefit}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-ink/50">{m.creditTransferNote}</p>
+        </div>
+      </section>
     </>
   );
 }
@@ -121,6 +159,7 @@ export default function Malaysia() {
       steps={t.malaysia.steps}
       partnerUniversities={MALAYSIA_UNIVERSITIES}
       extra={<MalaysiaExtras />}
+      heroImage="photos/malaysia-mahsa-visit.jpg"
     />
   );
 }

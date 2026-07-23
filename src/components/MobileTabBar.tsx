@@ -38,7 +38,7 @@ const icons = {
 
 /** App-style bottom tab bar for mobile — the desktop header's nav is hidden
  * below lg, this replaces it with a fixed, thumb-reachable tab bar. */
-export default function MobileTabBar({ onOpenMenu }: { onOpenMenu: () => void }) {
+export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: () => void }) {
   const { t } = useLang();
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
@@ -57,13 +57,10 @@ export default function MobileTabBar({ onOpenMenu }: { onOpenMenu: () => void })
           <span className="text-[10px] font-semibold">{t.nav.home}</span>
         </NavLink>
 
-        <button
-          onClick={onOpenMenu}
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-ink/55"
-        >
+        <NavLink to="/#routes" className={tabClass}>
           <span className="h-5 w-5">{icons.destinations}</span>
           <span className="text-[10px] font-semibold">{t.nav.destinations}</span>
-        </button>
+        </NavLink>
 
         <NavLink to="/#assessment" className="flex flex-1 flex-col items-center justify-center">
           <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-[0_8px_20px_-6px_rgba(28,23,64,0.6)]">

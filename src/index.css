@@ -161,7 +161,8 @@ em {
   .kite-shake-a,
   .kite-shake-b,
   .kite-shake-c,
-  .animate-marquee {
+  .animate-marquee,
+  .animate-marquee-slow {
     animation: none;
   }
 }

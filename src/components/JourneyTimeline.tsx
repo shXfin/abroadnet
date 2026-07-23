@@ -1,14 +1,15 @@
 import { useLang } from "../i18n";
 
 /**
- * Horizontal step timeline: consult, document, fly, arrive, receive, study,
- * after-help. Scrolls horizontally on small screens, lays flat on desktop.
+ * The whole "how this works" block: one heading covers both the step-by-step
+ * timeline and the destination grid that follows it (rendered by the parent,
+ * Home.tsx), so the two never read as separate sections.
  */
 export default function JourneyTimeline() {
   const { t } = useLang();
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
+    <>
       <p className="label-caps text-ink/50">{t.why.kicker}</p>
       <h2 className="mt-3 max-w-2xl font-display text-4xl md:text-5xl">{t.why.title}</h2>
 
@@ -34,6 +35,6 @@ export default function JourneyTimeline() {
           ))}
         </div>
       </div>
-    </section>
+    </>
   );
 }

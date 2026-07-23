@@ -17,7 +17,7 @@ export default function BoardingPassCta() {
           </h2>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">{t.pass.sub}</p>
           <Link
-            to="/book-session"
+            to="/#assessment"
             className="mt-8 inline-flex items-center gap-2 bg-coral px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-navy"
           >
             {t.pass.cta} →

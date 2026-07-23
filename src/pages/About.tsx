@@ -32,6 +32,8 @@ export default function About() {
         <p className="mt-4 text-xs font-semibold uppercase tracking-caps text-coral">{t.brand.motto}</p>
       </section>
 
+      <TeamSection />
+
       <section className="border-y hairline bg-parchment/40 py-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-2">
           <div>
@@ -46,8 +48,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      <TeamSection />
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="label-caps text-ink/50">{t.about.portfolioKicker}</p>

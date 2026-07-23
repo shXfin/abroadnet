@@ -122,9 +122,6 @@ export default function Layout() {
             >
               {t.nav.about}
             </NavLink>
-            <Link to="/book-session" className="label-caps text-ink/70 hover:text-ink">
-              {t.nav.freeSession}
-            </Link>
             <LangToggle />
             <Link to="/#assessment" className="btn-primary !px-5 !py-2.5">
               {t.nav.getMatched}
@@ -148,7 +145,6 @@ export default function Layout() {
                 ...destinations,
                 { to: "/success-stories", label: t.nav.students },
                 { to: "/about", label: t.nav.about },
-                { to: "/book-session", label: t.nav.freeSession },
                 { to: "/#assessment", label: t.nav.getMatched },
               ].map((link) => (
                 <Link

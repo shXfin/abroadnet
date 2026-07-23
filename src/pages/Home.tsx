@@ -5,10 +5,16 @@ import Ticker from "../components/Ticker";
 import BoardingPassCta from "../components/BoardingPassCta";
 import FacebookCarousel from "../components/FacebookCarousel";
 import JourneyTimeline from "../components/JourneyTimeline";
+import { TEAM } from "../data/team";
+import { MALAYSIA_UNIVERSITIES } from "../data/universities";
+import { assetPath } from "../lib/assetPath";
 import { useLang } from "../i18n";
+
+const TEAM_FACES = TEAM.filter((m) => m.photo).slice(0, 4);
 
 export default function Home() {
   const { t } = useLang();
+  const bachelorTuition = t.malaysia.tuition.find((row) => row.program === t.malaysia.bachelorLabel.split(" (")[0]);
 
   return (
     <>
@@ -31,36 +37,117 @@ export default function Home() {
       {/* Facebook carousel, right beneath the hero */}
       <FacebookCarousel />
 
-      <JourneyTimeline />
+      {/* The journey and where it leads, unified in one block */}
+      <section id="routes" className="border-y hairline bg-parchment/30 py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <JourneyTimeline />
 
-      {/* Destinations */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="label-caps text-ink/50">{t.routes.kicker}</p>
-        <h2 className="mt-3 font-display text-4xl md:text-6xl">{t.routes.title}</h2>
-
-        <div className="mt-12 grid gap-px border hairline bg-ink/15 md:grid-cols-2">
-          {[
-            { to: "/destinations/malaysia", code: "KUL", name: t.nav.malaysia, tag: t.routes.malaysiaTag },
-            { to: "/destinations/romania", code: "OTP", name: t.nav.romania, tag: t.routes.romaniaTag },
-            { to: "/destinations/georgia", code: "TBS", name: t.nav.georgia, tag: t.routes.georgiaTag },
-            { to: "/destinations/china", code: "PEK", name: t.nav.china, tag: t.routes.chinaTag },
-          ].map((route) => (
+          <div className="mt-10 grid gap-px border hairline bg-ink/15">
+            {/* Malaysia leads: the most-traveled route, given the room to show it */}
             <Link
-              key={route.code}
-              to={route.to}
-              className="group flex flex-col justify-between bg-paper p-8 transition-colors hover:bg-navy hover:text-white md:min-h-[260px] md:p-10"
+              to="/destinations/malaysia"
+              className="group relative flex flex-col overflow-hidden bg-navy p-8 text-white md:p-12"
             >
-              <span className="font-mono text-sm tracking-widest text-coral">{route.code}</span>
-              <div>
-                <h3 className="font-display text-4xl md:text-5xl">{route.name}</h3>
-                <p className="mt-4 max-w-sm text-sm leading-relaxed opacity-60">{route.tag}</p>
-                <p className="label-caps mt-8 flex items-center gap-2 text-coral">
-                  {t.routes.explore}
-                  <span className="transition-transform group-hover:translate-x-2">→</span>
-                </p>
+              <img
+                src={assetPath("photos/malaysia-mahsa-visit.jpg")}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover object-[78%_78%] opacity-95"
+              />
+              <div
+                className="absolute inset-0 transition-[background] group-hover:[background:linear-gradient(to_right,rgba(28,23,64,0.95)_0%,rgba(28,23,64,0.88)_26%,rgba(28,23,64,0.4)_40%,rgba(28,23,64,0.3)_60%,rgba(28,23,64,0.3)_100%)]"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(36,30,94,0.95) 0%, rgba(36,30,94,0.88) 26%, rgba(36,30,94,0.4) 40%, rgba(36,30,94,0.3) 60%, rgba(36,30,94,0.3) 100%)",
+                }}
+              />
+
+              <div className="relative flex items-center justify-between">
+                <span className="font-mono text-sm tracking-widest text-coral">KUL</span>
+                <span className="label-caps text-white/40">{t.routes.leadTag}</span>
+              </div>
+
+              <div className="relative mt-6 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-end">
+                <div>
+                  <h3 className="font-display text-5xl md:text-7xl">{t.nav.malaysia}</h3>
+                  <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 md:text-base">
+                    {t.routes.malaysiaTag}
+                  </p>
+                  <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-white/50">
+                    <span>{MALAYSIA_UNIVERSITIES.length} {t.routes.partnerUnis}</span>
+                    <p className="label-caps flex items-center gap-2 text-coral">
+                      {t.routes.explore}
+                      <span className="transition-transform group-hover:translate-x-2">→</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
+                  {bachelorTuition && (
+                    <div>
+                      <p className="label-caps text-white/40">{t.malaysia.bachelorLabel.split(" (")[0]}</p>
+                      <p className="mt-2 font-display text-lg leading-tight">{bachelorTuition.value}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="label-caps text-white/40">{t.malaysia.livingCostLabel}</p>
+                    <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.livingCostValue}</p>
+                  </div>
+                  <div>
+                    <p className="label-caps text-white/40">{t.malaysia.intakesKicker}</p>
+                    <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.intakes.length}×/{t.routes.perYear}</p>
+                  </div>
+                </div>
               </div>
             </Link>
-          ))}
+
+            <div className="grid gap-px bg-ink/15 sm:grid-cols-3">
+              {[
+                { to: "/destinations/romania", code: "OTP", name: t.nav.romania, tag: t.routes.romaniaTag },
+                { to: "/destinations/georgia", code: "TBS", name: t.nav.georgia, tag: t.routes.georgiaTag },
+                { to: "/destinations/china", code: "PEK", name: t.nav.china, tag: t.routes.chinaTag },
+              ].map((route) => (
+                <Link
+                  key={route.code}
+                  to={route.to}
+                  className="group flex flex-col justify-between bg-paper p-6 transition-colors hover:bg-navy hover:text-white sm:min-h-[220px]"
+                >
+                  <span className="font-mono text-sm tracking-widest text-coral">{route.code}</span>
+                  <div>
+                    <h3 className="font-display text-3xl md:text-4xl">{route.name}</h3>
+                    <p className="mt-3 text-sm leading-relaxed opacity-60">{route.tag}</p>
+                    <p className="label-caps mt-6 flex items-center gap-2 text-coral">
+                      {t.routes.explore}
+                      <span className="transition-transform group-hover:translate-x-2">→</span>
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* The "one counselor" promise, backed by real faces */}
+          <Link
+            to="/about"
+            className="mt-10 flex items-center gap-4 border-t hairline pt-8 transition-opacity hover:opacity-70"
+          >
+            <div className="flex -space-x-3">
+              {TEAM_FACES.map((m) => (
+                <img
+                  key={m.name}
+                  src={assetPath(m.photo!)}
+                  alt={m.name}
+                  className="h-10 w-10 rounded-full border-2 border-paper object-cover"
+                />
+              ))}
+            </div>
+            <p className="text-sm text-ink/60">
+              {t.why.teamNote}{" "}
+              <span className="font-semibold text-navy underline decoration-coral underline-offset-4">
+                {t.why.teamCta}
+              </span>
+            </p>
+          </Link>
         </div>
       </section>
 
