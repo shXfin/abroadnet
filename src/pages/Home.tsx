@@ -46,56 +46,69 @@ export default function Home() {
             {/* Malaysia leads: the most-traveled route, given the room to show it */}
             <Link
               to="/destinations/malaysia"
-              className="group relative flex flex-col overflow-hidden bg-navy p-8 text-white md:p-12"
+              className="group relative flex flex-col overflow-hidden bg-navy text-white"
             >
+              {/* Mobile: the photo sits as its own banner, text stays on solid navy below */}
+              <div className="aspect-[2048/1163] md:hidden">
+                <img
+                  src={assetPath("photos/malaysia-mahsa-visit.jpg")}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              {/* Desktop: full-bleed background photo behind the text, with a gradient for contrast */}
               <img
                 src={assetPath("photos/malaysia-mahsa-visit.jpg")}
                 alt=""
                 aria-hidden="true"
-                className="absolute inset-0 h-full w-full object-cover object-[78%_78%] opacity-95"
+                className="absolute inset-0 hidden h-full w-full object-cover object-[78%_78%] opacity-95 md:block"
               />
               <div
-                className="absolute inset-0 transition-[background] group-hover:[background:linear-gradient(to_right,rgba(28,23,64,0.95)_0%,rgba(28,23,64,0.88)_26%,rgba(28,23,64,0.4)_40%,rgba(28,23,64,0.3)_60%,rgba(28,23,64,0.3)_100%)]"
+                className="absolute inset-0 hidden transition-[background] md:block group-hover:[background:linear-gradient(to_right,rgba(28,23,64,0.95)_0%,rgba(28,23,64,0.88)_26%,rgba(28,23,64,0.4)_40%,rgba(28,23,64,0.3)_60%,rgba(28,23,64,0.3)_100%)]"
                 style={{
                   background:
                     "linear-gradient(to right, rgba(36,30,94,0.95) 0%, rgba(36,30,94,0.88) 26%, rgba(36,30,94,0.4) 40%, rgba(36,30,94,0.3) 60%, rgba(36,30,94,0.3) 100%)",
                 }}
               />
 
-              <div className="relative flex items-center justify-between">
-                <span className="font-mono text-sm tracking-widest text-coral">KUL</span>
-                <span className="label-caps text-white/40">{t.routes.leadTag}</span>
-              </div>
-
-              <div className="relative mt-6 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-end">
-                <div>
-                  <h3 className="font-display text-5xl md:text-7xl">{t.nav.malaysia}</h3>
-                  <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 md:text-base">
-                    {t.routes.malaysiaTag}
-                  </p>
-                  <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-white/50">
-                    <span>{MALAYSIA_UNIVERSITIES.length} {t.routes.partnerUnis}</span>
-                    <p className="label-caps flex items-center gap-2 text-coral">
-                      {t.routes.explore}
-                      <span className="transition-transform group-hover:translate-x-2">→</span>
-                    </p>
-                  </div>
+              <div className="relative p-8 md:p-12">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-sm tracking-widest text-coral">KUL</span>
+                  <span className="label-caps text-white/40">{t.routes.leadTag}</span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
-                  {bachelorTuition && (
-                    <div>
-                      <p className="label-caps text-white/40">{t.malaysia.bachelorLabel.split(" (")[0]}</p>
-                      <p className="mt-2 font-display text-lg leading-tight">{bachelorTuition.value}</p>
+                <div className="mt-6 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-end">
+                  <div>
+                    <h3 className="font-display text-5xl md:text-7xl">{t.nav.malaysia}</h3>
+                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 md:text-base">
+                      {t.routes.malaysiaTag}
+                    </p>
+                    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-white/50">
+                      <span>{MALAYSIA_UNIVERSITIES.length} {t.routes.partnerUnis}</span>
+                      <p className="label-caps flex items-center gap-2 text-coral">
+                        {t.routes.explore}
+                        <span className="transition-transform group-hover:translate-x-2">→</span>
+                      </p>
                     </div>
-                  )}
-                  <div>
-                    <p className="label-caps text-white/40">{t.malaysia.livingCostLabel}</p>
-                    <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.livingCostValue}</p>
                   </div>
-                  <div>
-                    <p className="label-caps text-white/40">{t.malaysia.intakesKicker}</p>
-                    <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.intakes.length}×/{t.routes.perYear}</p>
+
+                  <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
+                    {bachelorTuition && (
+                      <div>
+                        <p className="label-caps text-white/40">{t.malaysia.bachelorLabel.split(" (")[0]}</p>
+                        <p className="mt-2 font-display text-lg leading-tight">{bachelorTuition.value}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="label-caps text-white/40">{t.malaysia.livingCostLabel}</p>
+                      <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.livingCostValue}</p>
+                    </div>
+                    <div>
+                      <p className="label-caps text-white/40">{t.malaysia.intakesKicker}</p>
+                      <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.intakes.length}×/{t.routes.perYear}</p>
+                    </div>
                   </div>
                 </div>
               </div>

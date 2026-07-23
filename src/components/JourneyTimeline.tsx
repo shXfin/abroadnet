@@ -13,7 +13,7 @@ export default function JourneyTimeline() {
       <p className="label-caps text-ink/50">{t.why.kicker}</p>
       <h2 className="mt-3 max-w-2xl font-display text-4xl md:text-5xl">{t.why.title}</h2>
 
-      <div className="relative mt-14 overflow-x-auto pb-4">
+      <div className="scrollbar-hide relative mt-14 overflow-x-auto pb-4">
         <div className="flex min-w-[900px] gap-0 md:min-w-0">
           {t.why.steps.map((step, i) => (
             <div key={step.label} className="relative flex-1 px-3 first:pl-0 last:pr-0">

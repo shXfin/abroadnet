@@ -40,6 +40,16 @@ em {
   font-size: 13px;
 }
 
+/* Swipeable rows that scroll without showing the native scrollbar. */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 ::selection {
   @apply bg-coral text-white;
 }

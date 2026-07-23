@@ -60,7 +60,6 @@ const en = {
     kicker: "Live from our Facebook page",
     title: "See the journeys as they happen.",
     sub: "Visa approvals, campus arrivals, student stories. Follow along in real time.",
-    follow: "Follow @abroadnet25",
   },
   routes: {
     leadTag: "Most traveled",
@@ -464,7 +463,6 @@ const bn: typeof en = {
     kicker: "আমাদের ফেসবুক পেজ থেকে সরাসরি",
     title: "যাত্রাগুলো দেখুন, যেমনটা ঘটছে।",
     sub: "ভিসা অ্যাপ্রুভাল, ক্যাম্পাসে পৌঁছানো, শিক্ষার্থীদের গল্প। সবকিছু রিয়েল টাইমে।",
-    follow: "@abroadnet25 ফলো করুন",
   },
   routes: {
     leadTag: "সবচেয়ে বেশি যাত্রা করা",

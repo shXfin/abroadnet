@@ -158,35 +158,59 @@ export default function StudentStoriesGrid({ full = false }: { full?: boolean })
         </div>
       </figure>
 
-      <div className="mt-8">
-        <JustifiedWall items={items} targetHeight={full ? 230 : 300} />
-      </div>
-
       {full ? (
-        /* Many more → Facebook (students page only) */
-        <div className="mt-4 flex flex-col items-start justify-between gap-6 rounded-2xl border-2 border-coral/30 bg-coral/5 p-8 md:flex-row md:items-center md:p-10">
-          <div>
-            <h3 className="font-display text-2xl md:text-3xl">{t.students.moreTitle}</h3>
-            <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.students.moreSub}</p>
+        <>
+          <div className="mt-8">
+            <JustifiedWall items={items} targetHeight={230} />
           </div>
-          <a href={FB_URL} target="_blank" rel="noreferrer" className="btn-primary shrink-0">
-            {t.students.moreCta} →
-          </a>
-        </div>
-      ) : (
-        /* See more → students page (homepage only), with a peek of what's there */
-        <div className="mt-4 rounded-2xl border-2 border-navy/15 bg-navy/[0.03] p-8 md:p-10">
-          <PeekStrip items={peekItems} />
-          <div className="mt-6 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          {/* Many more → Facebook */}
+          <div className="mt-4 flex flex-col items-start justify-between gap-6 rounded-2xl border-2 border-coral/30 bg-coral/5 p-8 md:flex-row md:items-center md:p-10">
             <div>
-              <h3 className="font-display text-2xl md:text-3xl">{t.students.seeMoreTitle}</h3>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.students.seeMoreSub}</p>
+              <h3 className="font-display text-2xl md:text-3xl">{t.students.moreTitle}</h3>
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.students.moreSub}</p>
             </div>
-            <Link to="/success-stories" className="btn-primary shrink-0">
-              {t.students.seeMore} →
-            </Link>
+            <a href={FB_URL} target="_blank" rel="noreferrer" className="btn-primary shrink-0">
+              {t.students.moreCta} →
+            </a>
           </div>
-        </div>
+        </>
+      ) : (
+        <>
+          {/* Desktop teaser: the full wall, then a separate see-more card */}
+          <div className="hidden md:block">
+            <div className="mt-8">
+              <JustifiedWall items={items} targetHeight={300} />
+            </div>
+            <div className="mt-4 rounded-2xl border-2 border-navy/15 bg-navy/[0.03] p-8 md:p-10">
+              <PeekStrip items={peekItems} />
+              <div className="mt-6 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+                <div>
+                  <h3 className="font-display text-2xl md:text-3xl">{t.students.seeMoreTitle}</h3>
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.students.seeMoreSub}</p>
+                </div>
+                <Link to="/success-stories" className="btn-primary shrink-0">
+                  {t.students.seeMore} →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile: one compact tappable card instead of a long scroll */}
+          <Link
+            to="/success-stories"
+            className="mt-6 flex flex-col gap-4 rounded-2xl border-2 border-navy/15 bg-navy/[0.03] p-6 transition-colors active:bg-navy/[0.06] md:hidden"
+          >
+            <PeekStrip items={ITEMS.slice(0, 4)} />
+            <div>
+              <h3 className="font-display text-xl">{t.students.seeMoreTitle}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{t.students.seeMoreSub}</p>
+              <span className="label-caps mt-4 flex items-center gap-2 text-coral">
+                {t.students.seeMore}
+                <span>→</span>
+              </span>
+            </div>
+          </Link>
+        </>
       )}
     </div>
   );

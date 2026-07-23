@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useLang } from "../i18n";
 
 const icons = {
@@ -42,9 +42,13 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
   const { t } = useLang();
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
-    `flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors ${
+    `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
       isActive ? "text-coral" : "text-ink/55"
     }`;
+  // Plain (never "active") style for tabs that jump to an in-page anchor
+  // rather than a distinct route — e.g. Destinations, which otherwise shares
+  // "/" with Home and would falsely light up as the current page.
+  const anchorTabClass = "flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 text-ink/55 transition-colors";
 
   return (
     <nav
@@ -53,30 +57,30 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
     >
       <div className="mx-auto flex max-w-6xl items-end px-2">
         <NavLink to="/" end className={tabClass}>
-          <span className="h-5 w-5">{icons.home}</span>
-          <span className="text-[10px] font-semibold">{t.nav.home}</span>
+          <span className="h-6 w-6">{icons.home}</span>
+          <span className="text-xs font-semibold">{t.nav.home}</span>
         </NavLink>
 
-        <NavLink to="/#routes" className={tabClass}>
-          <span className="h-5 w-5">{icons.destinations}</span>
-          <span className="text-[10px] font-semibold">{t.nav.destinations}</span>
-        </NavLink>
+        <Link to="/#routes" className={anchorTabClass}>
+          <span className="h-6 w-6">{icons.destinations}</span>
+          <span className="text-xs font-semibold">{t.nav.destinations}</span>
+        </Link>
 
-        <NavLink to="/#assessment" className="flex flex-1 flex-col items-center justify-center">
-          <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-[0_8px_20px_-6px_rgba(28,23,64,0.6)]">
-            <span className="h-5 w-5 text-coral">{icons.spark}</span>
+        <NavLink to="/#assessment" className="flex flex-1 flex-col items-center justify-center pb-2">
+          <span className="-mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white shadow-[0_8px_20px_-6px_rgba(28,23,64,0.6)]">
+            <span className="h-6 w-6 text-coral">{icons.spark}</span>
           </span>
-          <span className="mt-1 text-[10px] font-semibold text-navy">{t.nav.getMatched}</span>
+          <span className="mt-1.5 whitespace-nowrap text-[11px] font-semibold text-navy">{t.nav.getMatched}</span>
         </NavLink>
 
         <NavLink to="/success-stories" className={tabClass}>
-          <span className="h-5 w-5">{icons.students}</span>
-          <span className="text-[10px] font-semibold">{t.nav.students}</span>
+          <span className="h-6 w-6">{icons.students}</span>
+          <span className="text-xs font-semibold">{t.nav.students}</span>
         </NavLink>
 
         <NavLink to="/about" className={tabClass}>
-          <span className="h-5 w-5">{icons.about}</span>
-          <span className="text-[10px] font-semibold">{t.nav.about}</span>
+          <span className="h-6 w-6">{icons.about}</span>
+          <span className="text-xs font-semibold">{t.nav.about}</span>
         </NavLink>
       </div>
     </nav>
