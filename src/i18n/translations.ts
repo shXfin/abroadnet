@@ -5,6 +5,7 @@ const en = {
     motto: "Dream, Faith, Success",
   },
   nav: {
+    home: "Home",
     destinations: "Destinations",
     malaysia: "Malaysia",
     romania: "Romania",
@@ -104,9 +105,10 @@ const en = {
     destinations: "Destinations",
     copyright: "Abroad Net · Educational Consultancy.",
     facebook: "Facebook · @abroadnet25",
+    youtube: "YouTube · @abroadnet25",
     contactKicker: "Reach us",
     email: "info@abroadnet.com.bd",
-    phone: "+880 1634-353683",
+    phone: "+880 1634-353682",
     address: "510, Majid Villa, GT Road (North), Chairman Ghat, Chandpur",
   },
   malaysia: {
@@ -344,6 +346,7 @@ const bn: typeof en = {
     motto: "Dream, Faith, Success",
   },
   nav: {
+    home: "হোম",
     destinations: "গন্তব্য",
     malaysia: "মালয়েশিয়া",
     romania: "রোমানিয়া",
@@ -443,9 +446,10 @@ const bn: typeof en = {
     destinations: "গন্তব্য",
     copyright: "অ্যাব্রোড নেট · এডুকেশনাল কনসালটেন্সি।",
     facebook: "ফেসবুক · @abroadnet25",
+    youtube: "ইউটিউব · @abroadnet25",
     contactKicker: "যোগাযোগ",
     email: "info@abroadnet.com.bd",
-    phone: "+৮৮০ ১৬৩৪-৩৫৩৬৮৩",
+    phone: "+৮৮০ ১৬৩৪-৩৫৩৬৮২",
     address: "৫১০, মজিদ ভিলা, জিটি রোড (উত্তর), চেয়ারম্যান ঘাট, চাঁদপুর",
   },
   malaysia: {

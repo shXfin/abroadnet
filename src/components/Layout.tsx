@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Logo from "./Logo";
+import MobileTabBar from "./MobileTabBar";
 import { useLang } from "../i18n";
 
 function ScrollToTop() {
@@ -82,6 +83,9 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
 export default function Layout() {
   const { t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => setMenuOpen(false), [pathname]);
 
   const destinations = [
     { to: "/destinations/malaysia", label: t.nav.malaysia },
@@ -129,9 +133,11 @@ export default function Layout() {
 
           <div className="flex items-center gap-5 lg:hidden">
             <LangToggle />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-              <span className="label-caps">{menuOpen ? t.nav.close : t.nav.menu}</span>
-            </button>
+            {menuOpen && (
+              <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="label-caps text-ink/70">
+                {t.nav.close}
+              </button>
+            )}
           </div>
         </div>
 
@@ -159,9 +165,11 @@ export default function Layout() {
         )}
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 pb-20 lg:pb-0">
         <Outlet />
       </main>
+
+      <MobileTabBar onOpenMenu={() => setMenuOpen((o) => !o)} />
 
       <footer className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-6 py-16">
@@ -193,14 +201,24 @@ export default function Layout() {
             <p>
               &copy; {new Date().getFullYear()} {t.footer.copyright}
             </p>
-            <a
-              href="https://www.facebook.com/abroadnet25/"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-white"
-            >
-              {t.footer.facebook}
-            </a>
+            <div className="flex gap-6">
+              <a
+                href="https://www.facebook.com/abroadnet25/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                {t.footer.facebook}
+              </a>
+              <a
+                href="https://youtube.com/@abroadnet25?si=yx5pG-arx0Irc1gV"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                {t.footer.youtube}
+              </a>
+            </div>
           </div>
         </div>
       </footer>

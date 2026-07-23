@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import AssessmentQuiz from "./AssessmentQuiz";
 import { useLang } from "../i18n";
@@ -161,14 +160,14 @@ function FlightRoutes() {
         <circle cx="230" cy="66" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" />
         <circle cx="230" cy="66" r="8" fill="#F0633B" />
         <circle cx="230" cy="66" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="174" y="42" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="184" y="49" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
-        <rect x="184" y="54.5" width="20" height="2.8" fill="#CC0000" />
-        <rect x="192" y="49" width="2.8" height="14" fill="#CC0000" />
-        <text x="210" y="61" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
-        <text x="234" y="61" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
-        <text x="283" y="61" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="255" y1="56" x2="238" y2="66" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
+        <rect x="174" y="10" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
+        <rect x="184" y="17" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
+        <rect x="184" y="22.5" width="20" height="2.8" fill="#CC0000" />
+        <rect x="192" y="17" width="2.8" height="14" fill="#CC0000" />
+        <text x="210" y="29" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
+        <text x="234" y="29" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
+        <text x="283" y="29" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
+        <line x1="245" y1="38" x2="234" y2="58" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
 
         {/* Romania OTP (380,42) — card right, above */}
         <circle cx="380" cy="42" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.7s" }} />
@@ -321,13 +320,19 @@ export default function Hero() {
           </span>
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-ink/70 md:text-lg">{t.hero.sub}</p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#assessment" className="btn-primary">
-              {t.hero.ctaPrimary} →
+          <div className="mt-8">
+            <a
+              href="#assessment"
+              className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
+            >
+              <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
+              <span className="ml-4 flex items-center gap-1.5 rounded-full bg-coral py-2.5 pl-3 pr-4 text-xs font-bold uppercase tracking-caps text-white transition-colors group-hover:bg-white group-hover:text-coral">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+                  <path d="M10 1.5l1.9 5.3 5.3 1.9-5.3 1.9L10 16l-1.9-5.4L2.8 8.7l5.3-1.9z" />
+                </svg>
+                {t.hero.ctaSecondary}
+              </span>
             </a>
-            <Link to="/book-session" className="btn-ghost">
-              {t.hero.ctaSecondary}
-            </Link>
           </div>
         </div>
 
