@@ -506,8 +506,6 @@ const en = {
   quiz: {
     kicker: "Free assessment",
     title: "Find your match",
-    teaserSub: "9 quick questions about your goals and budget. A real counselor follows up personally with your matches.",
-    teaserCta: "Begin the assessment",
     back: "Back",
     continue: "Continue",
     seeMyMatches: "Show my matches",
@@ -1033,8 +1031,6 @@ const bn: typeof en = {
   quiz: {
     kicker: "ফ্রি অ্যাসেসমেন্ট",
     title: "আপনার ম্যাচ খুঁজে নিন",
-    teaserSub: "আপনার লক্ষ্য ও বাজেট নিয়ে ৯টি সংক্ষিপ্ত প্রশ্ন। একজন সত্যিকারের কাউন্সেলর আপনার ম্যাচ নিয়ে সরাসরি যোগাযোগ করবেন।",
-    teaserCta: "অ্যাসেসমেন্ট শুরু করুন",
     back: "পেছনে",
     continue: "এগিয়ে যান",
     seeMyMatches: "আমার ম্যাচ দেখাও",

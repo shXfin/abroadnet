@@ -1,8 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLayoutEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import AssessmentQuiz from "./AssessmentQuiz";
-import QuizVisual from "./quiz/QuizVisual";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 import { MALAYSIA_UNIVERSITIES, ROMANIA_UNIVERSITIES, GEORGIA_UNIVERSITIES, CHINA_UNIVERSITIES } from "../data/universities";
@@ -436,43 +435,9 @@ function FlightRoutes() {
   );
 }
 
-/** Compact teaser shown in place of the full quiz until the visitor actually
- * intends to start — so the hero's CTA does something (reveals the quiz)
- * instead of just auto-scrolling to a form that's already fully on screen. */
-function AssessmentTeaser({ onStart }: { onStart: () => void }) {
-  const { t } = useLang();
-  return (
-    <div className="grid gap-6 md:grid-cols-[280px_1fr]">
-      <QuizVisual />
-      <div className="flex flex-col justify-center rounded-2xl border hairline bg-paper p-6 md:p-8">
-        <p className="label-caps text-coral">{t.quiz.kicker}</p>
-        <h2 className="mt-3 font-display text-3xl md:text-4xl">{t.quiz.title}</h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-ink/60">{t.quiz.teaserSub}</p>
-        <button onClick={onStart} className="btn-primary mt-6 w-fit">
-          {t.quiz.teaserCta} →
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function Hero() {
   const { t, lang } = useLang();
-  const location = useLocation();
-  const [started, setStarted] = useState(false);
-  const assessmentRef = useRef<HTMLDivElement>(null);
   const lastIndex = t.hero.titleLines.length - 1;
-
-  // Any link to "/#assessment" (nav, footer, other pages) should reveal the
-  // real quiz, not just scroll to a teaser card.
-  useEffect(() => {
-    if (location.hash === "#assessment") setStarted(true);
-  }, [location.hash]);
-
-  function revealAssessment() {
-    setStarted(true);
-    requestAnimationFrame(() => assessmentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
-  }
 
   // Hat offsets tuned per script so it clips onto the letter tops like the logo.
   const hatClass =
@@ -522,8 +487,8 @@ export default function Hero() {
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-ink/70 md:text-lg">{t.hero.sub}</p>
           <div className="mt-8">
-            <button
-              onClick={revealAssessment}
+            <a
+              href="#assessment"
               className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
             >
               <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
@@ -533,19 +498,16 @@ export default function Hero() {
                 </svg>
                 {t.hero.ctaSecondary}
               </span>
-            </button>
+            </a>
           </div>
         </div>
 
         <FlightRoutes />
       </div>
 
-      {/* The assessment, part of the same hero block, not a separate section.
-          A teaser sits here until the visitor actually starts it, so the CTA
-          above reveals something instead of just scrolling to a form that's
-          already fully rendered. */}
-      <div id="assessment" ref={assessmentRef} className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2 scroll-mt-6">
-        {started ? <AssessmentQuiz /> : <AssessmentTeaser onStart={revealAssessment} />}
+      {/* The assessment, part of the same hero block, not a separate section */}
+      <div id="assessment" className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2">
+        <AssessmentQuiz />
       </div>
     </section>
   );
