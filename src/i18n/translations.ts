@@ -102,6 +102,37 @@ const en = {
     duration: "Duration",
     durationValue: "60 min · Free",
   },
+  homeFaq: {
+    kicker: "Questions, answered",
+    title: "Before you ask, here's what most students want to know.",
+    generalTab: "General",
+    items: [
+      {
+        q: "How does the free assessment work?",
+        a: "Answer nine quick questions about your goals, budget, and target country. We match you with the right universities, then a real counselor follows up for your free 1-to-1 session.",
+      },
+      {
+        q: "Is the 1-to-1 session actually free?",
+        a: "Yes, completely. There's no charge to sit down with a counselor and map out your options, whether or not you decide to move forward with us afterward.",
+      },
+      {
+        q: "Which countries do you work with?",
+        a: "Malaysia, Romania, and Georgia are fully established routes with partner universities. China is an emerging destination we're actively building routes into.",
+      },
+      {
+        q: "I don't know which country is right for me. Can you still help?",
+        a: "That's exactly what the free assessment and 1-to-1 session are for. Most students start out unsure, and we help you compare options against your budget, grades, and goals.",
+      },
+      {
+        q: "Do you help with the visa application itself?",
+        a: "Yes. We handle documents, university applications, visa filing, and pre-departure prep, and stay reachable after you've arrived.",
+      },
+      {
+        q: "How is Abroad Net different from other consultancies?",
+        a: "Our counselors have walked these routes themselves, not just processed paperwork for them. You get real people, real placements, and support that continues after you land.",
+      },
+    ],
+  },
   footer: {
     tagline: "From selecting the right course to your first day at the university, we help in every step of the journey.",
     destinations: "Destinations",
@@ -159,6 +190,14 @@ const en = {
         description: "Classes begin. We stay reachable for whatever comes up.",
       },
     ],
+    whoCanApplyKicker: "Who can apply",
+    whoCanApply: [
+      { from: "After SSC", to: "Foundation or Diploma programme" },
+      { from: "After HSC", to: "Bachelor's degree" },
+      { from: "After Diploma", to: "Bachelor's degree, via credit transfer" },
+      { from: "After Bachelor's", to: "Master's degree" },
+      { from: "After Master's", to: "PhD" },
+    ],
     eligibilityKicker: "Eligibility by program",
     eligibilityHeaders: { program: "Program", academic: "Academic requirement", english: "English requirement" },
     eligibility: [
@@ -173,6 +212,9 @@ const en = {
       { label: "Recommended English level", value: "CEFR B2" },
       { label: "Bank balance needed", value: "BDT 10 Lakh, held 3 to 6 months" },
     ],
+    englishTestsKicker: "Accepted English tests",
+    englishTests: ["IELTS", "TOEFL", "PTE Academic", "Cambridge Linguaskill", "MUET", "MOI"],
+    englishTestsNote: "Medium of Instruction (MOI) is accepted by selected universities. Minimum score requirements vary by university and programme.",
     studyGapKicker: "Study gap policy",
     studyGapNote: "Malaysia is generally flexible about study gaps, provided you can meet the university's admission requirements.",
     studyGap: [
@@ -189,6 +231,41 @@ const en = {
     diplomaList: ["Business", "Information Technology", "Accounting", "Hospitality", "Tourism", "Media Studies", "Engineering"],
     bachelorLabel: "Bachelor's (3 to 4 years)",
     bachelorList: ["Computer Science", "Business Administration", "Software Engineering", "Artificial Intelligence", "Cyber Security", "Accounting & Finance", "Marketing", "Hospitality Management", "Tourism Management", "Law", "Nursing", "Pharmacy", "Biomedical Science", "MBBS"],
+    documentsKicker: "Required documents",
+    documents: [
+      {
+        label: "Foundation & Diploma",
+        list: ["Valid passport", "SSC certificate", "SSC transcript", "White background photo", "English proficiency certificate (Diploma applicants only, where required)"],
+      },
+      {
+        label: "Bachelor's degree",
+        list: ["Passport", "SSC certificate & transcript", "HSC certificate & transcript", "White background photo", "English proficiency certificate"],
+      },
+      {
+        label: "Master's degree",
+        list: ["Passport", "SSC, HSC & Bachelor's certificates", "SSC, HSC & Bachelor's transcripts", "White background photo", "English proficiency certificate", "Updated CV", "Work experience letter (if required)"],
+      },
+      {
+        label: "PhD",
+        list: ["Passport", "SSC, HSC, Bachelor's & Master's certificates", "All academic transcripts", "White background photo", "English proficiency certificate", "Updated CV", "Work experience letter (if required)", "Research proposal (required by many universities)"],
+      },
+    ],
+    embassyKicker: "Embassy interview documents",
+    embassyIntro: "Prepare the following documents for your Malaysia student visa interview:",
+    embassyDocuments: [
+      "Passport",
+      "Academic certificates & transcripts",
+      "English proficiency certificate",
+      "University offer letter",
+      "EMGS approval letter",
+      "eVAL",
+      "Embassy interview appointment letter",
+      "Bank statement",
+      "Bank solvency certificate",
+      "Proof of source of funds",
+      "Family photograph",
+    ],
+    financialProofNote: "Recommended: maintain a minimum bank balance of BDT 10 Lakh for at least 3 to 6 months, subject to embassy requirements.",
     costKicker: "Tuition & living, in real numbers",
     tuition: [
       { program: "Foundation", value: "৳4.2 to 7.0 Lakh / year" },
@@ -201,7 +278,11 @@ const en = {
     scholarshipsNote: "Merit scholarships, university scholarships, and seasonal tuition discounts are available for eligible students, including exclusive offers arranged through Abroad Net.",
     intakesKicker: "Intakes",
     intakes: ["January", "March", "May", "July", "September", "October"],
-    partTimeNote: "Enrolled students can work up to 20 hours a week during semester breaks, with prior approval from Malaysian Immigration.",
+    partTimeNote: "Enrolled students can work up to 20 hours a week during semester breaks or holidays lasting more than 7 consecutive days, with prior approval from the Department of Immigration Malaysia. Applications must be submitted through your university or college.",
+    partTimeApprovedKicker: "Approved sectors",
+    partTimeApproved: ["Restaurants & cafés", "Petrol stations", "Mini markets", "Hotels"],
+    partTimeRestrictedKicker: "Not permitted",
+    partTimeRestricted: ["Cashiers", "Singers", "Musicians", "Masseurs", "Guest relations officers (GROs)"],
     creditTransferKicker: "Credit transfer",
     creditTransferTitle: "Already started elsewhere? Bring your credits with you.",
     creditTransferWho: [
@@ -211,6 +292,46 @@ const en = {
     ],
     creditTransferBenefits: ["Save time", "Reduce tuition fees", "Continue your existing programme", "Internationally recognized degree"],
     creditTransferNote: "Credit transfer approval is subject to each university's own evaluation, based on how closely your previous coursework matches the new programme.",
+    transferCountriesKicker: "Onward transfer",
+    transferCountriesTitle: "Some universities open doors beyond Malaysia.",
+    transferCountriesNote: "Many Malaysian universities have international partnerships that may allow eligible students to continue their studies in the United Kingdom, Australia, the United States, Canada, or New Zealand, through credit transfer, articulation agreements, or dual-degree programmes. This depends on the university, the programme, and the receiving institution's admission requirements, and is never guaranteed.",
+    transferCountries: ["United Kingdom", "Australia", "United States", "Canada", "New Zealand"],
+    faqKicker: "Frequently asked questions",
+    faqTitle: "What students ask us most.",
+    faq: [
+      {
+        q: "Can I study in Malaysia after SSC?",
+        a: "Yes. After SSC, you're eligible for a Foundation or Diploma programme, which can lead into a Bachelor's degree afterward.",
+      },
+      {
+        q: "Can international students work while studying?",
+        a: "Yes. Enrolled students may work up to 20 hours a week during semester breaks or holidays of more than 7 consecutive days, with prior approval from the Department of Immigration Malaysia, applied for through your university.",
+      },
+      {
+        q: "Can my parents visit me?",
+        a: "Yes, parents can generally visit on a standard visit visa. Requirements can change, so we confirm the current process with you closer to your travel dates.",
+      },
+      {
+        q: "How much bank balance is required?",
+        a: "We recommend maintaining a minimum bank balance of BDT 10 Lakh for at least 3 to 6 months, subject to embassy requirements at the time of your application.",
+      },
+      {
+        q: "Can I obtain Permanent Residency (PR) after graduation?",
+        a: "Malaysia does not offer a direct graduate-to-PR pathway the way some countries do. Most graduates who wish to stay on move to a work pass tied to employment. We'll walk you through realistic options based on your situation.",
+      },
+      {
+        q: "Can I transfer to another university?",
+        a: "Yes, credit transfer is available for eligible students, including diploma holders moving into a Bachelor's degree. Approval and the number of transferable credits depend on the receiving university's own evaluation.",
+      },
+      {
+        q: "How long does the visa process take?",
+        a: "Timelines vary by university, intake, and case load. Once your offer letter and documents are ready, we'll give you an updated estimate and keep you posted at every step.",
+      },
+      {
+        q: "Is Malaysia safe for international students?",
+        a: "Yes. Malaysia is widely regarded as a safe, multicultural destination and welcomes students from over 150 countries every year.",
+      },
+    ],
   },
   romania: {
     country: "Romania",
@@ -336,6 +457,7 @@ const en = {
     officeKicker: "The office",
     officeTitle: "Visit us",
     officeCopy: "510, Majid Villa, GT Road (North), Chairman Ghat, Chandpur.",
+    officeDirections: "Get directions",
     portfolioKicker: "Portfolio",
     portfolioTitle: "The work so far",
     portfolioCopy: "Placements by year, partner institutions, notable cases. The track record in numbers and documents.",
@@ -384,6 +506,8 @@ const en = {
   quiz: {
     kicker: "Free assessment",
     title: "Find your match",
+    teaserSub: "9 quick questions about your goals and budget. A real counselor follows up personally with your matches.",
+    teaserCta: "Begin the assessment",
     back: "Back",
     continue: "Continue",
     seeMyMatches: "Show my matches",
@@ -505,6 +629,37 @@ const bn: typeof en = {
     duration: "সময়",
     durationValue: "৬০ মিনিট · ফ্রি",
   },
+  homeFaq: {
+    kicker: "প্রশ্নের উত্তর",
+    generalTab: "সাধারণ",
+    title: "জিজ্ঞাসার আগেই, বেশিরভাগ শিক্ষার্থী যা জানতে চান।",
+    items: [
+      {
+        q: "ফ্রি অ্যাসেসমেন্ট কীভাবে কাজ করে?",
+        a: "আপনার লক্ষ্য, বাজেট আর পছন্দের দেশ নিয়ে নয়টি সংক্ষিপ্ত প্রশ্নের উত্তর দিন। আমরা আপনাকে উপযুক্ত বিশ্ববিদ্যালয়ের সাথে মিলিয়ে দিই, এরপর একজন সত্যিকারের কাউন্সেলর আপনার ফ্রি ওয়ান-টু-ওয়ান সেশনের জন্য যোগাযোগ করেন।",
+      },
+      {
+        q: "ওয়ান-টু-ওয়ান সেশন কি সত্যিই ফ্রি?",
+        a: "হ্যাঁ, সম্পূর্ণ ফ্রি। একজন কাউন্সেলরের সাথে বসে আপনার সব বিকল্প নিয়ে আলোচনা করতে কোনো খরচ নেই, পরে আমাদের সাথে এগোতে চান বা না চান।",
+      },
+      {
+        q: "আপনারা কোন কোন দেশের জন্য কাজ করেন?",
+        a: "মালয়েশিয়া, রোমানিয়া ও জর্জিয়া আমাদের পুরোপুরি প্রতিষ্ঠিত রুট, পার্টনার বিশ্ববিদ্যালয়সহ। চীন একটি উদীয়মান গন্তব্য, যেখানে আমরা সক্রিয়ভাবে রুট তৈরি করছি।",
+      },
+      {
+        q: "কোন দেশ আমার জন্য সঠিক জানি না। তবুও কি সাহায্য পাব?",
+        a: "এটাই ফ্রি অ্যাসেসমেন্ট আর ওয়ান-টু-ওয়ান সেশনের কাজ। বেশিরভাগ শিক্ষার্থীই শুরুতে অনিশ্চিত থাকেন, আমরা আপনার বাজেট, রেজাল্ট আর লক্ষ্য অনুযায়ী বিকল্পগুলো তুলনা করতে সাহায্য করি।",
+      },
+      {
+        q: "আপনারা কি ভিসা আবেদনেও সাহায্য করেন?",
+        a: "হ্যাঁ। আমরা ডকুমেন্ট, বিশ্ববিদ্যালয়ের আবেদন, ভিসা ফাইলিং এবং প্রি-ডিপারচার প্রস্তুতি সামলাই, আর আপনি পৌঁছানোর পরও যোগাযোগে থাকি।",
+      },
+      {
+        q: "অন্যান্য কনসালটেন্সি থেকে অ্যাব্রোড নেট কীভাবে আলাদা?",
+        a: "আমাদের কাউন্সেলররা নিজেরাই এই পথ পাড়ি দিয়েছেন, শুধু কাগজপত্র প্রসেস করেননি। আপনি পাচ্ছেন সত্যিকারের মানুষ, বাস্তব প্লেসমেন্ট, আর পৌঁছানোর পরও চলতে থাকা সহায়তা।",
+      },
+    ],
+  },
   footer: {
     tagline: "সঠিক কোর্স বাছাই থেকে বিশ্ববিদ্যালয়ে প্রথম দিন, যাত্রার প্রতিটি ধাপে আমরা পাশে আছি।",
     destinations: "গন্তব্য",
@@ -562,6 +717,14 @@ const bn: typeof en = {
         description: "ক্লাস শুরু হয়। যেকোনো প্রয়োজনে আমরা পাশে থাকি।",
       },
     ],
+    whoCanApplyKicker: "কারা আবেদন করতে পারবেন",
+    whoCanApply: [
+      { from: "SSC-এর পর", to: "ফাউন্ডেশন বা ডিপ্লোমা প্রোগ্রাম" },
+      { from: "HSC-এর পর", to: "ব্যাচেলর্স ডিগ্রি" },
+      { from: "ডিপ্লোমার পর", to: "ব্যাচেলর্স ডিগ্রি, ক্রেডিট ট্রান্সফারের মাধ্যমে" },
+      { from: "ব্যাচেলর্সের পর", to: "মাস্টার্স ডিগ্রি" },
+      { from: "মাস্টার্সের পর", to: "পিএইচডি" },
+    ],
     eligibilityKicker: "প্রোগ্রাম অনুযায়ী যোগ্যতা",
     eligibilityHeaders: { program: "প্রোগ্রাম", academic: "একাডেমিক যোগ্যতা", english: "ইংরেজি যোগ্যতা" },
     eligibility: [
@@ -576,6 +739,9 @@ const bn: typeof en = {
       { label: "প্রস্তাবিত ইংরেজি লেভেল", value: "CEFR B2" },
       { label: "প্রয়োজনীয় ব্যাংক ব্যালেন্স", value: "৳১০ লাখ, ৩ থেকে ৬ মাস ধরে রাখা" },
     ],
+    englishTestsKicker: "গ্রহণযোগ্য ইংরেজি পরীক্ষা",
+    englishTests: ["IELTS", "TOEFL", "PTE Academic", "Cambridge Linguaskill", "MUET", "MOI"],
+    englishTestsNote: "নির্দিষ্ট কিছু বিশ্ববিদ্যালয় Medium of Instruction (MOI) গ্রহণ করে। ন্যূনতম স্কোর বিশ্ববিদ্যালয় ও প্রোগ্রামভেদে ভিন্ন হয়।",
     studyGapKicker: "স্টাডি গ্যাপ নীতি",
     studyGapNote: "বিশ্ববিদ্যালয়ের ভর্তির শর্ত পূরণ করলে মালয়েশিয়া সাধারণত স্টাডি গ্যাপের ক্ষেত্রে নমনীয়।",
     studyGap: [
@@ -592,6 +758,41 @@ const bn: typeof en = {
     diplomaList: ["বিজনেস", "ইনফরমেশন টেকনোলজি", "অ্যাকাউন্টিং", "হসপিটালিটি", "ট্যুরিজম", "মিডিয়া স্টাডিজ", "ইঞ্জিনিয়ারিং"],
     bachelorLabel: "ব্যাচেলর্স (৩ থেকে ৪ বছর)",
     bachelorList: ["কম্পিউটার সায়েন্স", "বিজনেস অ্যাডমিনিস্ট্রেশন", "সফটওয়্যার ইঞ্জিনিয়ারিং", "আর্টিফিশিয়াল ইন্টেলিজেন্স", "সাইবার সিকিউরিটি", "অ্যাকাউন্টিং ও ফাইন্যান্স", "মার্কেটিং", "হসপিটালিটি ম্যানেজমেন্ট", "ট্যুরিজম ম্যানেজমেন্ট", "ল", "নার্সিং", "ফার্মেসি", "বায়োমেডিকেল সায়েন্স", "MBBS"],
+    documentsKicker: "প্রয়োজনীয় ডকুমেন্ট",
+    documents: [
+      {
+        label: "ফাউন্ডেশন ও ডিপ্লোমা",
+        list: ["বৈধ পাসপোর্ট", "SSC সার্টিফিকেট", "SSC ট্রান্সক্রিপ্ট", "সাদা ব্যাকগ্রাউন্ড ছবি", "ইংরেজি দক্ষতার সার্টিফিকেট (শুধু ডিপ্লোমা আবেদনকারীদের জন্য, প্রযোজ্য ক্ষেত্রে)"],
+      },
+      {
+        label: "ব্যাচেলর্স ডিগ্রি",
+        list: ["পাসপোর্ট", "SSC সার্টিফিকেট ও ট্রান্সক্রিপ্ট", "HSC সার্টিফিকেট ও ট্রান্সক্রিপ্ট", "সাদা ব্যাকগ্রাউন্ড ছবি", "ইংরেজি দক্ষতার সার্টিফিকেট"],
+      },
+      {
+        label: "মাস্টার্স ডিগ্রি",
+        list: ["পাসপোর্ট", "SSC, HSC ও ব্যাচেলর্স সার্টিফিকেট", "SSC, HSC ও ব্যাচেলর্স ট্রান্সক্রিপ্ট", "সাদা ব্যাকগ্রাউন্ড ছবি", "ইংরেজি দক্ষতার সার্টিফিকেট", "হালনাগাদ সিভি", "কর্ম অভিজ্ঞতার সনদ (প্রয়োজনে)"],
+      },
+      {
+        label: "পিএইচডি",
+        list: ["পাসপোর্ট", "SSC, HSC, ব্যাচেলর্স ও মাস্টার্স সার্টিফিকেট", "সব একাডেমিক ট্রান্সক্রিপ্ট", "সাদা ব্যাকগ্রাউন্ড ছবি", "ইংরেজি দক্ষতার সার্টিফিকেট", "হালনাগাদ সিভি", "কর্ম অভিজ্ঞতার সনদ (প্রয়োজনে)", "রিসার্চ প্রপোজাল (অনেক বিশ্ববিদ্যালয়ে আবশ্যক)"],
+      },
+    ],
+    embassyKicker: "দূতাবাস ইন্টারভিউয়ের ডকুমেন্ট",
+    embassyIntro: "মালয়েশিয়া স্টুডেন্ট ভিসা ইন্টারভিউয়ের জন্য এই ডকুমেন্টগুলো প্রস্তুত রাখুন:",
+    embassyDocuments: [
+      "পাসপোর্ট",
+      "একাডেমিক সার্টিফিকেট ও ট্রান্সক্রিপ্ট",
+      "ইংরেজি দক্ষতার সার্টিফিকেট",
+      "বিশ্ববিদ্যালয়ের অফার লেটার",
+      "EMGS অনুমোদন লেটার",
+      "eVAL",
+      "দূতাবাস ইন্টারভিউ অ্যাপয়েন্টমেন্ট লেটার",
+      "ব্যাংক স্টেটমেন্ট",
+      "ব্যাংক সলভেন্সি সার্টিফিকেট",
+      "অর্থের উৎসের প্রমাণ",
+      "পারিবারিক ছবি",
+    ],
+    financialProofNote: "প্রস্তাবিত: কমপক্ষে ৩ থেকে ৬ মাস ধরে ৳১০ লাখ ব্যাংক ব্যালেন্স বজায় রাখুন, দূতাবাসের শর্ত সাপেক্ষে।",
     costKicker: "টিউশন ও থাকা-খাওয়া, বাস্তব সংখ্যায়",
     tuition: [
       { program: "ফাউন্ডেশন", value: "৳৪.২ থেকে ৭.০ লাখ / বছর" },
@@ -604,7 +805,11 @@ const bn: typeof en = {
     scholarshipsNote: "যোগ্য শিক্ষার্থীদের জন্য মেধাবৃত্তি, বিশ্ববিদ্যালয় বৃত্তি এবং মৌসুমি টিউশন ছাড় পাওয়া যায়, যার মধ্যে Abroad Net-এর মাধ্যমে ব্যবস্থা করা বিশেষ অফারও রয়েছে।",
     intakesKicker: "ইনটেক",
     intakes: ["জানুয়ারি", "মার্চ", "মে", "জুলাই", "সেপ্টেম্বর", "অক্টোবর"],
-    partTimeNote: "ভর্তি হওয়া শিক্ষার্থীরা সেমিস্টার বিরতিতে মালয়েশিয়ান ইমিগ্রেশনের পূর্ব অনুমোদন সাপেক্ষে সপ্তাহে ২০ ঘণ্টা পর্যন্ত কাজ করতে পারেন।",
+    partTimeNote: "ভর্তি হওয়া শিক্ষার্থীরা সেমিস্টার বিরতি বা টানা ৭ দিনের বেশি ছুটিতে, মালয়েশিয়ান ইমিগ্রেশন বিভাগের পূর্ব অনুমোদন সাপেক্ষে সপ্তাহে ২০ ঘণ্টা পর্যন্ত কাজ করতে পারেন। আবেদন আপনার বিশ্ববিদ্যালয়ের মাধ্যমে জমা দিতে হয়।",
+    partTimeApprovedKicker: "অনুমোদিত খাত",
+    partTimeApproved: ["রেস্তোরাঁ ও ক্যাফে", "পেট্রল স্টেশন", "মিনি মার্কেট", "হোটেল"],
+    partTimeRestrictedKicker: "অনুমোদিত নয়",
+    partTimeRestricted: ["ক্যাশিয়ার", "গায়ক", "সংগীতশিল্পী", "মাসিউর", "গেস্ট রিলেশনস অফিসার (GRO)"],
     creditTransferKicker: "ক্রেডিট ট্রান্সফার",
     creditTransferTitle: "অন্য কোথাও শুরু করেছেন? আপনার ক্রেডিট সাথে নিয়ে আসুন।",
     creditTransferWho: [
@@ -614,6 +819,46 @@ const bn: typeof en = {
     ],
     creditTransferBenefits: ["সময় বাঁচান", "টিউশন ফি কমান", "আপনার চলমান প্রোগ্রাম চালিয়ে যান", "আন্তর্জাতিকভাবে স্বীকৃত ডিগ্রি"],
     creditTransferNote: "ক্রেডিট ট্রান্সফার অনুমোদন নির্ভর করে বিশ্ববিদ্যালয়ের নিজস্ব মূল্যায়নের উপর, আপনার পূর্বের কোর্সওয়ার্ক নতুন প্রোগ্রামের সাথে কতটা মিলছে তার ভিত্তিতে।",
+    transferCountriesKicker: "পরবর্তী ট্রান্সফার",
+    transferCountriesTitle: "কিছু বিশ্ববিদ্যালয় মালয়েশিয়ার বাইরেও পথ খুলে দেয়।",
+    transferCountriesNote: "অনেক মালয়েশিয়ান বিশ্ববিদ্যালয়ের আন্তর্জাতিক পার্টনারশিপ রয়েছে, যা যোগ্য শিক্ষার্থীদের ক্রেডিট ট্রান্সফার, আর্টিকুলেশন এগ্রিমেন্ট বা ডুয়াল-ডিগ্রি প্রোগ্রামের মাধ্যমে যুক্তরাজ্য, অস্ট্রেলিয়া, যুক্তরাষ্ট্র, কানাডা বা নিউজিল্যান্ডে পড়াশোনা চালিয়ে যাওয়ার সুযোগ দিতে পারে। এটি বিশ্ববিদ্যালয়, প্রোগ্রাম এবং গ্রহণকারী প্রতিষ্ঠানের ভর্তির শর্তের উপর নির্ভরশীল, এবং কখনোই নিশ্চিত নয়।",
+    transferCountries: ["যুক্তরাজ্য", "অস্ট্রেলিয়া", "যুক্তরাষ্ট্র", "কানাডা", "নিউজিল্যান্ড"],
+    faqKicker: "সচরাচর জিজ্ঞাসিত প্রশ্ন",
+    faqTitle: "শিক্ষার্থীরা সবচেয়ে বেশি যা জানতে চান।",
+    faq: [
+      {
+        q: "SSC-এর পর কি মালয়েশিয়ায় পড়া যায়?",
+        a: "হ্যাঁ। SSC-এর পর আপনি ফাউন্ডেশন বা ডিপ্লোমা প্রোগ্রামের জন্য যোগ্য, যা পরে ব্যাচেলর্স ডিগ্রিতে যাওয়ার পথ তৈরি করে।",
+      },
+      {
+        q: "আন্তর্জাতিক শিক্ষার্থীরা কি পড়াশোনার পাশাপাশি কাজ করতে পারেন?",
+        a: "হ্যাঁ। ভর্তি হওয়া শিক্ষার্থীরা সেমিস্টার বিরতি বা টানা ৭ দিনের বেশি ছুটিতে, মালয়েশিয়ান ইমিগ্রেশন বিভাগের পূর্ব অনুমোদন সাপেক্ষে সপ্তাহে ২০ ঘণ্টা পর্যন্ত কাজ করতে পারেন, যা বিশ্ববিদ্যালয়ের মাধ্যমে আবেদন করতে হয়।",
+      },
+      {
+        q: "আমার বাবা-মা কি আমাকে দেখতে আসতে পারবেন?",
+        a: "হ্যাঁ, সাধারণত একটি স্ট্যান্ডার্ড ভিজিট ভিসায় বাবা-মা আসতে পারেন। শর্তাবলী পরিবর্তন হতে পারে, তাই আপনার ভ্রমণের তারিখের কাছাকাছি সময়ে আমরা সঠিক প্রক্রিয়া নিশ্চিত করে দেব।",
+      },
+      {
+        q: "কত ব্যাংক ব্যালেন্স প্রয়োজন?",
+        a: "আমরা পরামর্শ দিই কমপক্ষে ৩ থেকে ৬ মাস ধরে ৳১০ লাখ ব্যাংক ব্যালেন্স বজায় রাখার, যা আবেদনের সময় দূতাবাসের শর্ত সাপেক্ষে পরিবর্তিত হতে পারে।",
+      },
+      {
+        q: "গ্র্যাজুয়েশনের পর কি পার্মানেন্ট রেসিডেন্সি (PR) পাওয়া যায়?",
+        a: "কিছু দেশের মতো মালয়েশিয়ায় সরাসরি গ্র্যাজুয়েট-টু-PR পথ নেই। বেশিরভাগ গ্র্যাজুয়েট থেকে যেতে চাইলে চাকরির সাথে যুক্ত ওয়ার্ক পাসে যান। আপনার পরিস্থিতি অনুযায়ী বাস্তবসম্মত বিকল্পগুলো আমরা বুঝিয়ে দেব।",
+      },
+      {
+        q: "আমি কি অন্য বিশ্ববিদ্যালয়ে ট্রান্সফার করতে পারব?",
+        a: "হ্যাঁ, যোগ্য শিক্ষার্থীদের জন্য ক্রেডিট ট্রান্সফার সুবিধা আছে, ডিপ্লোমা থেকে ব্যাচেলর্সে যাওয়া শিক্ষার্থীসহ। অনুমোদন ও ট্রান্সফারযোগ্য ক্রেডিটের সংখ্যা নির্ভর করে গ্রহণকারী বিশ্ববিদ্যালয়ের নিজস্ব মূল্যায়নের উপর।",
+      },
+      {
+        q: "ভিসা প্রক্রিয়ায় কত সময় লাগে?",
+        a: "বিশ্ববিদ্যালয়, ইনটেক এবং কেস লোডের উপর নির্ভর করে সময় ভিন্ন হয়। আপনার অফার লেটার ও ডকুমেন্ট প্রস্তুত হলে আমরা হালনাগাদ সময়সীমা জানিয়ে প্রতিটি ধাপে আপনাকে অবগত রাখব।",
+      },
+      {
+        q: "আন্তর্জাতিক শিক্ষার্থীদের জন্য মালয়েশিয়া কি নিরাপদ?",
+        a: "হ্যাঁ। মালয়েশিয়া একটি নিরাপদ, বহুসংস্কৃতির গন্তব্য হিসেবে বিবেচিত এবং প্রতি বছর ১৫০টিরও বেশি দেশ থেকে শিক্ষার্থীদের স্বাগত জানায়।",
+      },
+    ],
   },
   romania: {
     country: "রোমানিয়া",
@@ -739,6 +984,7 @@ const bn: typeof en = {
     officeKicker: "অফিস",
     officeTitle: "ঘুরে যান",
     officeCopy: "৫১০, মজিদ ভিলা, জিটি রোড (উত্তর), চেয়ারম্যান ঘাট, চাঁদপুর।",
+    officeDirections: "দিকনির্দেশনা দেখুন",
     portfolioKicker: "পোর্টফোলিও",
     portfolioTitle: "এ পর্যন্ত যা করেছি",
     portfolioCopy: "বছরে বছরে প্লেসমেন্ট, পার্টনার প্রতিষ্ঠান, উল্লেখযোগ্য কেস। সংখ্যায় ও ডকুমেন্টে আমাদের ট্র্যাক রেকর্ড।",
@@ -787,6 +1033,8 @@ const bn: typeof en = {
   quiz: {
     kicker: "ফ্রি অ্যাসেসমেন্ট",
     title: "আপনার ম্যাচ খুঁজে নিন",
+    teaserSub: "আপনার লক্ষ্য ও বাজেট নিয়ে ৯টি সংক্ষিপ্ত প্রশ্ন। একজন সত্যিকারের কাউন্সেলর আপনার ম্যাচ নিয়ে সরাসরি যোগাযোগ করবেন।",
+    teaserCta: "অ্যাসেসমেন্ট শুরু করুন",
     back: "পেছনে",
     continue: "এগিয়ে যান",
     seeMyMatches: "আমার ম্যাচ দেখাও",

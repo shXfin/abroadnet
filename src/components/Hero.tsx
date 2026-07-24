@@ -1,71 +1,334 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import AssessmentQuiz from "./AssessmentQuiz";
+import QuizVisual from "./quiz/QuizVisual";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
+import { MALAYSIA_UNIVERSITIES, ROMANIA_UNIVERSITIES, GEORGIA_UNIVERSITIES, CHINA_UNIVERSITIES } from "../data/universities";
 
-const HOME = { x: 96, y: 432 };
+const HOME_POS = { left: "14%", top: "81%" };
 
-// Real students, placed in the map's empty gaps. Same white card + shadow
-// language as the destination flag cards, framed as photo chips sized to
-// each photo's own aspect ratio — never force-cropped.
-const PHOTO_PAD = 4;
-const PHOTO_HEIGHT = 76;
-
+// Real students, placed in the map's empty gaps — never force-cropped, each
+// sized by its own aspect ratio. Ribbon labels are real facts already
+// established elsewhere on the site (StudentStoriesGrid), not invented —
+// there's no China photo here because we have no confirmed China placement yet.
 const STUDENT_PHOTOS = [
-  { src: "photos/romania-visa-mehedi.jpg", aspect: 820 / 850, x: 140, y: 230 },
-  { src: "photos/airport-pickup.jpg", aspect: 1044 / 950, x: 594, y: 214 },
-  { src: "photos/malaysia-arrival-ruhel-full.jpg", aspect: 1, x: 494, y: 448 },
-].map((p) => ({ ...p, w: p.aspect * PHOTO_HEIGHT, h: PHOTO_HEIGHT }));
+  {
+    src: "photos/malaysia-arrival-imran-full.jpg",
+    aspect: 1,
+    pos: { left: "23%", top: "40%" },
+    title: "Imran Hossain Shanto",
+    destination: "Malaysia",
+  },
+  {
+    src: "photos/romania-visa-mehedi.jpg",
+    aspect: 820 / 850,
+    pos: { left: "52%", top: "38%" },
+    title: "Mehedi Hasan Supto",
+    destination: "Romania",
+  },
+  {
+    src: "photos/georgia-visa-rakibul-full.jpg",
+    aspect: 1,
+    pos: { left: "62%", top: "82%" },
+    title: "Md Rakibul Islam",
+    destination: "Georgia",
+  },
+];
+// A percentage of the container's own width, not a fixed pixel size, so
+// cards shrink proportionally on mobile instead of overwhelming a narrow view.
+const PHOTO_WIDTH_PCT = 15;
 
-/** Splits a "CODE · Country" translation string into its parts; the airport
- * code stays Latin in both languages, only the country name is translated. */
+function realCount(list: string[]) {
+  return list.filter((u) => !u.startsWith("TODO")).length;
+}
+
 function splitLabel(label: string) {
   const [code, country] = label.split(" · ");
   return { code, country };
 }
 
-function FlightRoutes() {
+function CheckBadge({ className }: { className?: string }) {
+  return (
+    <span className={`flex items-center justify-center rounded-full bg-emerald-600 text-white ${className}`}>
+      <svg viewBox="0 0 20 20" className="h-2.5 w-2.5" fill="currentColor" aria-hidden="true">
+        <path d="M8 13.4 4.8 10.2l-1.4 1.4L8 16.2l9-9-1.4-1.4z" />
+      </svg>
+    </span>
+  );
+}
+
+function CloseIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <path d="M5 5l10 10M15 5 5 15" />
+    </svg>
+  );
+}
+
+const FLAGS: Record<string, JSX.Element> = {
+  tbs: (
+    <svg viewBox="0 0 30 20" className="h-3.5 w-5 rounded-[2px] border border-black/10">
+      <rect width="30" height="20" fill="white" />
+      <rect x="12" width="6" height="20" fill="#FF0000" />
+      <rect y="7" width="30" height="6" fill="#FF0000" />
+      <path d="M5 2.5h2v5H5z M3.5 4h5v2h-5z M23 2.5h2v5h-2z M21.5 4h5v2h-5z M5 12.5h2v5H5z M3.5 14h5v2h-5z M23 12.5h2v5h-2z M21.5 14h5v2h-5z" fill="#FF0000" />
+    </svg>
+  ),
+  otp: (
+    <svg viewBox="0 0 30 20" className="h-3.5 w-5 rounded-[2px] border border-black/10">
+      <rect width="10" height="20" x="0" fill="#002B7F" />
+      <rect width="10" height="20" x="10" fill="#FCD116" />
+      <rect width="10" height="20" x="20" fill="#CE1126" />
+    </svg>
+  ),
+  pek: (
+    <svg viewBox="0 0 30 20" className="h-3.5 w-5 rounded-[2px]">
+      <rect width="30" height="20" fill="#DE2910" />
+      <text x="3" y="10" fontSize="9" fill="#FFDE00">★</text>
+    </svg>
+  ),
+  kul: (
+    <svg viewBox="0 0 28 14" className="h-3.5 w-5 rounded-[2px] border border-black/10">
+      <rect width="28" height="14" fill="white" />
+      <rect width="28" height="2" fill="#CC0001" />
+      <rect y="4" width="28" height="2" fill="#CC0001" />
+      <rect y="8" width="28" height="2" fill="#CC0001" />
+      <rect y="12" width="28" height="2" fill="#CC0001" />
+      <rect width="14" height="8" fill="#010066" />
+    </svg>
+  ),
+  dhk: (
+    <svg viewBox="0 0 20 12" className="h-3.5 w-5 rounded-[2px]">
+      <rect width="20" height="12" fill="#006A4E" />
+      <circle cx="9" cy="6" r="4.2" fill="#F42A41" />
+    </svg>
+  ),
+};
+
+type DestKey = "tbs" | "otp" | "pek" | "kul";
+
+function useMeasuredArcs(containerRef: React.RefObject<HTMLDivElement>, destKeys: DestKey[]) {
+  const [paths, setPaths] = useState<Record<DestKey, string>>({} as Record<DestKey, string>);
+
+  useLayoutEffect(() => {
+    function measure() {
+      const container = containerRef.current;
+      if (!container) return;
+      const cRect = container.getBoundingClientRect();
+      const homeEl = container.querySelector<HTMLElement>("[data-node='dhk']");
+      if (!homeEl) return;
+      const hRect = homeEl.getBoundingClientRect();
+      const startX = hRect.left + hRect.width / 2 - cRect.left;
+      const startY = hRect.top + hRect.height / 2 - cRect.top;
+
+      const next = {} as Record<DestKey, string>;
+      destKeys.forEach((key) => {
+        const el = container.querySelector<HTMLElement>(`[data-node='${key}']`);
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const endX = r.left + r.width / 2 - cRect.left;
+        const endY = r.top + r.height / 2 - cRect.top;
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const midX = startX + dx * 0.5;
+        const midY = startY + dy * 0.5 - Math.abs(dx) * 0.18;
+        next[key] = `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
+      });
+      setPaths(next);
+    }
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (containerRef.current) observer.observe(containerRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return paths;
+}
+
+function DestinationBadge({
+  destKey,
+  code,
+  country,
+  className,
+  active,
+  onEnter,
+  onLeave,
+  onOpen,
+}: {
+  destKey: DestKey;
+  code: string;
+  country: string;
+  className: string;
+  active: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      data-node={destKey}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onClick={onOpen}
+      className={`group absolute z-20 flex w-max -translate-x-1/2 -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full border bg-white py-1 pl-1.5 pr-2 shadow-[0_8px_20px_-8px_rgba(28,23,64,0.35)] transition-transform sm:gap-1.5 sm:py-1.5 sm:pl-2 sm:pr-2.5 ${
+        active ? "scale-105 border-coral" : "border-navy/10 hover:scale-105"
+      } ${className}`}
+    >
+      <span className="[&>svg]:h-2.5 [&>svg]:w-[14px] sm:[&>svg]:h-3.5 sm:[&>svg]:w-5">{FLAGS[destKey]}</span>
+      <span className="font-mono text-[8px] font-bold tracking-wide text-coral sm:text-[11px]">{code}</span>
+      <span className="text-[7px] font-semibold text-navy/60 sm:text-[10px]">· {country}</span>
+      <CheckBadge className="h-2.5 w-2.5 shrink-0 sm:h-3.5 sm:w-3.5" />
+    </button>
+  );
+}
+
+function DestinationDrawer({ destKey, onClose }: { destKey: DestKey; onClose: () => void }) {
   const { t } = useLang();
-  const geo = splitLabel(t.hero.tbs);
-  const ro = splitLabel(t.hero.otp);
-  const cn = splitLabel(t.hero.pek);
-  const my = splitLabel(t.hero.kul);
-  const dhk = splitLabel(t.hero.dhk);
+  const map = {
+    tbs: { label: t.hero.tbs, to: "/destinations/georgia", intro: t.georgia.intro, unis: realCount(GEORGIA_UNIVERSITIES) },
+    otp: { label: t.hero.otp, to: "/destinations/romania", intro: t.romania.intro, unis: realCount(ROMANIA_UNIVERSITIES) },
+    pek: { label: t.hero.pek, to: "/destinations/china", intro: t.china.intro, unis: realCount(CHINA_UNIVERSITIES) },
+    kul: { label: t.hero.kul, to: "/destinations/malaysia", intro: t.malaysia.intro, unis: realCount(MALAYSIA_UNIVERSITIES) },
+  } as const;
+  const data = map[destKey];
+  const { code, country } = splitLabel(data.label);
 
   return (
-    <div className="relative w-full">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/40 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="w-full max-w-md overflow-hidden rounded-2xl border hairline bg-paper shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b hairline bg-white p-6">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border hairline bg-parchment/60">
+              {FLAGS[destKey]}
+            </span>
+            <div className="flex items-center gap-2">
+              <h3 className="font-display text-xl text-navy">{country}</h3>
+              <span className="rounded-full bg-coral/10 px-2.5 py-0.5 font-mono text-xs font-bold text-coral">{code}</span>
+            </div>
+          </div>
+          <button onClick={onClose} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-full bg-parchment/60 text-ink/50 hover:text-ink">
+            <CloseIcon className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="space-y-5 p-6">
+          <p className="text-sm leading-relaxed text-ink/70">{data.intro}</p>
+          {data.unis > 0 && (
+            <div className="rounded-xl border hairline bg-white p-4">
+              <p className="label-caps text-ink/40">{destKey === "kul" ? t.routes.partnerUnis : "Partner universities"}</p>
+              <p className="mt-1 font-display text-lg text-navy">{data.unis}</p>
+            </div>
+          )}
+          <Link to={data.to} onClick={onClose} className="label-caps flex items-center gap-2 text-coral hover:opacity-70">
+            {t.routes.explore}
+            <span>→</span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Lightbox({ photo, onClose }: { photo: (typeof STUDENT_PHOTOS)[number]; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/70 p-4 backdrop-blur-md" onClick={onClose}>
+      <div className="relative w-full max-w-lg rounded-2xl bg-white p-3" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} aria-label="Close" className="absolute -top-4 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-navy text-white">
+          <CloseIcon className="h-4 w-4" />
+        </button>
+        <img src={assetPath(photo.src)} alt={photo.title} className="max-h-[70vh] w-full rounded-xl object-contain" />
+        <p className="mt-3 pb-1 text-center text-sm font-semibold text-navy">
+          {photo.title} · {photo.destination}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PhotoCard({ photo, rotate, onOpen }: { photo: (typeof STUDENT_PHOTOS)[number]; rotate: string; onOpen: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      style={{ left: photo.pos.left, top: photo.pos.top, width: `${PHOTO_WIDTH_PCT}%` }}
+      className={`group absolute z-20 min-w-[52px] max-w-[108px] -translate-x-1/2 -translate-y-1/2 rounded-lg border hairline bg-white p-1 pb-1.5 shadow-[0_12px_28px_-10px_rgba(28,23,64,0.35)] transition-transform sm:rounded-xl sm:p-1.5 sm:pb-2 ${rotate} hover:rotate-0 hover:scale-105`}
+    >
+      <span className="absolute -top-1.5 left-1/2 h-2.5 w-6 -translate-x-1/2 rounded-sm bg-white/70 shadow-sm sm:-top-2 sm:h-3.5 sm:w-8" />
+      <span className="relative block overflow-hidden rounded-md sm:rounded-lg" style={{ aspectRatio: photo.aspect }}>
+        <img src={assetPath(photo.src)} alt={photo.title} className="h-full w-full object-cover" />
+      </span>
+      <span className="mt-1 block truncate text-center text-[6px] font-bold text-navy sm:mt-1.5 sm:text-[9px]">{photo.title}</span>
+      <span className="hidden text-center text-[8px] font-medium text-ink/40 sm:block">{photo.destination}</span>
+    </button>
+  );
+}
+
+const PHOTO_ROTATIONS = ["-rotate-3", "rotate-2", "-rotate-2"];
+
+function FlightRoutes() {
+  const { t } = useLang();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeKey, setActiveKey] = useState<DestKey | null>(null);
+  const [openDrawer, setOpenDrawer] = useState<DestKey | null>(null);
+  const [openPhoto, setOpenPhoto] = useState<(typeof STUDENT_PHOTOS)[number] | null>(null);
+
+  const destinations: { key: DestKey; label: string; className: string }[] = [
+    { key: "kul", label: t.hero.kul, className: "left-[32%] top-[12%]" },
+    { key: "otp", label: t.hero.otp, className: "left-[74%] top-[13%]" },
+    { key: "pek", label: t.hero.pek, className: "left-[88%] top-[42%]" },
+    { key: "tbs", label: t.hero.tbs, className: "left-[86%] top-[74%]" },
+  ];
+  const dhk = splitLabel(t.hero.dhk);
+  const paths = useMeasuredArcs(containerRef, destinations.map((d) => d.key));
+
+  return (
+    <div ref={containerRef} className="relative aspect-[640/520] w-full overflow-visible">
+      {/* World dot-grid network texture, standing in for a map backdrop.
+          Faded via a CSS mask (exact to the box edges) rather than an SVG
+          radial gradient, whose bounding-box math falls short on non-square
+          boxes and left a visible line at the top/bottom. */}
       <svg
         viewBox="0 0 640 520"
-        className="w-full"
-        role="img"
-        aria-label="Flight routes from Dhaka to Malaysia, Romania, Georgia and China"
+        className="absolute inset-0 h-full w-full"
+        aria-hidden="true"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent, black 18%, black 82%, transparent), linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)",
+          WebkitMaskComposite: "source-in",
+          maskImage:
+            "linear-gradient(to right, transparent, black 18%, black 82%, transparent), linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)",
+          maskComposite: "intersect",
+        }}
       >
         <defs>
-          <radialGradient id="sky" cx="65%" cy="20%" r="70%">
-            <stop offset="0%" stopColor="#DDD8F0" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#F7F4EE" stopOpacity="0" />
+          <pattern id="networkGrid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <rect x="1" y="1" width="7" height="7" rx="1.5" fill="#D6C8AA" fillOpacity="0.28" />
+          </pattern>
+          <radialGradient id="sky" cx="65%" cy="15%" r="70%">
+            <stop offset="0%" stopColor="#E05228" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="#FAF7F0" stopOpacity="0" />
           </radialGradient>
-          <filter id="cs" x="-30%" y="-80%" width="160%" height="300%">
-            <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#241E5E" floodOpacity="0.11" />
-          </filter>
-          {STUDENT_PHOTOS.map((p, i) => (
-            <clipPath key={`clip-${i}`} id={`student-clip-${i}`}>
-              <rect x={p.x - p.w / 2} y={p.y - p.h / 2} width={p.w} height={p.h} rx="8" />
-            </clipPath>
-          ))}
         </defs>
-
-        {/* Sky atmosphere */}
         <rect width="640" height="520" fill="url(#sky)" />
-
-        {/* Cloud puffs */}
-        <ellipse cx="514" cy="156" rx="64" ry="17" fill="#241E5E" fillOpacity="0.05" />
-        <ellipse cx="551" cy="151" rx="44" ry="13" fill="#241E5E" fillOpacity="0.05" />
-        <ellipse cx="480" cy="162" rx="36" ry="11" fill="#241E5E" fillOpacity="0.05" />
-        <ellipse cx="162" cy="135" rx="48" ry="13" fill="#241E5E" fillOpacity="0.038" />
-        <ellipse cx="196" cy="130" rx="34" ry="10" fill="#241E5E" fillOpacity="0.038" />
-
-        {/* স্বপ্ন (dream), watermarked over the sky */}
+        <rect width="640" height="520" fill="url(#networkGrid)" />
+        <g stroke="#E05228" strokeOpacity="0.08" strokeWidth="1" strokeDasharray="3 5">
+          <line x1="0" y1="173" x2="640" y2="173" />
+          <line x1="0" y1="346" x2="640" y2="346" />
+          <line x1="213" y1="0" x2="213" y2="520" />
+          <line x1="426" y1="0" x2="426" y2="520" />
+        </g>
         <text
           x="330"
           y="330"
@@ -79,200 +342,138 @@ function FlightRoutes() {
         >
           স্বপ্ন
         </text>
-
-        {/* Delta rivers */}
-        <path d="M-10,470 C 90,455 170,475 250,462" fill="none" stroke="#241E5E" strokeWidth="10" strokeOpacity="0.05" strokeLinecap="round" />
-        <path d="M-10,492 C 110,478 200,500 300,486" fill="none" stroke="#241E5E" strokeWidth="14" strokeOpacity="0.04" strokeLinecap="round" />
-        <path d="M20,449 C 90,441 140,452 200,446" fill="none" stroke="#241E5E" strokeWidth="6" strokeOpacity="0.06" strokeLinecap="round" />
-
-        {/* Route glow (depth layer) */}
-        <path d="M96,432 C 130,300 170,150 230,66" fill="none" stroke="#241E5E" strokeWidth="9" strokeOpacity="0.055" strokeLinecap="round" />
-        <path d="M96,432 C 190,300 280,110 380,42" fill="none" stroke="#F0633B" strokeWidth="9" strokeOpacity="0.05" strokeLinecap="round" />
-        <path d="M96,432 C 300,380 460,230 566,96" fill="none" stroke="#241E5E" strokeWidth="9" strokeOpacity="0.055" strokeLinecap="round" />
-        <path d="M96,432 C 250,380 430,370 582,380" fill="none" stroke="#F0633B" strokeWidth="9" strokeOpacity="0.05" strokeLinecap="round" />
-
-        {/* Route dashes (animated draw) */}
-        <path id="route-geo" d="M96,432 C 130,300 170,150 230,66" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" />
-        <path id="route-ro" d="M96,432 C 190,300 280,110 380,42" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.25s" }} />
-        <path id="route-cn" d="M96,432 C 300,380 460,230 566,96" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.5s" }} />
-        <path id="route-my" d="M96,432 C 250,380 430,370 582,380" className="route-path" fill="none" stroke="#241E5E" strokeOpacity="0.28" strokeWidth="2.5" style={{ animationDelay: "0.75s" }} />
-
-        {/* Kite A — coral */}
-        <g className="kite-shake-a">
-          <g transform="translate(298,190) rotate(14)">
-            <polygon points="0,-28 20,0 0,28 -20,0" fill="#F0633B" />
-            <line x1="0" y1="-28" x2="0" y2="28" stroke="#F7F4EE" strokeWidth="2" />
-            <line x1="-20" y1="0" x2="20" y2="0" stroke="#F7F4EE" strokeWidth="2" />
-            <polygon points="0,-14 5,-8 0,-2 -5,-8" fill="#F7F4EE" fillOpacity="0.35" />
-            <polygon points="0,2 5,8 0,14 -5,8" fill="#F7F4EE" fillOpacity="0.35" />
-            <path d="M0,28 q -10,20 4,38 q 10,16 -4,30 q -8,12 3,20" fill="none" stroke="#F0633B" strokeWidth="2.2" strokeOpacity="0.6" />
-            <circle cx="-1" cy="54" r="3.2" fill="#241E5E" />
-            <circle cx="1" cy="80" r="2.8" fill="#241E5E" />
-          </g>
-        </g>
-
-        {/* Kite B — green */}
-        <g className="kite-shake-b">
-          <g transform="translate(468,266) rotate(-10) scale(0.65)">
-            <polygon points="0,-26 18,0 0,26 -18,0" fill="#006A4E" />
-            <line x1="0" y1="-26" x2="0" y2="26" stroke="#F7F4EE" strokeWidth="1.8" />
-            <line x1="-18" y1="0" x2="18" y2="0" stroke="#F7F4EE" strokeWidth="1.8" />
-            <path d="M0,26 q 8,18 -2,34 q -8,12 2,26" fill="none" stroke="#006A4E" strokeWidth="2" strokeOpacity="0.7" />
-            <circle cx="1" cy="48" r="3" fill="#F42A41" />
-            <circle cx="-1" cy="68" r="2.4" fill="#F42A41" />
-          </g>
-        </g>
-
-        {/* Kite C — tiny coral, fills upper-right void */}
-        <g className="kite-shake-c">
-          <g transform="translate(538,200) rotate(20) scale(0.44)">
-            <polygon points="0,-24 16,0 0,24 -16,0" fill="#F0633B" fillOpacity="0.8" />
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="#F7F4EE" strokeWidth="1.8" />
-            <line x1="-16" y1="0" x2="16" y2="0" stroke="#F7F4EE" strokeWidth="1.8" />
-            <path d="M0,24 q 6,14 -2,26 q -5,8 2,14" fill="none" stroke="#F0633B" strokeWidth="1.8" strokeOpacity="0.6" />
-            <circle cx="1" cy="38" r="2.8" fill="#241E5E" />
-          </g>
-        </g>
-
-        {/* Planes (animated) */}
-        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#241E5E">
-          <animateMotion dur="9s" begin="0.8s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
-            <mpath href="#route-geo" />
-          </animateMotion>
-        </path>
-        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#F0633B">
-          <animateMotion dur="9.5s" begin="0s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
-            <mpath href="#route-ro" />
-          </animateMotion>
-        </path>
-        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#241E5E">
-          <animateMotion dur="10.5s" begin="1.6s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
-            <mpath href="#route-cn" />
-          </animateMotion>
-        </path>
-        <path d="M0,-7 L16,0 L0,7 L4,0 Z" fill="#F0633B">
-          <animateMotion dur="7s" begin="0.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear">
-            <mpath href="#route-my" />
-          </animateMotion>
-        </path>
-
-        {/* Georgia TBS (230,66) — card right */}
-        <circle cx="230" cy="66" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" />
-        <circle cx="230" cy="66" r="8" fill="#F0633B" />
-        <circle cx="230" cy="66" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="174" y="10" width="136" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="184" y="17" width="20" height="14" rx="1.5" fill="white" stroke="#DCDCDC" strokeWidth="0.7" />
-        <rect x="184" y="22.5" width="20" height="2.8" fill="#CC0000" />
-        <rect x="192" y="17" width="2.8" height="14" fill="#CC0000" />
-        <text x="210" y="29" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{geo.code}</text>
-        <text x="234" y="29" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {geo.country}</text>
-        <text x="283" y="29" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="245" y1="38" x2="234" y2="58" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
-
-        {/* Romania OTP (380,42) — card right, above */}
-        <circle cx="380" cy="42" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.7s" }} />
-        <circle cx="380" cy="42" r="8" fill="#F0633B" />
-        <circle cx="380" cy="42" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="392" y="8" width="142" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="402" y="15" width="7" height="14" rx="1.5" fill="#002B7F" />
-        <rect x="409" y="15" width="7" height="14" fill="#FCD116" />
-        <rect x="416" y="15" width="7" height="14" rx="1.5" fill="#CE1126" />
-        <text x="429" y="27" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{ro.code}</text>
-        <text x="452" y="27" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {ro.country}</text>
-        <text x="511" y="27" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="394" y1="36" x2="382" y2="40" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
-
-        {/* China PEK (566,96) — card left */}
-        <circle cx="566" cy="96" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "1.4s" }} />
-        <circle cx="566" cy="96" r="8" fill="#F0633B" />
-        <circle cx="566" cy="96" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="428" y="78" width="128" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="438" y="85" width="20" height="14" rx="1.5" fill="#DE2910" />
-        <text x="443" y="95" fontSize="9" fill="#FFDE00">★</text>
-        <text x="464" y="97" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{cn.code}</text>
-        <text x="487" y="97" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {cn.country}</text>
-        <text x="530" y="97" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="556" y1="92" x2="558" y2="95" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
-
-        {/* Malaysia KUL (582,380) — card left */}
-        <circle cx="582" cy="380" r="20" fill="#F0633B" fillOpacity="0.2" className="node-pulse" style={{ animationDelay: "0.35s" }} />
-        <circle cx="582" cy="380" r="8" fill="#F0633B" />
-        <circle cx="582" cy="380" r="8" fill="none" stroke="#F7F4EE" strokeWidth="2.8" />
-        <rect x="438" y="362" width="140" height="28" rx="14" fill="white" fillOpacity="0.93" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="448" y="369" width="20" height="14" rx="1.5" fill="white" />
-        <rect x="448" y="369" width="20" height="2" fill="#CC0001" />
-        <rect x="448" y="373" width="20" height="2" fill="#CC0001" />
-        <rect x="448" y="377" width="20" height="2" fill="#CC0001" />
-        <rect x="448" y="381" width="20" height="2" fill="#CC0001" />
-        <rect x="448" y="369" width="10" height="7" fill="#010066" />
-        <text x="474" y="381" fontSize="11" fontWeight="700" fill="#F0633B" letterSpacing="0.09em">{my.code}</text>
-        <text x="497" y="381" fontSize="10.5" fontWeight="500" fill="#1C1740" fillOpacity="0.52">· {my.country}</text>
-        <text x="557" y="381" fontSize="11" fontWeight="700" fill="#006A4E">✓</text>
-        <line x1="578" y1="376" x2="574" y2="378" stroke="#241E5E" strokeOpacity="0.15" strokeWidth="1.5" />
-
-        {/* Real students, framed as photo chips in the map's empty gaps.
-            Each frame matches its photo's own aspect ratio, so the whole
-            image shows — nothing is cropped. */}
-        {STUDENT_PHOTOS.map((p, i) => (
-          <g key={`student-${i}`}>
-            <rect
-              x={p.x - p.w / 2 - PHOTO_PAD}
-              y={p.y - p.h / 2 - PHOTO_PAD}
-              width={p.w + PHOTO_PAD * 2}
-              height={p.h + PHOTO_PAD * 2}
-              rx="10"
-              fill="white"
-              fillOpacity="0.95"
-              stroke="#241E5E"
-              strokeOpacity="0.07"
-              strokeWidth="0.8"
-              filter="url(#cs)"
-            />
-            <image
-              href={assetPath(p.src)}
-              x={p.x - p.w / 2}
-              y={p.y - p.h / 2}
-              width={p.w}
-              height={p.h}
-              preserveAspectRatio="xMidYMid meet"
-              clipPath={`url(#student-clip-${i})`}
-            />
-            <rect
-              x={p.x - p.w / 2}
-              y={p.y - p.h / 2}
-              width={p.w}
-              height={p.h}
-              rx="8"
-              fill="none"
-              stroke="#241E5E"
-              strokeOpacity="0.08"
-              strokeWidth="1"
-            />
-          </g>
-        ))}
-
-        {/* Home node — map pin */}
-        <circle cx={HOME.x} cy="400" r="34" fill="#006A4E" fillOpacity="0.08" className="home-ring" />
-        <ellipse cx={HOME.x} cy="434" rx="10" ry="3.5" fill="#1C1740" fillOpacity="0.12" />
-        <path d="M76,400 A20,20 0 1,1 116,400 L96,432 Z" fill="#006A4E" />
-        <path d="M78,393 A20,20 0 0,1 114,393" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.18" strokeLinecap="round" />
-        <circle cx={HOME.x} cy="396" r="8" fill="#F42A41" />
-
-        {/* Home label card */}
-        <rect x="56" y="448" width="140" height="26" rx="13" fill="white" fillOpacity="0.9" stroke="#241E5E" strokeOpacity="0.07" strokeWidth="0.8" filter="url(#cs)" />
-        <rect x="66" y="455" width="18" height="12" rx="1.5" fill="#006A4E" />
-        <circle cx="75" cy="461" r="3.5" fill="#F42A41" />
-        <text x="91" y="465" fontSize="11" fontWeight="600" fill="#1C1740" fillOpacity="0.7" letterSpacing="0.04em">
-          {dhk.code} · {dhk.country}
-        </text>
       </svg>
+
+      {/* Floating kite accents */}
+      <div className="pointer-events-none absolute left-[50%] top-[3%] z-20 animate-float-slow opacity-90">
+        <svg width="46" height="78" viewBox="0 0 68 110" fill="none">
+          <path d="M34 0 L68 40 L34 80 L0 40 Z" fill="#F0633B" />
+          <path d="M34 0 L34 80 M0 40 L68 40" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.6" />
+          <path d="M34 80 C 20 90, 45 98, 30 110" stroke="#F0633B" strokeWidth="2" fill="none" strokeDasharray="3 3" />
+        </svg>
+      </div>
+      <div className="pointer-events-none absolute left-[90%] top-[43%] z-20 animate-float-delayed opacity-85">
+        <svg width="40" height="70" viewBox="0 0 48 85" fill="none">
+          <path d="M24 0 L48 30 L24 60 L0 30 Z" fill="#006A4E" />
+          <path d="M24 0 L24 60 M0 30 L48 30" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.6" />
+          <path d="M24 60 C 15 68, 32 75, 20 85" stroke="#006A4E" strokeWidth="1.5" fill="none" />
+        </svg>
+      </div>
+
+      {/* Measured route arcs — recomputed on resize so they always meet the badges exactly */}
+      <svg className="absolute inset-0 z-10 h-full w-full overflow-visible" aria-hidden="true">
+        <defs>
+          <filter id="pathGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        {destinations.map((d) => {
+          const isActive = activeKey === d.key;
+          const isDimmed = activeKey !== null && !isActive;
+          return (
+            <path
+              key={d.key}
+              d={paths[d.key] || ""}
+              fill="none"
+              stroke="#E05228"
+              strokeOpacity={isDimmed ? 0.12 : isActive ? 0.85 : undefined}
+              strokeWidth={isActive ? 3 : 2}
+              strokeDasharray="6 6"
+              filter={isActive ? "url(#pathGlow)" : undefined}
+              className={!isDimmed ? `route-flow${isActive ? "" : " route-glow-pulse"}` : undefined}
+              style={{ transition: "stroke-width 0.2s" }}
+            />
+          );
+        })}
+        {destinations.map((d) => (
+          <circle key={`dot-${d.key}`} data-arc-end={d.key} r="4" fill="#E05228" opacity="0" />
+        ))}
+      </svg>
+
+      {/* Real students, framed as tilted photo cards — each ribbon states a real, established fact */}
+      {STUDENT_PHOTOS.map((p, i) => (
+        <PhotoCard key={p.src} photo={p} rotate={PHOTO_ROTATIONS[i]} onOpen={() => setOpenPhoto(p)} />
+      ))}
+
+      {/* Home node — Dhaka, the round logo hub */}
+      <div data-node="dhk" style={{ left: HOME_POS.left, top: HOME_POS.top }} className="absolute z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 sm:gap-2">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-parchment bg-white shadow-xl sm:h-16 sm:w-16">
+          <AbroadMark className="h-4.5 w-4.5 sm:h-8 sm:w-8" />
+        </span>
+        <span className="flex items-center gap-1 whitespace-nowrap rounded-full border hairline bg-white px-1.5 py-1 shadow-sm sm:gap-1.5 sm:px-3 sm:py-1.5">
+          <span className="[&>svg]:h-2.5 [&>svg]:w-[14px] sm:[&>svg]:h-3.5 sm:[&>svg]:w-5">{FLAGS.dhk}</span>
+          <span className="text-[7px] font-bold text-navy/70 sm:text-[10px]">
+            <span className="text-coral">{dhk.code}</span> · {dhk.country}
+          </span>
+        </span>
+      </div>
+
+      {/* Destination badges — hover glows the route, click opens real destination info */}
+      {destinations.map((d) => {
+        const { code, country } = splitLabel(d.label);
+        return (
+          <DestinationBadge
+            key={d.key}
+            destKey={d.key}
+            code={code}
+            country={country}
+            className={d.className}
+            active={activeKey === d.key}
+            onEnter={() => setActiveKey(d.key)}
+            onLeave={() => setActiveKey(null)}
+            onOpen={() => setOpenDrawer(d.key)}
+          />
+        );
+      })}
+
+      {openDrawer && <DestinationDrawer destKey={openDrawer} onClose={() => setOpenDrawer(null)} />}
+      {openPhoto && <Lightbox photo={openPhoto} onClose={() => setOpenPhoto(null)} />}
+    </div>
+  );
+}
+
+/** Compact teaser shown in place of the full quiz until the visitor actually
+ * intends to start — so the hero's CTA does something (reveals the quiz)
+ * instead of just auto-scrolling to a form that's already fully on screen. */
+function AssessmentTeaser({ onStart }: { onStart: () => void }) {
+  const { t } = useLang();
+  return (
+    <div className="grid gap-6 md:grid-cols-[280px_1fr]">
+      <QuizVisual />
+      <div className="flex flex-col justify-center rounded-2xl border hairline bg-paper p-6 md:p-8">
+        <p className="label-caps text-coral">{t.quiz.kicker}</p>
+        <h2 className="mt-3 font-display text-3xl md:text-4xl">{t.quiz.title}</h2>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-ink/60">{t.quiz.teaserSub}</p>
+        <button onClick={onStart} className="btn-primary mt-6 w-fit">
+          {t.quiz.teaserCta} →
+        </button>
+      </div>
     </div>
   );
 }
 
 export default function Hero() {
   const { t, lang } = useLang();
+  const location = useLocation();
+  const [started, setStarted] = useState(false);
+  const assessmentRef = useRef<HTMLDivElement>(null);
   const lastIndex = t.hero.titleLines.length - 1;
+
+  // Any link to "/#assessment" (nav, footer, other pages) should reveal the
+  // real quiz, not just scroll to a teaser card.
+  useEffect(() => {
+    if (location.hash === "#assessment") setStarted(true);
+  }, [location.hash]);
+
+  function revealAssessment() {
+    setStarted(true);
+    requestAnimationFrame(() => assessmentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
   // Hat offsets tuned per script so it clips onto the letter tops like the logo.
   const hatClass =
     lang === "en"
@@ -321,8 +522,8 @@ export default function Hero() {
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-ink/70 md:text-lg">{t.hero.sub}</p>
           <div className="mt-8">
-            <a
-              href="#assessment"
+            <button
+              onClick={revealAssessment}
               className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
             >
               <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
@@ -332,16 +533,19 @@ export default function Hero() {
                 </svg>
                 {t.hero.ctaSecondary}
               </span>
-            </a>
+            </button>
           </div>
         </div>
 
         <FlightRoutes />
       </div>
 
-      {/* The assessment, part of the same hero block, not a separate section */}
-      <div id="assessment" className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2">
-        <AssessmentQuiz />
+      {/* The assessment, part of the same hero block, not a separate section.
+          A teaser sits here until the visitor actually starts it, so the CTA
+          above reveals something instead of just scrolling to a form that's
+          already fully rendered. */}
+      <div id="assessment" ref={assessmentRef} className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2 scroll-mt-6">
+        {started ? <AssessmentQuiz /> : <AssessmentTeaser onStart={revealAssessment} />}
       </div>
     </section>
   );

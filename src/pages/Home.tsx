@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import StudentStoriesGrid from "../components/StudentStoriesGrid";
@@ -11,6 +12,71 @@ import { assetPath } from "../lib/assetPath";
 import { useLang } from "../i18n";
 
 const TEAM_FACES = TEAM.filter((m) => m.photo).slice(0, 4);
+
+type FaqItem = { q: string; a: string };
+
+/** A tabbed FAQ, not two stacked lists — the Malaysia-specific questions
+ * (most-traveled route, so people ask about it most) live one tap away
+ * instead of doubling the page's scroll length. */
+function FaqSection({
+  kicker,
+  title,
+  generalLabel,
+  generalItems,
+  malaysiaItems,
+  malaysiaLabel,
+}: {
+  kicker: string;
+  title: string;
+  generalLabel: string;
+  generalItems: FaqItem[];
+  malaysiaItems: FaqItem[];
+  malaysiaLabel: string;
+}) {
+  const [tab, setTab] = useState<"general" | "malaysia">("general");
+  const items = tab === "general" ? generalItems : malaysiaItems;
+
+  return (
+    <section className="mx-auto max-w-6xl px-6 py-20">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="label-caps text-coral">{kicker}</p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{title}</h2>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setTab("general")}
+            className={`label-caps rounded-full border-2 px-5 py-2 transition-colors ${
+              tab === "general" ? "border-navy bg-navy text-white" : "border-navy/15 text-ink/60 hover:border-navy/30"
+            }`}
+          >
+            {generalLabel}
+          </button>
+          <button
+            onClick={() => setTab("malaysia")}
+            className={`label-caps rounded-full border-2 px-5 py-2 transition-colors ${
+              tab === "malaysia" ? "border-navy bg-navy text-white" : "border-navy/15 text-ink/60 hover:border-navy/30"
+            }`}
+          >
+            {malaysiaLabel}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-10 divide-y hairline border-t hairline">
+        {items.map((item) => (
+          <details key={item.q} className="group py-6">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-lg text-navy md:text-xl">
+              {item.q}
+              <span className="shrink-0 text-2xl text-coral transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const { t } = useLang();
@@ -163,6 +229,16 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <FaqSection
+        kicker={t.homeFaq.kicker}
+        title={t.homeFaq.title}
+        generalLabel={t.homeFaq.generalTab}
+        generalItems={t.homeFaq.items}
+        malaysiaItems={t.malaysia.faq}
+        malaysiaLabel={t.nav.malaysia}
+      />
+
 
       <BoardingPassCta />
     </>

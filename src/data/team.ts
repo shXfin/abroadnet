@@ -36,7 +36,7 @@ export const TEAM: TeamMember[] = [
     city: "Chandpur",
     country: "Bangladesh",
     phone: "+880 163 435 3683",
-    role: { en: "Consultant", bn: "কাউন্সেলর" },
+    role: { en: "Manager", bn: "ম্যানেজার" },
     photo: "photos/team-shafayat.jpg",
   },
   {

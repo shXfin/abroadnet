@@ -164,8 +164,36 @@ em {
   animation: kite-c 4.5s 2s ease-in-out infinite alternate;
 }
 
+/* Hero network routes: a continuous marching-dash flow, like traffic moving
+   both ways between Dhaka and each destination, plus a slow breathing glow. */
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.route-flow {
+  animation: route-flow 1.6s linear infinite;
+}
+
+@keyframes route-glow-pulse {
+  0%,
+  100% {
+    stroke-opacity: 0.28;
+  }
+  50% {
+    stroke-opacity: 0.55;
+  }
+}
+
+.route-glow-pulse {
+  animation: route-glow-pulse 2.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .route-path,
+  .route-flow,
+  .route-glow-pulse,
   .node-pulse,
   .home-ring,
   .kite-shake-a,

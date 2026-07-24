@@ -4,6 +4,8 @@ import Logo from "./Logo";
 import MobileTabBar from "./MobileTabBar";
 import { useLang } from "../i18n";
 
+const MAP_DIRECTIONS_URL = "https://maps.app.goo.gl/bMD9JZ9HhSWj1iyY7";
+
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
@@ -188,9 +190,15 @@ export default function Layout() {
           </div>
 
           <div className="mt-10 grid gap-3 border-t border-white/15 pt-8 text-sm text-white/70 sm:grid-cols-3">
-            <p>{t.footer.email}</p>
-            <p>{t.footer.phone}</p>
-            <p>{t.footer.address}</p>
+            <a href={`mailto:${t.footer.email}`} className="hover:text-white">
+              {t.footer.email}
+            </a>
+            <a href="tel:+8801634353682" className="hover:text-white">
+              {t.footer.phone}
+            </a>
+            <a href={MAP_DIRECTIONS_URL} target="_blank" rel="noreferrer" className="hover:text-white">
+              {t.footer.address}
+            </a>
           </div>
 
           <div className="mt-8 flex flex-col justify-between gap-3 border-t border-white/15 pt-6 text-xs text-white/50 md:flex-row">

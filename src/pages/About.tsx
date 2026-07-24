@@ -3,6 +3,9 @@ import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 import TeamSection from "../components/TeamSection";
 
+const MAP_DIRECTIONS_URL = "https://maps.app.goo.gl/bMD9JZ9HhSWj1iyY7";
+const MAP_EMBED_URL = "https://www.google.com/maps?q=23.2342465,90.6706005&hl=en&z=16&output=embed";
+
 function OfficePhoto() {
   const [failed, setFailed] = useState(false);
   if (failed) {
@@ -42,9 +45,29 @@ export default function About() {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink/60">{t.about.officeCopy}</p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">{t.footer.phone}</p>
             <p className="max-w-sm text-sm leading-relaxed text-ink/60">{t.footer.email}</p>
+            <a
+              href={MAP_DIRECTIONS_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-block text-sm font-semibold text-coral underline decoration-coral underline-offset-4"
+            >
+              {t.about.officeDirections} →
+            </a>
           </div>
           <div className="aspect-[4/3] overflow-hidden border hairline bg-paper p-6">
             <OfficePhoto />
+          </div>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-6xl px-6">
+          <div className="aspect-[16/7] overflow-hidden border hairline">
+            <iframe
+              src={MAP_EMBED_URL}
+              title="Abroad Net office location"
+              className="h-full w-full grayscale-[20%]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </section>
