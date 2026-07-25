@@ -102,9 +102,9 @@ export default function Layout() {
 
       <header className="sticky top-0 z-50 border-b hairline bg-paper/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-3">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="shrink-0">
+          <a href={import.meta.env.BASE_URL} onClick={() => setMenuOpen(false)} className="shrink-0">
             <Logo />
-          </Link>
+          </a>
 
           <nav className="hidden items-center gap-7 lg:flex">
             <DestinationsDropdown label={t.nav.destinations} destinations={destinations} />
