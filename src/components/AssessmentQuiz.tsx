@@ -8,12 +8,13 @@ import {
   GEORGIA_UNIVERSITIES,
   CHINA_UNIVERSITIES,
 } from "../data/universities";
+import { combineCountryCode, hasSubmitted, rememberSubmission } from "../lib/submissionGuards";
 import QuizVisual from "./quiz/QuizVisual";
 
-// TODO: replace with the real Formspree form ID (or Airtable webhook) once created.
-const FORM_ENDPOINT = "https://formspree.io/f/REPLACE_ME";
+const FORM_ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
 
 type ContactInfo = { name: string; email: string; phone: string };
+type OtherInfo = { destination: string; field: string };
 
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 function localizeNumber(n: number, lang: string) {
@@ -42,15 +43,26 @@ export default function AssessmentQuiz() {
   const steps = quizSteps[lang];
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [otherInfo, setOtherInfo] = useState<OtherInfo>({ destination: "", field: "" });
   const [contact, setContact] = useState<ContactInfo>({ name: "", email: "", phone: "" });
+  const [countryCode, setCountryCode] = useState("+880");
+  const [customCountryCode, setCustomCountryCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [submitErrorMessage, setSubmitErrorMessage] = useState("");
 
   const step = steps[stepIndex];
   const totalSteps = steps.length;
+  const needsOtherDestination = step.kind === "single" && step.id === "destination" && answers.destination === "other";
+  const needsOtherField = step.kind === "single" && step.id === "field" && answers.field === "other";
   const canContinue =
     step.kind === "single"
-      ? Boolean(answers[step.id])
+      ? Boolean(
+          answers[step.id] &&
+            (!needsOtherDestination || otherInfo.destination.trim()) &&
+            (!needsOtherField || otherInfo.field.trim()),
+        )
       : step.kind === "contact"
         ? Boolean(contact.name && contact.email && contact.phone)
         : true;
@@ -61,22 +73,70 @@ export default function AssessmentQuiz() {
 
   async function handleContinue() {
     if (step.kind === "contact") {
-      setSubmitting(true);
       setSubmitError(false);
-      try {
-        const res = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({ ...answers, ...contact }),
-        });
-        if (!res.ok) setSubmitError(true);
-      } catch {
+      setSubmitErrorMessage("");
+      const email = contact.email.trim();
+      const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
+      const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
+      if (hasSubmitted({ email, phone })) {
         setSubmitError(true);
-      } finally {
-        setSubmitting(false);
+        setSubmitErrorMessage(t.quiz.duplicateError);
+        return;
       }
     }
     setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
+  }
+
+  async function handleSubmitApplication() {
+    setSubmitting(true);
+    setSubmitError(false);
+    setSubmitErrorMessage("");
+    try {
+      const email = contact.email.trim();
+      const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
+      const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
+
+      if (hasSubmitted({ email, phone })) {
+        setSubmitError(true);
+        setSubmitErrorMessage(t.quiz.duplicateError);
+        return;
+      }
+
+      if (!FORM_ENDPOINT) {
+        setSubmitError(true);
+        setSubmitErrorMessage(t.quiz.contactError);
+        return;
+      }
+
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          source: "website-assessment",
+          language: lang,
+          ...answers,
+          destinationOther: answers.destination === "other" ? otherInfo.destination.trim() : "",
+          fieldOther: answers.field === "other" ? otherInfo.field.trim() : "",
+          ...contact,
+          phone,
+        }),
+      });
+
+      if (res.type !== "opaque" && !res.ok) {
+        setSubmitError(true);
+        setSubmitErrorMessage(t.quiz.contactError);
+        return;
+      }
+
+      rememberSubmission({ email, phone });
+      setSubmitted(true);
+    } catch {
+      setSubmitError(true);
+      setSubmitErrorMessage(t.quiz.contactError);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const match = matchedUniversities(answers.destination);
@@ -136,6 +196,28 @@ export default function AssessmentQuiz() {
                 );
               })}
             </div>
+            {needsOtherDestination && (
+              <div className="mt-5">
+                <label className="label-caps text-ink/50">{t.quiz.destinationOther}</label>
+                <input
+                  value={otherInfo.destination}
+                  onChange={(e) => setOtherInfo((info) => ({ ...info, destination: e.target.value }))}
+                  placeholder={t.quiz.destinationOtherPh}
+                  className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
+                />
+              </div>
+            )}
+            {needsOtherField && (
+              <div className="mt-5">
+                <label className="label-caps text-ink/50">{t.quiz.fieldOther}</label>
+                <input
+                  value={otherInfo.field}
+                  onChange={(e) => setOtherInfo((info) => ({ ...info, field: e.target.value }))}
+                  placeholder={t.quiz.fieldOtherPh}
+                  className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
+                />
+              </div>
+            )}
             <p className="mt-6 rounded-lg bg-parchment/60 px-4 py-3 text-sm text-ink/60">{step.tip}</p>
           </div>
         )}
@@ -143,44 +225,111 @@ export default function AssessmentQuiz() {
         {step.kind === "contact" && (
           <div className="mt-8">
             <h2 className="font-display text-3xl md:text-4xl">{step.question}</h2>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.28em] text-ink/40">{t.apply.requiredNote}</p>
             <div className="mt-8 space-y-5">
               <div>
-                <label className="label-caps text-ink/50">{t.quiz.contactName}</label>
+                <label className="label-caps text-ink/50">{t.quiz.contactName} *</label>
                 <input
                   value={contact.name}
                   onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))}
                   placeholder={t.quiz.contactNamePh}
+                  autoComplete="name"
                   className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
                 />
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label className="label-caps text-ink/50">{t.quiz.contactEmail}</label>
+                  <label className="label-caps text-ink/50">{t.quiz.contactEmail} *</label>
                   <input
                     type="email"
                     value={contact.email}
                     onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
                     placeholder="you@email.com"
+                    autoComplete="email"
                     className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="label-caps text-ink/50">{t.quiz.contactPhone}</label>
-                  <input
-                    value={contact.phone}
-                    onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value }))}
-                    placeholder="+880..."
-                    className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
-                  />
+                  <label className="label-caps text-ink/50">{t.quiz.contactPhone} *</label>
+                  <div className="mt-1 grid gap-3 sm:grid-cols-[120px_1fr]">
+                    <div>
+                      <label className="label-caps text-ink/50">{t.quiz.phoneCode}</label>
+                      <select
+                        value={countryCode}
+                        onChange={(e) => setCountryCode(e.target.value)}
+                        autoComplete="tel-country-code"
+                        className="w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold focus:border-coral focus:outline-none"
+                      >
+                        <option value="+880">+880</option>
+                        <option value="+60">+60</option>
+                        <option value="+40">+40</option>
+                        <option value="+995">+995</option>
+                        <option value="+86">+86</option>
+                        <option value="+1">+1</option>
+                        <option value="other">Other</option>
+                      </select>
+                      {countryCode === "other" && (
+                        <input
+                          value={customCountryCode}
+                          onChange={(e) => setCustomCountryCode(e.target.value)}
+                          placeholder="+971"
+                          required
+                          className="mt-3 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        value={contact.phone}
+                        onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value }))}
+                        placeholder="1712345678"
+                        autoComplete="tel-national"
+                        className="mt-1 w-full border-0 border-b-2 hairline bg-transparent py-2.5 text-lg font-semibold placeholder:text-ink/30 focus:border-coral focus:outline-none"
+                      />
+                      <p className="mt-2 text-xs leading-relaxed text-ink/45">
+                        Enter the local number with or without the leading `0`. We’ll normalize it for you.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <p className="mt-6 rounded-lg bg-parchment/60 px-4 py-3 text-sm text-ink/60">{step.tip}</p>
-            {submitError && <p className="mt-3 text-sm text-coral">{t.quiz.contactError}</p>}
+            {submitError && <p className="mt-3 text-sm text-coral">{submitErrorMessage || t.quiz.contactError}</p>}
           </div>
         )}
 
-        {step.kind === "summary" && (
+        {step.kind === "summary" && submitted && (
+          <div className="py-2 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-coral/30 bg-coral/10 text-2xl text-coral motion-safe:animate-pulse">
+              ✓
+            </div>
+            <p className="label-caps mt-8 text-coral">{t.apply.doneKicker}</p>
+            <h2 className="mx-auto mt-4 max-w-xl font-display text-4xl md:text-5xl">{t.apply.doneTitle}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">{t.apply.doneSub}</p>
+            <div className="mx-auto mt-6 flex w-fit items-center gap-2 text-coral/80">
+              <span className="h-2 w-2 rounded-full bg-coral motion-safe:animate-pulse" />
+              <span className="h-2 w-8 rounded-full bg-coral/35 motion-safe:animate-pulse [animation-delay:150ms]" />
+              <span className="h-2 w-2 rounded-full bg-coral motion-safe:animate-pulse [animation-delay:300ms]" />
+            </div>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <Link to="/success-stories" className="btn-primary">
+                {t.apply.doneStudents} →
+              </Link>
+              <a
+                href="https://www.facebook.com/abroadnet25/"
+                target="_blank"
+                rel="noreferrer"
+                className="btn-ghost"
+              >
+                {t.apply.doneFacebook}
+              </a>
+            </div>
+          </div>
+        )}
+
+        {step.kind === "summary" && !submitted && (
           <div>
             <p className="label-caps text-coral">{t.quiz.resultsKicker}</p>
             <h2 className="mt-3 font-display text-4xl md:text-5xl">
@@ -198,18 +347,22 @@ export default function AssessmentQuiz() {
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href={`https://wa.me/8801634353682?text=${encodeURIComponent(t.book.whatsappMessage)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
+              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-primary disabled:opacity-40">
+                {submitting ? t.apply.submitting : `${t.quiz.submitApplication} →`}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSubmitError(false);
+                  setSubmitErrorMessage("");
+                  setStepIndex(0);
+                }}
+                className="btn-ghost"
               >
-                {t.quiz.bookSession} →
-              </a>
-              <Link to="/apply" className="btn-ghost">
-                {t.quiz.fullApplication}
-              </Link>
+                {t.quiz.editAnswers}
+              </button>
             </div>
+            {submitError && <p className="mt-3 text-sm text-coral">{submitErrorMessage || t.quiz.contactError}</p>}
           </div>
         )}
 

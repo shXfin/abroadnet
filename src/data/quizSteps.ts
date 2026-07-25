@@ -16,7 +16,7 @@ const en: QuizStep[] = [
       { value: "romania", label: "Romania" },
       { value: "georgia", label: "Georgia" },
       { value: "china", label: "China" },
-      { value: "undecided", label: "Not sure yet" },
+      { value: "other", label: "Others" },
     ],
   },
   {
@@ -116,7 +116,7 @@ const bn: QuizStep[] = [
       { value: "romania", label: "রোমানিয়া" },
       { value: "georgia", label: "জর্জিয়া" },
       { value: "china", label: "চীন" },
-      { value: "undecided", label: "এখনও ঠিক করিনি" },
+      { value: "other", label: "অন্যান্য" },
     ],
   },
   {
