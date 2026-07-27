@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
-import { combineCountryCode, hasSubmitted, rememberSubmission } from "../lib/submissionGuards";
+import { checkLeadDuplicate } from "../lib/leadChecks";
+import { combineCountryCode, rememberSubmission } from "../lib/submissionGuards";
 
 const FORM_ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
 
@@ -23,7 +24,8 @@ export default function Apply() {
       const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
       const phone = combineCountryCode(activeCountryCode, String(form.get("phone") || "").trim());
 
-      if (hasSubmitted({ email, phone })) {
+      const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
+      if (duplicateStatus === "duplicate") {
         setStatus("duplicate");
         return;
       }

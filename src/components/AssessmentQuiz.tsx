@@ -8,7 +8,8 @@ import {
   GEORGIA_UNIVERSITIES,
   CHINA_UNIVERSITIES,
 } from "../data/universities";
-import { combineCountryCode, hasSubmitted, rememberSubmission } from "../lib/submissionGuards";
+import { checkLeadDuplicate } from "../lib/leadChecks";
+import { combineCountryCode, rememberSubmission } from "../lib/submissionGuards";
 import QuizVisual from "./quiz/QuizVisual";
 
 const FORM_ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
@@ -73,15 +74,21 @@ export default function AssessmentQuiz() {
 
   async function handleContinue() {
     if (step.kind === "contact") {
+      setSubmitting(true);
       setSubmitError(false);
       setSubmitErrorMessage("");
-      const email = contact.email.trim();
-      const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
-      const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
-      if (hasSubmitted({ email, phone })) {
-        setSubmitError(true);
-        setSubmitErrorMessage(t.quiz.duplicateError);
-        return;
+      try {
+        const email = contact.email.trim();
+        const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
+        const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
+        const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
+        if (duplicateStatus === "duplicate") {
+          setSubmitError(true);
+          setSubmitErrorMessage(t.quiz.duplicateError);
+          return;
+        }
+      } finally {
+        setSubmitting(false);
       }
     }
     setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
@@ -96,7 +103,8 @@ export default function AssessmentQuiz() {
       const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
       const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
 
-      if (hasSubmitted({ email, phone })) {
+      const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
+      if (duplicateStatus === "duplicate") {
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.duplicateError);
         return;

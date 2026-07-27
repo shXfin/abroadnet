@@ -67,6 +67,36 @@ function doPost(e) {
   }
 }
 
+function doGet(e) {
+  try {
+    const params = (e && e.parameter) || {};
+    if (params.action !== "checkDuplicate") {
+      return jsonpOrJson_(params.callback, { ok: false, status: "unknown" });
+    }
+
+    const sheet = getLeadSheet_();
+    ensureHeaders_(sheet);
+
+    const normalizedPhone = normalizePhone_(params.phone);
+    const email = String(params.email || "").trim().toLowerCase();
+
+    if (!email && !normalizedPhone) {
+      return jsonpOrJson_(params.callback, { ok: false, status: "invalid" });
+    }
+
+    return jsonpOrJson_(params.callback, {
+      ok: true,
+      status: isDuplicate_(sheet, normalizedPhone, email) ? "duplicate" : "unique",
+    });
+  } catch (error) {
+    return jsonpOrJson_((e && e.parameter && e.parameter.callback) || "", {
+      ok: false,
+      status: "error",
+      message: String(error),
+    });
+  }
+}
+
 function getLeadSheet_() {
   const spreadsheet = getSpreadsheet_();
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
@@ -153,4 +183,14 @@ function clean_(value) {
 
 function json_(payload) {
   return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function jsonpOrJson_(callback, payload) {
+  const safeCallback = String(callback || "").trim();
+  if (/^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*)*$/.test(safeCallback)) {
+    return ContentService
+      .createTextOutput(safeCallback + "(" + JSON.stringify(payload) + ");")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return json_(payload);
 }
