@@ -23,15 +23,6 @@ export default function ChatWidget() {
               <p className="font-display text-base leading-tight">{t.chat.title}</p>
               <p className="text-xs text-white/50">{t.chat.subtitle}</p>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              aria-label={t.chat.close}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
           </div>
 
           <div className="max-h-96 flex-1 overflow-y-auto bg-parchment/30 p-4">
@@ -66,13 +57,23 @@ export default function ChatWidget() {
         </div>
       )}
 
+      {/* Always visible, in the same spot — it morphs into a close button
+          rather than disappearing, same as Intercom/Drift/Tidio-style widgets. */}
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label={t.chat.launcherLabel}
+        aria-label={open ? t.chat.close : t.chat.launcherLabel}
         aria-expanded={open}
-        className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 z-[60] flex h-16 w-16 items-center justify-center rounded-full bg-paper shadow-[0_16px_30px_-10px_rgba(28,23,64,0.45)] ring-2 ring-coral/70 transition-transform hover:-translate-y-0.5 active:scale-95 lg:bottom-8 lg:right-8"
+        className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 z-[60] flex h-16 w-16 items-center justify-center rounded-full bg-paper shadow-[0_16px_30px_-10px_rgba(28,23,64,0.45)] ring-[3px] ring-coral transition-transform hover:-translate-y-0.5 active:scale-95 lg:bottom-8 lg:right-8 ${
+          open ? "" : "chat-launcher-attn"
+        }`}
       >
-        <img src={assetPath("icons/chat-mascot.png")} alt={t.chat.launcherLabel} className="h-11 w-11 object-contain" />
+        {open ? (
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-navy" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        ) : (
+          <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="h-11 w-11 object-contain" />
+        )}
       </button>
     </>
   );

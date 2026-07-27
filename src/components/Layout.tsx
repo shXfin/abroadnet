@@ -179,7 +179,7 @@ export default function Layout() {
       <MobileTabBar onOpenMenu={() => setMenuOpen((o) => !o)} />
       <ChatWidget />
 
-      <footer className="bg-navy text-white">
+      <footer className="bg-navy text-white pb-24 lg:pb-0">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="flex flex-col justify-between gap-10 md:flex-row md:items-end">
             <div>

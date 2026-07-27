@@ -54,11 +54,18 @@ export default function DestinationSteps({
             {steps.map((step, i) => (
               <li
                 key={step.title}
-                className="grid gap-4 border-t hairline py-8 md:grid-cols-[100px_320px_1fr] md:gap-10"
+                className="sticky mb-3 grid gap-2 overflow-hidden rounded-2xl border hairline bg-paper p-5 shadow-[0_24px_48px_-28px_rgba(28,23,64,0.4)] md:grid-cols-[100px_320px_1fr] md:items-center md:gap-10 md:p-6 last:mb-0"
+                style={{ top: `calc(5.5rem + ${i * 10}px)`, zIndex: i + 1 }}
               >
-                <span className="font-mono text-sm text-coral">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="font-display text-2xl md:text-3xl">{step.title}</h3>
-                <p className="max-w-md text-sm leading-relaxed text-ink/60 md:pt-2">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-3 -top-4 font-display text-[4.5rem] leading-none text-ink/[0.04] md:text-[6rem]"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="relative font-mono text-sm text-coral">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="relative font-display text-xl md:text-2xl">{step.title}</h3>
+                <p className="relative max-w-md text-sm leading-relaxed text-ink/60">
                   {step.description}
                 </p>
               </li>
