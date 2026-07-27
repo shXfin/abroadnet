@@ -50,31 +50,49 @@ export default function DestinationSteps({
           <p className="label-caps text-ink/50">{t.destination.itineraryKicker}</p>
           <h2 className="mt-3 font-display text-4xl md:text-5xl">{t.destination.itineraryTitle}</h2>
 
-          <ol className="mt-14">
+          {/* Mobile: a quick, non-blocking scan of the steps — no sticky/stacking here,
+              so nothing stands between a mobile visitor and the real information below. */}
+          <div className="mt-8 flex gap-3 overflow-x-auto pb-2 md:hidden">
             {steps.map((step, i) => (
-              <li
-                key={step.title}
-                className="sticky mb-3 grid gap-2 overflow-hidden rounded-2xl border hairline bg-paper p-5 shadow-[0_24px_48px_-28px_rgba(28,23,64,0.4)] md:grid-cols-[100px_320px_1fr] md:items-center md:gap-10 md:p-6 last:mb-0"
-                style={{ top: `calc(5.5rem + ${i * 10}px)`, zIndex: i + 1 }}
-              >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-3 -top-4 font-display text-[4.5rem] leading-none text-ink/[0.04] md:text-[6rem]"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="relative font-mono text-sm text-coral">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="relative font-display text-xl md:text-2xl">{step.title}</h3>
-                <p className="relative max-w-md text-sm leading-relaxed text-ink/60">
-                  {step.description}
-                </p>
-              </li>
+              <div key={step.title} className="w-40 shrink-0 rounded-xl border hairline bg-paper p-4">
+                <span className="font-mono text-xs text-coral">{String(i + 1).padStart(2, "0")}</span>
+                <p className="mt-1 font-display text-sm leading-snug">{step.title}</p>
+              </div>
             ))}
-          </ol>
+          </div>
+
+          {/* Desktop: the folder stack lives in a narrow rail beside the REAL content
+              (the per-country details below) instead of gating it — it collapses into
+              a pile of filed folders as you read, rather than sitting in front of
+              everything you actually came here to read. */}
+          <div className="md:mt-12 md:grid md:grid-cols-[220px_1fr] md:gap-12">
+            <div className="relative hidden md:block">
+              <ol>
+                {steps.map((step, i) => (
+                  <li
+                    key={step.title}
+                    className="sticky mb-2 last:mb-0"
+                    style={{ top: `calc(6rem + ${i * 8}px)`, zIndex: i + 1 }}
+                  >
+                    <div
+                      className="absolute -top-4 flex h-5 w-14 items-center justify-center rounded-t-lg border hairline border-b-0 bg-navy text-[10px] font-mono text-white/80"
+                      style={{ left: `${6 + (i % 3) * 20}%` }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <div className="relative overflow-hidden rounded-xl border hairline bg-paper p-3.5 shadow-[0_16px_32px_-20px_rgba(28,23,64,0.4)]">
+                      <span className="font-mono text-xs text-coral">{String(i + 1).padStart(2, "0")}</span>
+                      <h3 className="mt-1 font-display text-sm leading-snug">{step.title}</h3>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div>{extra}</div>
+          </div>
         </div>
       </section>
-
-      {extra}
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="label-caps text-ink/50">{t.destination.unisKicker}</p>

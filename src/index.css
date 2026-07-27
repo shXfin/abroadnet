@@ -210,23 +210,29 @@ em {
  * ring pulse every few seconds so it actually gets noticed in the corner —
  * the rest of each cycle is a hold, so it doesn't feel restless. */
 @keyframes chat-launcher-wiggle {
-  0%, 68% {
-    transform: rotate(0deg) scale(1);
+  0%, 66% {
+    transform: translateY(0) rotate(0deg) scale(1);
   }
-  72% {
-    transform: rotate(-10deg) scale(1.05);
+  69% {
+    transform: translateY(2px) rotate(-4deg) scale(0.96);
   }
-  76% {
-    transform: rotate(9deg) scale(1.05);
+  73% {
+    transform: translateY(-14px) rotate(8deg) scale(1.08);
+  }
+  77% {
+    transform: translateY(0) rotate(-10deg) scale(1.04);
   }
   80% {
-    transform: rotate(-6deg) scale(1.05);
+    transform: translateY(-7px) rotate(6deg) scale(1.06);
   }
   84% {
-    transform: rotate(4deg) scale(1.02);
+    transform: translateY(0) rotate(-4deg) scale(1.02);
   }
-  88%, 100% {
-    transform: rotate(0deg) scale(1);
+  88% {
+    transform: translateY(-2px) rotate(2deg) scale(1.01);
+  }
+  92%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
   }
 }
 
