@@ -161,7 +161,7 @@ export default function AssessmentQuiz() {
     <div className="grid gap-6 md:grid-cols-[280px_1fr]">
       <QuizVisual />
 
-      <div className="rounded-2xl border hairline bg-paper p-6 md:p-8">
+      <div id="assessment-card" className="rounded-2xl border hairline bg-paper p-6 md:p-8">
         {step.kind !== "summary" && (
           <>
             <div className="flex items-center justify-between">

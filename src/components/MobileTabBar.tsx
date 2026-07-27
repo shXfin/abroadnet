@@ -1,5 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useLang } from "../i18n";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 const icons = {
   home: (
@@ -40,15 +41,20 @@ const icons = {
  * below lg, this replaces it with a fixed, thumb-reachable tab bar. */
 export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: () => void }) {
   const { t } = useLang();
+  const { pathname, hash } = useLocation();
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
       isActive ? "text-coral" : "text-ink/55"
     }`;
-  // Plain (never "active") style for tabs that jump to an in-page anchor
-  // rather than a distinct route — e.g. Destinations, which otherwise shares
-  // "/" with Home and would falsely light up as the current page.
-  const anchorTabClass = "flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 text-ink/55 transition-colors";
+  // Destinations shares the "/" route with Home (it's an in-page anchor, not
+  // its own page), so a plain NavLink would either never light up or light
+  // up together with Home. Track the hash ourselves so exactly one tab is
+  // active: Destinations while sitting on #routes, Home otherwise.
+  const onRoutesAnchor = pathname === "/" && hash === "#routes";
+  const anchorTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
+    onRoutesAnchor ? "text-coral" : "text-ink/55"
+  }`;
 
   return (
     <nav
@@ -56,7 +62,7 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="mx-auto flex max-w-6xl items-end px-2">
-        <NavLink to="/" end className={tabClass}>
+        <NavLink to="/" end className={tabClass({ isActive: pathname === "/" && !onRoutesAnchor })}>
           <span className="h-6 w-6">{icons.home}</span>
           <span className="text-xs font-semibold">{t.nav.home}</span>
         </NavLink>
@@ -66,7 +72,7 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
           <span className="text-xs font-semibold">{t.nav.destinations}</span>
         </Link>
 
-        <NavLink to="/#assessment" className="flex flex-1 flex-col items-center justify-center pb-2">
+        <NavLink to="/#assessment" onClick={handleAssessmentLinkClick} className="flex flex-1 flex-col items-center justify-center pb-2">
           <span className="-mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white shadow-[0_8px_20px_-6px_rgba(28,23,64,0.6)]">
             <span className="h-6 w-6 text-coral">{icons.spark}</span>
           </span>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import AssessmentQuiz from "./AssessmentQuiz";
 import { useLang } from "../i18n";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 import { assetPath } from "../lib/assetPath";
 import { MALAYSIA_UNIVERSITIES, ROMANIA_UNIVERSITIES, GEORGIA_UNIVERSITIES, CHINA_UNIVERSITIES } from "../data/universities";
 
@@ -449,8 +450,7 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-6 pb-12 pt-14 lg:min-h-[calc(100vh-140px)] lg:grid-cols-[1fr_1.05fr] lg:gap-6 lg:pb-0 lg:pt-0">
         <div>
-          <p className="text-sm font-semibold text-coral">{t.hero.kicker}</p>
-          <h1 className="mt-5 font-display text-[3.4rem] leading-[1.04] md:text-7xl xl:text-8xl">
+          <h1 className="font-display text-[3.4rem] leading-[1.04] md:text-7xl xl:text-8xl">
             {t.hero.titleLines.map((line, i) => {
               if (i !== lastIndex) {
                 return (
@@ -487,8 +487,9 @@ export default function Hero() {
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-ink/70 md:text-lg">{t.hero.sub}</p>
           <div className="mt-8">
-            <a
-              href="#assessment"
+            <Link
+              to="/#assessment"
+              onClick={handleAssessmentLinkClick}
               className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
             >
               <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
@@ -498,15 +499,15 @@ export default function Hero() {
                 </svg>
                 {t.hero.ctaSecondary}
               </span>
-            </a>
+            </Link>
           </div>
         </div>
 
         <FlightRoutes />
       </div>
 
-      {/* The assessment, part of the same hero block, not a separate section */}
-      <div id="assessment" className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:pt-2">
+      {/* The assessment, part of the same hero block, not a separate section. scroll-mt clears the sticky header when linked to via #assessment */}
+      <div id="assessment" className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-20 pt-6 lg:pt-2">
         <AssessmentQuiz />
       </div>
     </section>

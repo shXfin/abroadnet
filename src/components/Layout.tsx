@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import MobileTabBar from "./MobileTabBar";
+import ChatWidget from "./ChatWidget";
 import { useLang } from "../i18n";
+import { jumpToAssessmentNow, handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 const MAP_DIRECTIONS_URL = "https://maps.app.goo.gl/bMD9JZ9HhSWj1iyY7";
 
@@ -13,7 +15,11 @@ function ScrollToTop() {
       const id = hash.slice(1);
       const el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        if (id === "assessment") {
+          jumpToAssessmentNow();
+        } else {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
         return;
       }
     }
@@ -125,7 +131,7 @@ export default function Layout() {
               {t.nav.about}
             </NavLink>
             <LangToggle />
-            <Link to="/#assessment" className="btn-primary !px-5 !py-2.5">
+            <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary !px-5 !py-2.5">
               {t.nav.getMatched}
             </Link>
           </nav>
@@ -152,7 +158,10 @@ export default function Layout() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => {
+                    if (link.to === "/#assessment") handleAssessmentLinkClick(e);
+                    setMenuOpen(false);
+                  }}
                   className="font-display text-2xl text-ink"
                 >
                   {link.label}
@@ -168,6 +177,7 @@ export default function Layout() {
       </main>
 
       <MobileTabBar onOpenMenu={() => setMenuOpen((o) => !o)} />
+      <ChatWidget />
 
       <footer className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-6 py-16">

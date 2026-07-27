@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import BoardingPassCta from "./BoardingPassCta";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 type Props = {
   country: string;
@@ -81,6 +82,7 @@ export default function DestinationSteps({
         <p className="mt-8 text-sm text-ink/50">
           <Link
             to="/#assessment"
+            onClick={handleAssessmentLinkClick}
             className="underline decoration-coral underline-offset-4 hover:text-coral"
           >
             {t.destination.unisNote}

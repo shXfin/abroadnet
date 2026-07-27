@@ -112,9 +112,10 @@ export default function Home() {
             {/* Malaysia leads: the most-traveled route, given the room to show it */}
             <Link
               to="/destinations/malaysia"
-              className="group relative flex flex-col overflow-hidden bg-navy text-white"
+              className="group relative flex flex-col overflow-hidden bg-paper text-ink transition-colors duration-300 hover:bg-navy hover:text-white"
             >
-              {/* Mobile: the photo sits as its own banner, text stays on solid navy below */}
+              {/* Mobile: the photo sits as its own banner, text stays on the same paper panel
+                  Romania/Georgia/China use below it — flips navy only on a real hover (desktop). */}
               <div className="aspect-[2048/1163] md:hidden">
                 <img
                   src={assetPath("photos/malaysia-mahsa-visit.jpg")}
@@ -124,34 +125,31 @@ export default function Home() {
                 />
               </div>
 
-              {/* Desktop: full-bleed background photo behind the text, with a gradient for contrast */}
+              {/* Desktop: full-bleed background photo behind the text. A uniform wash (not a
+                  fade) keeps contrast even everywhere text can land — same paper/navy the other
+                  three cards use, just laid over the photo instead of replacing it, so it reads
+                  as one flat card color with the photo as a faint texture underneath. */}
               <img
                 src={assetPath("photos/malaysia-mahsa-visit.jpg")}
                 alt=""
                 aria-hidden="true"
-                className="absolute inset-0 hidden h-full w-full object-cover object-[78%_78%] opacity-95 md:block"
+                className="absolute inset-0 hidden h-full w-full object-cover object-[78%_78%] transition-transform duration-500 md:block md:group-hover:scale-[1.04]"
               />
-              <div
-                className="absolute inset-0 hidden transition-[background] md:block group-hover:[background:linear-gradient(to_right,rgba(28,23,64,0.95)_0%,rgba(28,23,64,0.88)_26%,rgba(28,23,64,0.4)_40%,rgba(28,23,64,0.3)_60%,rgba(28,23,64,0.3)_100%)]"
-                style={{
-                  background:
-                    "linear-gradient(to right, rgba(36,30,94,0.95) 0%, rgba(36,30,94,0.88) 26%, rgba(36,30,94,0.4) 40%, rgba(36,30,94,0.3) 60%, rgba(36,30,94,0.3) 100%)",
-                }}
-              />
+              <div className="absolute inset-0 hidden bg-paper/90 transition-colors duration-300 md:block md:group-hover:bg-navy/90" />
 
               <div className="relative p-8 md:p-12">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-sm tracking-widest text-coral">KUL</span>
-                  <span className="label-caps text-white/40">{t.routes.leadTag}</span>
+                  <span className="label-caps text-ink/40 group-hover:text-white/40">{t.routes.leadTag}</span>
                 </div>
 
                 <div className="mt-6 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-end">
                   <div>
                     <h3 className="font-display text-5xl md:text-7xl">{t.nav.malaysia}</h3>
-                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 md:text-base">
+                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-ink/60 group-hover:text-white/60 md:text-base">
                       {t.routes.malaysiaTag}
                     </p>
-                    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-white/50">
+                    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-ink/50 group-hover:text-white/50">
                       <span>{MALAYSIA_UNIVERSITIES.length} {t.routes.partnerUnis}</span>
                       <p className="label-caps flex items-center gap-2 text-coral">
                         {t.routes.explore}
@@ -160,19 +158,19 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
+                  <div className="grid grid-cols-3 gap-6 border-t border-ink/10 pt-6 group-hover:border-white/10 md:border-t-0 md:border-l md:pl-10 md:pt-0">
                     {bachelorTuition && (
                       <div>
-                        <p className="label-caps text-white/40">{t.malaysia.bachelorLabel.split(" (")[0]}</p>
+                        <p className="label-caps text-ink/40 group-hover:text-white/40">{t.malaysia.bachelorLabel.split(" (")[0]}</p>
                         <p className="mt-2 font-display text-lg leading-tight">{bachelorTuition.value}</p>
                       </div>
                     )}
                     <div>
-                      <p className="label-caps text-white/40">{t.malaysia.livingCostLabel}</p>
+                      <p className="label-caps text-ink/40 group-hover:text-white/40">{t.malaysia.livingCostLabel}</p>
                       <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.livingCostValue}</p>
                     </div>
                     <div>
-                      <p className="label-caps text-white/40">{t.malaysia.intakesKicker}</p>
+                      <p className="label-caps text-ink/40 group-hover:text-white/40">{t.malaysia.intakesKicker}</p>
                       <p className="mt-2 font-display text-lg leading-tight">{t.malaysia.intakes.length}×/{t.routes.perYear}</p>
                     </div>
                   </div>

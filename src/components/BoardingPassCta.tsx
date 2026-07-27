@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 /** Boarding-pass styled call-to-action for the free 1-on-1 session. */
 export default function BoardingPassCta() {
@@ -18,6 +19,7 @@ export default function BoardingPassCta() {
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">{t.pass.sub}</p>
           <Link
             to="/#assessment"
+            onClick={handleAssessmentLinkClick}
             className="mt-8 inline-flex items-center gap-2 bg-coral px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-navy"
           >
             {t.pass.cta} →
