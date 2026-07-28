@@ -125,7 +125,7 @@ export default function DestinationSteps({
               (the per-country details and partner universities below) instead of
               gating it — it collapses into a pile of filed folders as you read, and
               stays resting there through to the end of this destination's content. */}
-          <div className="md:mt-12 md:grid md:grid-cols-[220px_1fr] md:gap-12">
+          <div className="md:mt-12 md:grid md:grid-cols-[280px_1fr] md:gap-12">
             <div ref={railOuterRef} className="relative hidden md:block">
               <ol className="sticky" style={{ top: STICKY_TOP, height: WRAPPER_HEIGHT }}>
                 {steps.map((step, i) => {
@@ -156,8 +156,8 @@ export default function DestinationSteps({
                         >
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <span className="relative block overflow-hidden rounded-xl border hairline bg-paper px-5 pb-5 pt-8 shadow-[0_16px_32px_-20px_rgba(28,23,64,0.4)] transition-shadow hover:shadow-[0_16px_32px_-14px_rgba(28,23,64,0.5)]">
-                          <h3 className="truncate font-display text-base leading-snug">{step.title}</h3>
+                        <span className="relative block overflow-hidden rounded-xl border hairline bg-paper px-4 pb-5 pt-8 shadow-[0_16px_32px_-20px_rgba(28,23,64,0.4)] transition-shadow hover:shadow-[0_16px_32px_-14px_rgba(28,23,64,0.5)]">
+                          <h3 className="truncate font-display text-sm leading-snug">{step.title}</h3>
                           {isOpen && (
                             <span className="mt-2 block text-sm leading-relaxed text-ink/60">{step.description}</span>
                           )}
