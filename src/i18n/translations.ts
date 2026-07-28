@@ -582,6 +582,8 @@ const en = {
     unisKicker: "Partner universities",
     unisTitle: "Where you could land",
     unisNote: "Not sure which fits? Talk it through in a free session.",
+    prevLabel: "Previous",
+    nextLabel: "Next up",
   },
   students: {
     kicker: "Proof, not promises",
@@ -1278,6 +1280,8 @@ const bn: typeof en = {
     unisKicker: "পার্টনার বিশ্ববিদ্যালয়",
     unisTitle: "যেখানে পড়তে পারেন",
     unisNote: "কোনটি আপনার জন্য ঠিক, নিশ্চিত নন? ফ্রি সেশনে কথা বলে নিন।",
+    prevLabel: "পূর্ববর্তী",
+    nextLabel: "পরবর্তী",
   },
   students: {
     kicker: "প্রতিশ্রুতি নয়, প্রমাণ",
