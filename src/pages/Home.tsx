@@ -5,6 +5,8 @@ import StudentStoriesGrid from "../components/StudentStoriesGrid";
 import Ticker from "../components/Ticker";
 import BoardingPassCta from "../components/BoardingPassCta";
 import FacebookCarousel from "../components/FacebookCarousel";
+import TestimonialsMarquee from "../components/TestimonialsMarquee";
+import PartnershipBanner from "../components/PartnershipBanner";
 import JourneyTimeline from "../components/JourneyTimeline";
 import { TEAM } from "../data/team";
 import { MALAYSIA_UNIVERSITIES } from "../data/universities";
@@ -98,10 +100,14 @@ export default function Home() {
         </div>
       </section>
 
+      <TestimonialsMarquee />
+
       <Ticker />
 
       {/* Facebook carousel, right beneath the hero */}
       <FacebookCarousel />
+
+      <PartnershipBanner />
 
       {/* The journey and where it leads, unified in one block */}
       <section id="routes" className="border-y hairline bg-parchment/30 py-20">

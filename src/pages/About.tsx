@@ -37,8 +37,53 @@ export default function About() {
 
       <TeamSection />
 
-      <section className="border-y hairline bg-parchment/40 py-20">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-2">
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <p className="label-caps text-ink/50">{t.about.portfolioKicker}</p>
+        <h2 className="mt-3 font-display text-4xl">{t.about.portfolioTitle}</h2>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink/60">{t.about.portfolioCopy}</p>
+
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {t.about.gallery.map((item) => {
+            const content = (
+              <>
+                <div className="aspect-[4/3] overflow-hidden rounded-t-xl">
+                  <img src={assetPath(item.photo)} alt="" className="h-full w-full object-cover" />
+                </div>
+                <p className="p-4 text-sm leading-snug text-ink/70">{item.caption}</p>
+              </>
+            );
+            return (
+              <li key={item.photo} className="overflow-hidden rounded-xl border hairline bg-paper">
+                {item.href ? (
+                  <a href={item.href} target="_blank" rel="noreferrer" className="block transition-opacity hover:opacity-90">
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="label-caps mt-12 text-ink/50">{t.about.pressKicker}</p>
+        <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2">
+          {t.about.pressLinks.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm font-semibold text-coral underline decoration-coral/40 underline-offset-4 hover:decoration-coral"
+            >
+              {item.label} →
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="grid gap-12 md:grid-cols-2">
           <div>
             <p className="label-caps text-ink/50">{t.about.officeKicker}</p>
             <h2 className="mt-3 font-display text-4xl">{t.about.officeTitle}</h2>
@@ -59,7 +104,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-6xl px-6">
+        <div className="mx-auto mt-12 max-w-6xl">
           <div className="aspect-[16/7] overflow-hidden border hairline">
             <iframe
               src={MAP_EMBED_URL}
@@ -70,12 +115,6 @@ export default function About() {
             />
           </div>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="label-caps text-ink/50">{t.about.portfolioKicker}</p>
-        <h2 className="mt-3 font-display text-4xl">{t.about.portfolioTitle}</h2>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink/60">{t.about.portfolioCopy}</p>
       </section>
     </>
   );

@@ -501,6 +501,26 @@ export default function Hero() {
               </span>
             </Link>
           </div>
+
+          {/* Deliberately not a second pill. The hero keeps one dominant
+              action; this is the site's quieter secondary idiom (coral
+              underline), set off by a hairline so it reads as a footnote to
+              the CTA rather than a competing choice. */}
+          <div className="mt-7 max-w-md border-t hairline pt-5">
+            <div className="flex items-center gap-2.5">
+              <img src={assetPath("photos/englishology-wordmark.png")} alt="Englishology" className="h-4 w-auto shrink-0" />
+              <span className="label-caps text-ink/40">{t.hero.linguaskillPartner}</span>
+            </div>
+            <Link to="/linguaskill" className="group mt-2.5 block text-sm font-semibold text-ink/70 hover:text-coral">
+              <span className="underline decoration-coral/40 underline-offset-4 group-hover:decoration-coral">
+                {t.hero.linguaskillBadge}
+                {/* Glued to the last word so a wrap can never orphan the arrow */}
+                <span className="whitespace-nowrap no-underline">
+                  &nbsp;<span className="inline-block text-coral transition-transform group-hover:translate-x-0.5">→</span>
+                </span>
+              </span>
+            </Link>
+          </div>
         </div>
 
         <FlightRoutes />

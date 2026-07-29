@@ -227,6 +227,15 @@ export default function AssessmentQuiz() {
               </div>
             )}
             <p className="mt-6 rounded-lg bg-parchment/60 px-4 py-3 text-sm text-ink/60">{step.tip}</p>
+            {step.id === "english" && (
+              <Link
+                to="/linguaskill"
+                className="mt-3 flex items-center gap-2 rounded-lg border hairline bg-paper px-4 py-3 text-sm font-semibold text-coral transition-colors hover:border-coral"
+              >
+                {t.quiz.linguaskillNudge}
+                <span>→</span>
+              </Link>
+            )}
           </div>
         )}
 

@@ -46,6 +46,7 @@ function LangToggle({ light = false }: { light?: boolean }) {
 }
 
 function DestinationsDropdown({ label, destinations }: { label: string; destinations: { to: string; label: string }[] }) {
+  const { t } = useLang();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -67,7 +68,7 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
         <span className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-3 w-48 border hairline bg-paper py-2 shadow-lg">
+        <div className="absolute left-0 top-full mt-3 w-56 border hairline bg-paper py-2 shadow-lg">
           {destinations.map((d) => (
             <NavLink
               key={d.to}
@@ -82,6 +83,15 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
               {d.label}
             </NavLink>
           ))}
+          <div className="my-1 border-t hairline" />
+          <NavLink
+            to="/destinations"
+            onClick={() => setOpen(false)}
+            className="flex items-center justify-between px-4 py-2 text-sm font-semibold text-coral hover:opacity-70"
+          >
+            {t.nav.viewAllDestinations}
+            <span>→</span>
+          </NavLink>
         </div>
       )}
     </div>
@@ -130,6 +140,14 @@ export default function Layout() {
             >
               {t.nav.about}
             </NavLink>
+            <NavLink
+              to="/linguaskill"
+              className={({ isActive }) =>
+                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
+              }
+            >
+              {t.nav.linguaskill}
+            </NavLink>
             <LangToggle />
             <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary !px-5 !py-2.5">
               {t.nav.getMatched}
@@ -153,6 +171,7 @@ export default function Layout() {
                 ...destinations,
                 { to: "/success-stories", label: t.nav.students },
                 { to: "/about", label: t.nav.about },
+                { to: "/linguaskill", label: t.nav.linguaskill },
                 { to: "/#assessment", label: t.nav.getMatched },
               ].map((link) => (
                 <Link
