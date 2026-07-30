@@ -85,6 +85,29 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
           ))}
           <div className="my-1 border-t hairline" />
           <NavLink
+            to="/universities"
+            onClick={() => setOpen(false)}
+            className={({ isActive }) =>
+              `flex items-center justify-between px-4 py-2 text-sm font-semibold transition-colors ${
+                isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
+              }`
+            }
+          >
+            {t.nav.universities}
+          </NavLink>
+          <NavLink
+            to="/courses"
+            onClick={() => setOpen(false)}
+            className={({ isActive }) =>
+              `flex items-center justify-between px-4 py-2 text-sm font-semibold transition-colors ${
+                isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
+              }`
+            }
+          >
+            {t.nav.courses}
+          </NavLink>
+          <div className="my-1 border-t hairline" />
+          <NavLink
             to="/destinations"
             onClick={() => setOpen(false)}
             className="flex items-center justify-between px-4 py-2 text-sm font-semibold text-coral hover:opacity-70"
@@ -124,6 +147,22 @@ export default function Layout() {
 
           <nav className="hidden items-center gap-7 lg:flex">
             <DestinationsDropdown label={t.nav.destinations} destinations={destinations} />
+            <NavLink
+              to="/universities"
+              className={({ isActive }) =>
+                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
+              }
+            >
+              {t.nav.universities}
+            </NavLink>
+            <NavLink
+              to="/courses"
+              className={({ isActive }) =>
+                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
+              }
+            >
+              {t.nav.courses}
+            </NavLink>
             <NavLink
               to="/success-stories"
               className={({ isActive }) =>
@@ -169,6 +208,8 @@ export default function Layout() {
             <div className="flex flex-col gap-5">
               {[
                 ...destinations,
+                { to: "/universities", label: t.nav.universities },
+                { to: "/courses", label: t.nav.courses },
                 { to: "/success-stories", label: t.nav.students },
                 { to: "/about", label: t.nav.about },
                 { to: "/linguaskill", label: t.nav.linguaskill },
