@@ -15,6 +15,14 @@
       rel="stylesheet"
     />
     <title>Abroad Net — Study Abroad Consultancy</title>
+    <script>
+      (function () {
+        var redirect = new URLSearchParams(window.location.search).get("redirect");
+        if (redirect) {
+          window.history.replaceState(null, "", "/abroadnet" + redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

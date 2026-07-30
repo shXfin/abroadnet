@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Abroad Net</title>
+    <script>
+      // GitHub Pages SPA redirect: encode the real path into a query param
+      // on /404.html, then index.html's inline script decodes it back
+      // before React Router mounts. See rafgraph/spa-github-pages.
+      var l = window.location;
+      l.replace(
+        l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
+        "/abroadnet/?redirect=" + encodeURIComponent(l.pathname.replace("/abroadnet", "") + l.search + l.hash)
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
