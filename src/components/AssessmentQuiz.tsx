@@ -10,6 +10,7 @@ import {
 } from "../data/universities";
 import { checkLeadDuplicate } from "../lib/leadChecks";
 import { combineCountryCode, rememberSubmission } from "../lib/submissionGuards";
+import { buildWhatsAppUrl } from "../lib/whatsapp";
 import QuizVisual from "./quiz/QuizVisual";
 
 const FORM_ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
@@ -52,6 +53,13 @@ export default function AssessmentQuiz() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState("");
+
+  function answerLabel(stepId: string, value: string | undefined) {
+    if (!value) return "";
+    const found = steps.find((s) => s.id === stepId);
+    if (!found || found.kind !== "single") return value;
+    return found.options.find((o) => o.value === value)?.label ?? value;
+  }
 
   const step = steps[stepIndex];
   const totalSteps = steps.length;
@@ -139,6 +147,23 @@ export default function AssessmentQuiz() {
 
       rememberSubmission({ email, phone });
       setSubmitted(true);
+
+      const destination =
+        answers.destination === "other" ? otherInfo.destination.trim() : answerLabel("destination", answers.destination);
+      const field = answers.field === "other" ? otherInfo.field.trim() : answerLabel("field", answers.field);
+      const message = [
+        `Hi, I just completed the free assessment on abroadnetedu.com.`,
+        `Name: ${contact.name.trim()}`,
+        `Destination: ${destination}`,
+        `Level: ${answerLabel("level", answers.level)}`,
+        `Field: ${field}`,
+        `Budget: ${answerLabel("budget", answers.budget)}`,
+        `Intake: ${answerLabel("intake", answers.intake)}`,
+        `Email: ${email}`,
+      ]
+        .filter((line) => !line.endsWith(": "))
+        .join("\n");
+      window.open(buildWhatsAppUrl(message), "_blank");
     } catch {
       setSubmitError(true);
       setSubmitErrorMessage(t.quiz.contactError);
