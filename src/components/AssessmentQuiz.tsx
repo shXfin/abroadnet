@@ -107,6 +107,13 @@ export default function AssessmentQuiz() {
     setSubmitting(true);
     setSubmitError(false);
     setSubmitErrorMessage("");
+
+    // Opened synchronously, still inside the click's user-activation window,
+    // so the browser won't treat it as an unrequested popup once we redirect
+    // it below — after the `await`s past this point, window.open() on its
+    // own would get silently blocked.
+    const waWindow = window.open("", "_blank");
+
     try {
       const email = contact.email.trim();
       const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
@@ -114,12 +121,14 @@ export default function AssessmentQuiz() {
 
       const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
       if (duplicateStatus === "duplicate") {
+        waWindow?.close();
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.duplicateError);
         return;
       }
 
       if (!FORM_ENDPOINT) {
+        waWindow?.close();
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.contactError);
         return;
@@ -141,6 +150,7 @@ export default function AssessmentQuiz() {
       });
 
       if (res.type !== "opaque" && !res.ok) {
+        waWindow?.close();
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.contactError);
         return;
@@ -164,8 +174,14 @@ export default function AssessmentQuiz() {
       ]
         .filter((line) => !line.endsWith(": "))
         .join("\n");
-      window.open(buildWhatsAppUrl(message), "_blank");
+      const waUrl = buildWhatsAppUrl(message);
+      if (waWindow) {
+        waWindow.location.href = waUrl;
+      } else {
+        window.location.href = waUrl;
+      }
     } catch {
+      waWindow?.close();
       setSubmitError(true);
       setSubmitErrorMessage(t.quiz.contactError);
     } finally {
