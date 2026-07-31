@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import DestinationSteps from "../../components/DestinationSteps";
 import { MALAYSIA_UNIVERSITIES } from "../../data/universities";
 import { useLang } from "../../i18n";
@@ -87,6 +88,12 @@ function MalaysiaExtras() {
                   </li>
                 ))}
               </ul>
+              <Link
+                to="/courses?level=foundation"
+                className="mt-4 inline-block text-xs font-semibold text-coral underline decoration-coral/40 underline-offset-4 hover:decoration-coral"
+              >
+                {m.seeAllProgramsAtLevel} →
+              </Link>
             </div>
             <div>
               <h3 className="font-display text-2xl">{m.diplomaLabel}</h3>
@@ -97,6 +104,12 @@ function MalaysiaExtras() {
                   </li>
                 ))}
               </ul>
+              <Link
+                to="/courses?level=diploma"
+                className="mt-4 inline-block text-xs font-semibold text-coral underline decoration-coral/40 underline-offset-4 hover:decoration-coral"
+              >
+                {m.seeAllProgramsAtLevel} →
+              </Link>
             </div>
             <div>
               <h3 className="font-display text-2xl">{m.bachelorLabel}</h3>
@@ -107,6 +120,12 @@ function MalaysiaExtras() {
                   </li>
                 ))}
               </ul>
+              <Link
+                to="/courses?level=bachelor"
+                className="mt-4 inline-block text-xs font-semibold text-coral underline decoration-coral/40 underline-offset-4 hover:decoration-coral"
+              >
+                {m.seeAllProgramsAtLevel} →
+              </Link>
             </div>
           </div>
 

@@ -4,6 +4,18 @@ import BoardingPassCta from "./BoardingPassCta";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 import { handleAssessmentLinkClick } from "../lib/assessmentJump";
+import { PARTNER_ID_BY_LEGACY_NAME } from "../data/catalogue/partners";
+
+/** Only Malaysia has a catalogue entry today — this stays undefined for the
+ * other destinations' partner names and the tile just renders as plain text.
+ * Deliberately doesn't import the full catalogue index: that would pull all
+ * 50 universities + 421 courses into this eagerly-loaded component's bundle
+ * instead of the lazy /universities and /courses chunks. Catalogue ids are
+ * asserted equal to slugs at generation time, so the id doubles as the slug
+ * without needing the dataset here. */
+function catalogueSlugFor(legacyName: string): string | undefined {
+  return PARTNER_ID_BY_LEGACY_NAME[legacyName];
+}
 
 type Props = {
   country: string;
@@ -176,19 +188,40 @@ export default function DestinationSteps({
                 <p className="label-caps text-ink/50">{t.destination.unisKicker}</p>
                 <h2 className="mt-3 font-display text-4xl md:text-5xl">{t.destination.unisTitle}</h2>
                 <ul className="mt-10 grid gap-px border hairline bg-ink/15 sm:grid-cols-2">
-                  {partnerUniversities.map((uni) => (
-                    <li key={uni} className="bg-paper p-6 font-display text-xl">
-                      {uni}
-                    </li>
-                  ))}
+                  {partnerUniversities.map((uni) => {
+                    const slug = catalogueSlugFor(uni);
+                    return (
+                      <li key={uni} className="bg-paper">
+                        {slug ? (
+                          <Link
+                            to={`/universities/${slug}`}
+                            className="group flex items-center justify-between gap-3 p-6 font-display text-xl transition-colors hover:text-coral"
+                          >
+                            {uni}
+                            <span className="shrink-0 text-base text-ink/25 transition-all group-hover:translate-x-1 group-hover:text-coral">
+                              →
+                            </span>
+                          </Link>
+                        ) : (
+                          <p className="p-6 font-display text-xl">{uni}</p>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
-                <p className="mt-8 text-sm text-ink/50">
+                <p className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink/50">
                   <Link
                     to="/#assessment"
                     onClick={handleAssessmentLinkClick}
                     className="underline decoration-coral underline-offset-4 hover:text-coral"
                   >
                     {t.destination.unisNote}
+                  </Link>
+                  <Link to="/universities" className="underline decoration-coral underline-offset-4 hover:text-coral">
+                    {t.destination.seeAllUniversities}
+                  </Link>
+                  <Link to="/courses" className="underline decoration-coral underline-offset-4 hover:text-coral">
+                    {t.destination.seeAllCourses}
                   </Link>
                 </p>
               </section>
