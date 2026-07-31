@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
 import { handleAssessmentLinkClick } from "../../lib/assessmentJump";
+import { buildWhatsAppUrl } from "../../lib/whatsapp";
 import {
   coursesForUniversity,
   durationLabel,
@@ -19,6 +20,7 @@ export default function UniversityDetail() {
   if (!uni) return <Navigate to="/universities" replace />;
 
   const courses = coursesForUniversity(uni.id);
+  const whatsappUrl = buildWhatsAppUrl(`Hi, I want to apply at ${uni.name.en}.`);
   const byLevel = LEVEL_ORDER.map((level) => ({
     level,
     items: courses.filter((x) => x.level === level),
@@ -71,8 +73,11 @@ export default function UniversityDetail() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary">
-            {c.apply}
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary">
+            {c.chatOnWhatsapp}
+          </a>
+          <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-ghost">
+            {c.takeAssessment}
           </Link>
           {courses.length > 0 && (
             <Link to={`/courses?uni=${uni.id}`} className="btn-ghost">
@@ -131,9 +136,9 @@ export default function UniversityDetail() {
             <div className="border hairline bg-paper px-6 py-12 text-center">
               <p className="font-display text-xl text-navy">{c.noCoursesYet}</p>
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">{c.emptyBody}</p>
-              <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary mt-6">
-                {c.apply}
-              </Link>
+              <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary mt-6">
+                {c.chatOnWhatsapp}
+              </a>
             </div>
           </div>
         </section>

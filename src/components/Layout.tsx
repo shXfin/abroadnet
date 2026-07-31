@@ -45,50 +45,15 @@ function LangToggle({ light = false }: { light?: boolean }) {
   );
 }
 
-function NavDropdown({ label, items, isActive }: { label: string; items: { to: string; label: string }[]; isActive: boolean }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("click", onClickOutside);
-    return () => document.removeEventListener("click", onClickOutside);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className={`label-caps flex items-center gap-1.5 transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`}
-      >
-        {label}
-        <span className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
-      </button>
-      {open && (
-        <div className="absolute left-0 top-full mt-3 w-56 border hairline bg-paper py-2 shadow-lg">
-          {items.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `block px-4 py-2 text-sm font-semibold transition-colors ${
-                  isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function DestinationsDropdown({ label, destinations }: { label: string; destinations: { to: string; label: string }[] }) {
+function DestinationsDropdown({
+  label,
+  destinations,
+  extraItems = [],
+}: {
+  label: string;
+  destinations: { to: string; label: string }[];
+  extraItems?: { to: string; label: string }[];
+}) {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -126,6 +91,25 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
               {d.label}
             </NavLink>
           ))}
+          {extraItems.length > 0 && (
+            <>
+              <div className="my-1 border-t hairline" />
+              {extraItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-4 py-2 text-sm font-semibold transition-colors ${
+                      isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </>
+          )}
           <div className="my-1 border-t hairline" />
           <NavLink
             to="/destinations"
@@ -182,15 +166,19 @@ export default function Layout() {
             >
               {t.nav.courses}
             </NavLink>
-            <DestinationsDropdown label={t.nav.destinations} destinations={destinations} />
-            <NavDropdown
-              label={t.nav.linguaskill}
-              isActive={pathname.startsWith("/success-stories") || pathname.startsWith("/linguaskill")}
-              items={[
-                { to: "/linguaskill", label: t.nav.linguaskill },
-                { to: "/success-stories", label: t.nav.successStories },
-              ]}
+            <DestinationsDropdown
+              label={t.nav.destinations}
+              destinations={destinations}
+              extraItems={[{ to: "/linguaskill", label: t.nav.linguaskill }]}
             />
+            <NavLink
+              to="/success-stories"
+              className={({ isActive }) =>
+                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
+              }
+            >
+              {t.nav.successStories}
+            </NavLink>
             <NavLink
               to="/about"
               className={({ isActive }) =>
@@ -272,6 +260,12 @@ export default function Layout() {
                 </Link>
                 <Link to="/courses" className="text-white/80 hover:text-white">
                   {t.nav.courses}
+                </Link>
+                <Link to="/linguaskill" className="text-white/80 hover:text-white">
+                  {t.nav.linguaskill}
+                </Link>
+                <Link to="/success-stories" className="text-white/80 hover:text-white">
+                  {t.nav.successStories}
                 </Link>
               </div>
             </div>

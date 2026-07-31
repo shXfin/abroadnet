@@ -95,7 +95,6 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
   const { t } = useLang();
   const { pathname, hash } = useLocation();
   const [uniOpen, setUniOpen] = useState(false);
-  const [destOpen, setDestOpen] = useState(false);
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
@@ -105,34 +104,23 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
   const uniTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
     uniActive ? "text-coral" : "text-ink/55"
   }`;
-  // The destinations anchor shares the "/" route with Home (it's an in-page
-  // anchor, not its own page), so a plain NavLink would never light up on
-  // its own. Track the hash so the tab lights up while sitting on #routes,
-  // plus for success-stories/linguaskill since the sheet now covers those too.
-  const onRoutesAnchor = pathname === "/" && hash === "#routes";
-  const destActive = onRoutesAnchor || pathname.startsWith("/success-stories") || pathname.startsWith("/linguaskill");
-  const destTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
-    destActive ? "text-coral" : "text-ink/55"
-  }`;
 
-  const anySheetOpen = uniOpen || destOpen;
   useEffect(() => {
-    if (!anySheetOpen) return;
+    if (!uniOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setUniOpen(false), setDestOpen(false));
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setUniOpen(false);
     document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
     };
-  }, [anySheetOpen]);
+  }, [uniOpen]);
 
   // Closing on route change means a tap into any sheet link dismisses it,
   // without wiring an onClick through every row below.
   useEffect(() => {
     setUniOpen(false);
-    setDestOpen(false);
   }, [pathname, hash]);
 
   return (
@@ -142,7 +130,7 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="mx-auto flex max-w-6xl items-end px-2">
-          <NavLink to="/" end className={tabClass({ isActive: pathname === "/" && !onRoutesAnchor })}>
+          <NavLink to="/" end className={tabClass({ isActive: pathname === "/" })}>
             <span className="h-6 w-6">{icons.home}</span>
             <span className="text-xs font-semibold">{t.nav.home}</span>
           </NavLink>
@@ -159,10 +147,10 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
             <span className="mt-1.5 whitespace-nowrap text-[11px] font-semibold text-navy">{t.nav.getMatched}</span>
           </NavLink>
 
-          <button type="button" onClick={() => setDestOpen(true)} className={destTabClass}>
-            <span className="h-6 w-6">{icons.destinations}</span>
-            <span className="text-xs font-semibold">{t.nav.destinations}</span>
-          </button>
+          <NavLink to="/success-stories" className={tabClass}>
+            <span className="h-6 w-6">{icons.students}</span>
+            <span className="text-xs font-semibold">{t.nav.successStories}</span>
+          </NavLink>
 
           <NavLink to="/about" className={tabClass}>
             <span className="h-6 w-6">{icons.about}</span>
@@ -174,12 +162,6 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
       <Sheet open={uniOpen} onClose={() => setUniOpen(false)}>
         <SheetRow to="/universities" icon={icons.university} label={t.nav.universities} />
         <SheetRow to="/courses" icon={icons.course} label={t.nav.courses} />
-      </Sheet>
-
-      <Sheet open={destOpen} onClose={() => setDestOpen(false)}>
-        <SheetRow to="/#routes" icon={icons.destinations} label={t.nav.destinations} />
-        <SheetRow to="/success-stories" icon={icons.students} label={t.nav.successStories} />
-        <SheetRow to="/linguaskill" icon={icons.linguaskill} label={t.nav.linguaskill} />
       </Sheet>
     </>
   );

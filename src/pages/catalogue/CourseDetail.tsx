@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
 import { handleAssessmentLinkClick } from "../../lib/assessmentJump";
+import { buildWhatsAppUrl } from "../../lib/whatsapp";
 import {
   courseBySlug,
   coursesForUniversity,
@@ -28,6 +29,9 @@ export default function CourseDetail() {
         .filter((x) => x.id !== course.id && x.department === course.department)
         .slice(0, 5)
     : [];
+  const whatsappUrl = buildWhatsAppUrl(
+    uni ? `Hi, I'm interested in ${course.name.en} at ${uni.name.en}.` : `Hi, I'm interested in ${course.name.en}.`,
+  );
 
   return (
     <>
@@ -76,8 +80,11 @@ export default function CourseDetail() {
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary">
-            {c.apply}
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary">
+            {c.chatOnWhatsapp}
+          </a>
+          <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-ghost">
+            {c.takeAssessment}
           </Link>
           {uni && (
             <Link to={`/universities/${uni.slug}`} className="btn-ghost">
