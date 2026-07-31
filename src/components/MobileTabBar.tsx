@@ -48,6 +48,12 @@ const icons = {
       <path d="M7.5 4.5 13 10l-5.5 5.5" />
     </svg>
   ),
+  linguaskill: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 5.5h16v11H9l-3.5 3v-3H4Z" />
+      <path d="M8 10h8M8 13h5" />
+    </svg>
+  ),
   spark: (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M12 2l2.2 6.2L20.5 10l-6.3 1.8L12 18l-2.2-6.2L3.5 10l6.3-1.8Z" />
@@ -55,43 +61,79 @@ const icons = {
   ),
 };
 
+function SheetRow({ to, icon, label }: { to: string; icon: JSX.Element; label: string }) {
+  return (
+    <Link to={to} className="flex items-center gap-3.5 rounded-xl px-3 py-3.5 active:bg-parchment/60">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-parchment text-ink/70">
+        <span className="h-5 w-5">{icon}</span>
+      </span>
+      <span className="flex-1 text-left text-[15px] font-semibold text-ink">{label}</span>
+      <span className="text-ink/30">{icons.chevronRight}</span>
+    </Link>
+  );
+}
+
+function Sheet({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[70] lg:hidden">
+      <div className="absolute inset-0 bg-navy/40 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-x-0 bottom-0 border-t hairline bg-paper pb-2"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.5rem)" }}
+      >
+        <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-ink/15" />
+        <div className="px-3 py-2">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 /** App-style bottom tab bar for mobile — the desktop header's nav is hidden
  * below lg, this replaces it with a fixed, thumb-reachable tab bar. */
 export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: () => void }) {
   const { t } = useLang();
   const { pathname, hash } = useLocation();
-  const [exploreOpen, setExploreOpen] = useState(false);
+  const [uniOpen, setUniOpen] = useState(false);
+  const [destOpen, setDestOpen] = useState(false);
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
       isActive ? "text-coral" : "text-ink/55"
     }`;
-  // Destinations shares the "/" route with Home (it's an in-page anchor, not
-  // its own page), so a plain NavLink would either never light up or light
-  // up together with Home. Explore is "on" for the anchor, the catalogue
-  // pages, or any destination detail page — everything the sheet links to.
+  const uniActive = pathname.startsWith("/universities") || pathname.startsWith("/courses");
+  const uniTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
+    uniActive ? "text-coral" : "text-ink/55"
+  }`;
+  // The destinations anchor shares the "/" route with Home (it's an in-page
+  // anchor, not its own page), so a plain NavLink would never light up on
+  // its own. Track the hash so the tab lights up while sitting on #routes,
+  // plus for success-stories/linguaskill since the sheet now covers those too.
   const onRoutesAnchor = pathname === "/" && hash === "#routes";
-  const exploreActive =
-    onRoutesAnchor || pathname.startsWith("/destinations") || pathname.startsWith("/universities") || pathname.startsWith("/courses");
-  const exploreTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
-    exploreActive ? "text-coral" : "text-ink/55"
+  const destActive = onRoutesAnchor || pathname.startsWith("/success-stories") || pathname.startsWith("/linguaskill");
+  const destTabClass = `flex flex-1 flex-col items-center justify-center gap-1.5 py-3.5 transition-colors ${
+    destActive ? "text-coral" : "text-ink/55"
   }`;
 
+  const anySheetOpen = uniOpen || destOpen;
   useEffect(() => {
-    if (!exploreOpen) return;
+    if (!anySheetOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setExploreOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setUniOpen(false), setDestOpen(false));
     document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
     };
-  }, [exploreOpen]);
+  }, [anySheetOpen]);
 
   // Closing on route change means a tap into any sheet link dismisses it,
   // without wiring an onClick through every row below.
-  useEffect(() => setExploreOpen(false), [pathname, hash]);
+  useEffect(() => {
+    setUniOpen(false);
+    setDestOpen(false);
+  }, [pathname, hash]);
 
   return (
     <>
@@ -105,9 +147,9 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
             <span className="text-xs font-semibold">{t.nav.home}</span>
           </NavLink>
 
-          <button type="button" onClick={() => setExploreOpen(true)} className={exploreTabClass}>
-            <span className="h-6 w-6">{icons.destinations}</span>
-            <span className="text-xs font-semibold">{t.nav.destinations}</span>
+          <button type="button" onClick={() => setUniOpen(true)} className={uniTabClass}>
+            <span className="h-6 w-6">{icons.university}</span>
+            <span className="text-xs font-semibold">{t.nav.universities}</span>
           </button>
 
           <NavLink to="/#assessment" onClick={handleAssessmentLinkClick} className="flex flex-1 flex-col items-center justify-center pb-2">
@@ -117,10 +159,10 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
             <span className="mt-1.5 whitespace-nowrap text-[11px] font-semibold text-navy">{t.nav.getMatched}</span>
           </NavLink>
 
-          <NavLink to="/success-stories" className={tabClass}>
-            <span className="h-6 w-6">{icons.students}</span>
-            <span className="text-xs font-semibold">{t.nav.students}</span>
-          </NavLink>
+          <button type="button" onClick={() => setDestOpen(true)} className={destTabClass}>
+            <span className="h-6 w-6">{icons.destinations}</span>
+            <span className="text-xs font-semibold">{t.nav.destinations}</span>
+          </button>
 
           <NavLink to="/about" className={tabClass}>
             <span className="h-6 w-6">{icons.about}</span>
@@ -129,51 +171,16 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
         </div>
       </nav>
 
-      {exploreOpen && (
-        <div className="fixed inset-0 z-[70] lg:hidden">
-          <div className="absolute inset-0 bg-navy/40 backdrop-blur-sm" onClick={() => setExploreOpen(false)} />
-          <div
-            className="absolute inset-x-0 bottom-0 border-t hairline bg-paper pb-2"
-            style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.5rem)" }}
-          >
-            <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-ink/15" />
-            <div className="px-3 py-2">
-              <Link
-                to="/#routes"
-                className="flex items-center gap-3.5 rounded-xl px-3 py-3.5 active:bg-parchment/60"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-parchment text-ink/70">
-                  <span className="h-5 w-5">{icons.destinations}</span>
-                </span>
-                <span className="flex-1 text-left text-[15px] font-semibold text-ink">{t.nav.destinations}</span>
-                <span className="text-ink/30">{icons.chevronRight}</span>
-              </Link>
+      <Sheet open={uniOpen} onClose={() => setUniOpen(false)}>
+        <SheetRow to="/universities" icon={icons.university} label={t.nav.universities} />
+        <SheetRow to="/courses" icon={icons.course} label={t.nav.courses} />
+      </Sheet>
 
-              <Link
-                to="/universities"
-                className="flex items-center gap-3.5 rounded-xl px-3 py-3.5 active:bg-parchment/60"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-parchment text-ink/70">
-                  <span className="h-5 w-5">{icons.university}</span>
-                </span>
-                <span className="flex-1 text-left text-[15px] font-semibold text-ink">{t.nav.universities}</span>
-                <span className="text-ink/30">{icons.chevronRight}</span>
-              </Link>
-
-              <Link
-                to="/courses"
-                className="flex items-center gap-3.5 rounded-xl px-3 py-3.5 active:bg-parchment/60"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-parchment text-ink/70">
-                  <span className="h-5 w-5">{icons.course}</span>
-                </span>
-                <span className="flex-1 text-left text-[15px] font-semibold text-ink">{t.nav.courses}</span>
-                <span className="text-ink/30">{icons.chevronRight}</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      <Sheet open={destOpen} onClose={() => setDestOpen(false)}>
+        <SheetRow to="/#routes" icon={icons.destinations} label={t.nav.destinations} />
+        <SheetRow to="/success-stories" icon={icons.students} label={t.nav.successStories} />
+        <SheetRow to="/linguaskill" icon={icons.linguaskill} label={t.nav.linguaskill} />
+      </Sheet>
     </>
   );
 }

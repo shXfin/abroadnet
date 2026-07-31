@@ -45,6 +45,49 @@ function LangToggle({ light = false }: { light?: boolean }) {
   );
 }
 
+function NavDropdown({ label, items, isActive }: { label: string; items: { to: string; label: string }[]; isActive: boolean }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("click", onClickOutside);
+    return () => document.removeEventListener("click", onClickOutside);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className={`label-caps flex items-center gap-1.5 transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`}
+      >
+        {label}
+        <span className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-3 w-56 border hairline bg-paper py-2 shadow-lg">
+          {items.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={() => setOpen(false)}
+              className={({ isActive }) =>
+                `block px-4 py-2 text-sm font-semibold transition-colors ${
+                  isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DestinationsDropdown({ label, destinations }: { label: string; destinations: { to: string; label: string }[] }) {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
@@ -163,14 +206,14 @@ export default function Layout() {
             >
               {t.nav.courses}
             </NavLink>
-            <NavLink
-              to="/success-stories"
-              className={({ isActive }) =>
-                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
-              }
-            >
-              {t.nav.students}
-            </NavLink>
+            <NavDropdown
+              label={t.nav.students}
+              isActive={pathname.startsWith("/success-stories") || pathname.startsWith("/linguaskill")}
+              items={[
+                { to: "/success-stories", label: t.nav.successStories },
+                { to: "/linguaskill", label: t.nav.linguaskill },
+              ]}
+            />
             <NavLink
               to="/about"
               className={({ isActive }) =>
@@ -178,14 +221,6 @@ export default function Layout() {
               }
             >
               {t.nav.about}
-            </NavLink>
-            <NavLink
-              to="/linguaskill"
-              className={({ isActive }) =>
-                `label-caps transition-colors ${isActive ? "text-coral" : "text-ink/70 hover:text-ink"}`
-              }
-            >
-              {t.nav.linguaskill}
             </NavLink>
             <LangToggle />
             <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-primary !px-5 !py-2.5">
