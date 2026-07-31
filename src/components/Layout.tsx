@@ -189,7 +189,6 @@ export default function Layout() {
           </a>
 
           <nav className="hidden items-center gap-7 lg:flex">
-            <DestinationsDropdown label={t.nav.destinations} destinations={destinations} />
             <NavLink
               to="/universities"
               className={({ isActive }) =>
@@ -206,12 +205,13 @@ export default function Layout() {
             >
               {t.nav.courses}
             </NavLink>
+            <DestinationsDropdown label={t.nav.destinations} destinations={destinations} />
             <NavDropdown
-              label={t.nav.students}
+              label={t.nav.linguaskill}
               isActive={pathname.startsWith("/success-stories") || pathname.startsWith("/linguaskill")}
               items={[
-                { to: "/success-stories", label: t.nav.successStories },
                 { to: "/linguaskill", label: t.nav.linguaskill },
+                { to: "/success-stories", label: t.nav.successStories },
               ]}
             />
             <NavLink
