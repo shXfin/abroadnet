@@ -149,7 +149,7 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
 
           <NavLink to="/success-stories" className={tabClass}>
             <span className="h-6 w-6">{icons.students}</span>
-            <span className="text-xs font-semibold">{t.nav.successStories}</span>
+            <span className="whitespace-nowrap text-[11px] font-semibold">{t.nav.successStories}</span>
           </NavLink>
 
           <NavLink to="/about" className={tabClass}>

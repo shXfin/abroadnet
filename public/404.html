@@ -10,7 +10,7 @@
       var l = window.location;
       l.replace(
         l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
-        "/abroadnet/?redirect=" + encodeURIComponent(l.pathname.replace("/abroadnet", "") + l.search + l.hash)
+        "/?redirect=" + encodeURIComponent(l.pathname + l.search + l.hash)
       );
     </script>
   </head>
