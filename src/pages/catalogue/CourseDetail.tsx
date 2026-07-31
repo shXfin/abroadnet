@@ -3,6 +3,7 @@ import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
 import { handleAssessmentLinkClick } from "../../lib/assessmentJump";
 import { buildWhatsAppUrl } from "../../lib/whatsapp";
+import WhatsAppIcon from "../../components/icons/WhatsAppIcon";
 import {
   courseBySlug,
   coursesForUniversity,
@@ -80,7 +81,8 @@ export default function CourseDetail() {
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary">
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-whatsapp">
+            <WhatsAppIcon className="h-5 w-5" />
             {c.chatOnWhatsapp}
           </a>
           <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-ghost">

@@ -3,6 +3,7 @@ import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
 import { handleAssessmentLinkClick } from "../../lib/assessmentJump";
 import { buildWhatsAppUrl } from "../../lib/whatsapp";
+import WhatsAppIcon from "../../components/icons/WhatsAppIcon";
 import {
   coursesForUniversity,
   durationLabel,
@@ -73,7 +74,8 @@ export default function UniversityDetail() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary">
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-whatsapp">
+            <WhatsAppIcon className="h-5 w-5" />
             {c.chatOnWhatsapp}
           </a>
           <Link to="/#assessment" onClick={handleAssessmentLinkClick} className="btn-ghost">
@@ -136,7 +138,8 @@ export default function UniversityDetail() {
             <div className="border hairline bg-paper px-6 py-12 text-center">
               <p className="font-display text-xl text-navy">{c.noCoursesYet}</p>
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/60">{c.emptyBody}</p>
-              <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary mt-6">
+              <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-whatsapp mt-6">
+                <WhatsAppIcon className="h-5 w-5" />
                 {c.chatOnWhatsapp}
               </a>
             </div>

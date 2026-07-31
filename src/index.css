@@ -70,6 +70,10 @@ em {
   .btn-ghost {
     @apply inline-flex items-center gap-2 rounded-full border-2 border-ink/20 px-7 py-3.5 text-sm font-bold text-ink transition-colors duration-200 hover:border-coral hover:text-coral;
   }
+
+  .btn-whatsapp {
+    @apply inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#1EBE5B];
+  }
 }
 
 /* Flight route hero */

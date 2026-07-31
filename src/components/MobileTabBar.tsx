@@ -162,6 +162,7 @@ export default function MobileTabBar({ onOpenMenu: _onOpenMenu }: { onOpenMenu: 
       <Sheet open={uniOpen} onClose={() => setUniOpen(false)}>
         <SheetRow to="/universities" icon={icons.university} label={t.nav.universities} />
         <SheetRow to="/courses" icon={icons.course} label={t.nav.courses} />
+        <SheetRow to="/#routes" icon={icons.destinations} label={t.nav.destinations} />
       </Sheet>
     </>
   );

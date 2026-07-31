@@ -11,6 +11,7 @@ import {
 import { checkLeadDuplicate } from "../lib/leadChecks";
 import { combineCountryCode, rememberSubmission } from "../lib/submissionGuards";
 import { buildWhatsAppUrl } from "../lib/whatsapp";
+import WhatsAppIcon from "./icons/WhatsAppIcon";
 import QuizVisual from "./quiz/QuizVisual";
 
 const FORM_ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
@@ -389,8 +390,15 @@ export default function AssessmentQuiz() {
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-primary disabled:opacity-40">
-                {submitting ? t.apply.submitting : `${t.quiz.submitApplication} →`}
+              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-whatsapp disabled:opacity-40">
+                {submitting ? (
+                  t.apply.submitting
+                ) : (
+                  <>
+                    <WhatsAppIcon className="h-5 w-5" />
+                    {t.quiz.submitApplication} →
+                  </>
+                )}
               </button>
               <button
                 type="button"
