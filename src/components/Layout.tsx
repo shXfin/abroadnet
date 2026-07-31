@@ -128,29 +128,6 @@ function DestinationsDropdown({ label, destinations }: { label: string; destinat
           ))}
           <div className="my-1 border-t hairline" />
           <NavLink
-            to="/universities"
-            onClick={() => setOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center justify-between px-4 py-2 text-sm font-semibold transition-colors ${
-                isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
-              }`
-            }
-          >
-            {t.nav.universities}
-          </NavLink>
-          <NavLink
-            to="/courses"
-            onClick={() => setOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center justify-between px-4 py-2 text-sm font-semibold transition-colors ${
-                isActive ? "text-coral" : "text-ink/80 hover:bg-parchment/60 hover:text-ink"
-              }`
-            }
-          >
-            {t.nav.courses}
-          </NavLink>
-          <div className="my-1 border-t hairline" />
-          <NavLink
             to="/destinations"
             onClick={() => setOpen(false)}
             className="flex items-center justify-between px-4 py-2 text-sm font-semibold text-coral hover:opacity-70"
