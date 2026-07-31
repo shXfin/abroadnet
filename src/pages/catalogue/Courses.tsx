@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
+import CountryPills from "../../components/catalogue/CountryPills";
 import {
   ActiveChips,
   CatalogueShell,
@@ -113,7 +114,9 @@ export default function Courses() {
   return (
     <>
       <header className="mx-auto max-w-6xl px-6 pb-10 pt-16">
-        <p className="label-caps text-coral">{c.courseKicker}</p>
+        <div className="mb-5">
+          <CountryPills />
+        </div>
         <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">{c.courseTitle}</h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">{c.courseSub}</p>
       </header>
@@ -125,10 +128,13 @@ export default function Courses() {
         activeCount={activeCount}
         toolbar={
           <>
-            <p className="text-sm font-semibold text-ink/50">
+            <div className="min-w-0 flex-1 md:hidden">
+              <SearchField value={q} onChange={(v) => setValue("q", v)} placeholder={c.searchCoursePlaceholder} />
+            </div>
+            <p className="hidden text-sm font-semibold text-ink/50 md:block">
               <span className="tabular-nums text-ink">{results.length}</span> {countWord}
             </p>
-            <label className="ml-auto flex items-center gap-2 text-xs text-ink/40">
+            <label className="ml-auto flex shrink-0 items-center gap-2 text-xs text-ink/40">
               <span className="hidden sm:inline">{c.sortLabel}</span>
               <select
                 value={sort}

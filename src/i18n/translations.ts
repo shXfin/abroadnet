@@ -602,6 +602,7 @@ const en = {
     indexSoonLabel: "Coming soon",
   },
   catalogue: {
+    countryComingSoon: "Coming soon",
     uniKicker: "Malaysia",
     uniTitle: "Universities we can place you at.",
     uniSub: "Every institution we hold fee structures for, with the programmes they run. Partner universities first — those are the ones we place students at directly.",
@@ -1441,6 +1442,7 @@ const bn: typeof en = {
     indexSoonLabel: "শীঘ্রই আসছে",
   },
   catalogue: {
+    countryComingSoon: "শীঘ্রই আসছে",
     uniKicker: "মালয়েশিয়া",
     uniTitle: "যেসব বিশ্ববিদ্যালয়ে আমরা পাঠাতে পারি।",
     uniSub: "যেসব প্রতিষ্ঠানের ফি স্ট্রাকচার আমাদের কাছে আছে, তাদের প্রোগ্রামসহ। পার্টনার বিশ্ববিদ্যালয় আগে — সেখানেই আমরা সরাসরি শিক্ষার্থী পাঠাই।",

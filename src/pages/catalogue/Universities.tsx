@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../../i18n";
 import UniversityLogo from "../../components/catalogue/UniversityLogo";
+import CountryPills from "../../components/catalogue/CountryPills";
 import {
   ActiveChips,
   CatalogueShell,
@@ -97,7 +98,9 @@ export default function Universities() {
   return (
     <>
       <header className="mx-auto max-w-6xl px-6 pb-10 pt-16">
-        <p className="label-caps text-coral">{c.uniKicker}</p>
+        <div className="mb-5">
+          <CountryPills />
+        </div>
         <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">{c.uniTitle}</h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">{c.uniSub}</p>
       </header>
@@ -108,9 +111,14 @@ export default function Universities() {
         doneLabel={c.done}
         activeCount={activeCount}
         toolbar={
-          <p className="text-sm font-semibold text-ink/50">
-            <span className="tabular-nums text-ink">{results.length}</span> {countWord}
-          </p>
+          <>
+            <div className="min-w-0 flex-1 md:hidden">
+              <SearchField value={q} onChange={(v) => setValue("q", v)} placeholder={c.searchUniPlaceholder} />
+            </div>
+            <p className="hidden text-sm font-semibold text-ink/50 md:block">
+              <span className="tabular-nums text-ink">{results.length}</span> {countWord}
+            </p>
+          </>
         }
       >
         {chips.length > 0 && (

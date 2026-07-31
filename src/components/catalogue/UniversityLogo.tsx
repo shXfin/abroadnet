@@ -1,5 +1,13 @@
-import type { LogoRef } from "../../data/catalogue/types";
+import { useState } from "react";
+import { monogramInitials, monogramTone, type LogoRef } from "../../data/catalogue/types";
 import { assetPath } from "../../lib/assetPath";
+
+/** A `src` starting with http(s) is a hotlinked URL (client-supplied logo,
+ * fetched by the browser at view time — nothing downloaded into the repo or
+ * onto disk). Anything else is a repo-local asset path. */
+function resolveSrc(src: string) {
+  return /^https?:\/\//.test(src) ? src : assetPath(src);
+}
 
 /** Monogram tones. Text colour is picked per tone from measured contrast, not
  * by eye: paper-on-coral is only 2.95:1, which fails even the large-bold AA
@@ -37,23 +45,34 @@ export default function UniversityLogo({
   size?: keyof typeof SIZES;
 }) {
   const s = SIZES[size];
+  const [imageFailed, setImageFailed] = useState(false);
 
-  if (logo.kind === "image") {
+  if (logo.kind === "image" && !imageFailed) {
     return (
       <span className={`flex shrink-0 items-center justify-center overflow-hidden border hairline bg-white ${s.box}`}>
-        <img src={assetPath(logo.src)} alt={name} className="h-full w-full object-contain p-1.5" loading="lazy" />
+        <img
+          src={resolveSrc(logo.src)}
+          alt={name}
+          className="h-full w-full object-contain p-1.5"
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
       </span>
     );
   }
 
-  const tone = TONES[logo.tone];
+  // A broken hotlink (deleted file, revoked share, dead domain) falls back to
+  // the same deterministic monogram directory-tier universities already use,
+  // rather than a broken-image icon.
+  const initials = logo.kind === "image" ? monogramInitials(name) : logo.initials;
+  const tone = TONES[logo.kind === "image" ? monogramTone(name) : logo.tone];
   return (
     <span
       aria-hidden="true"
-      style={{ fontSize: typeSize(logo.initials, s.scale) }}
+      style={{ fontSize: typeSize(initials, s.scale) }}
       className={`flex shrink-0 items-center justify-center font-display font-bold leading-none tracking-tight ${s.box} ${tone.bg} ${tone.text}`}
     >
-      {logo.initials}
+      {initials}
     </span>
   );
 }
