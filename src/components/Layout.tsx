@@ -267,6 +267,12 @@ export default function Layout() {
                     {d.label}
                   </Link>
                 ))}
+                <Link to="/universities" className="text-white/80 hover:text-white">
+                  {t.nav.universities}
+                </Link>
+                <Link to="/courses" className="text-white/80 hover:text-white">
+                  {t.nav.courses}
+                </Link>
               </div>
             </div>
           </div>
