@@ -12,7 +12,9 @@ import {
 } from "../../components/catalogue/Filters";
 import { EmptyState } from "./Universities";
 import {
+  CATALOGUE_COUNTRIES,
   COURSES,
+  COURSE_COUNT_BY_COUNTRY,
   COURSE_COUNT_BY_DEPARTMENT,
   COURSE_COUNT_BY_LEVEL,
   COURSE_DEPARTMENTS,
@@ -26,10 +28,6 @@ import {
 import { departmentLabel, levelLabel, type Department, type Level } from "../../data/catalogue/types";
 import { useCatalogueFilters } from "../../lib/useCatalogueFilters";
 
-/** Only institutions that actually have courses belong in the university
- * filter — offering the other 41 would just produce empty result sets. */
-const UNIS_WITH_COURSES = UNIVERSITIES.filter((u) => u.courseCount > 0);
-
 export default function Courses() {
   const { t, lang } = useLang();
   const c = t.catalogue;
@@ -40,18 +38,26 @@ export default function Courses() {
   const departments = getAll("dept") as Department[];
   const universityIds = getAll("uni");
   const sort = (get("sort") || "relevance") as CourseSort;
-  const country = get("country");
+  const country = get("country") || "malaysia";
 
   const results = useMemo(
     () => filterCourses(COURSES, { q, levels, departments, universityIds, country }, sort),
     [q, levels.join(), departments.join(), universityIds.join(), sort, country],
   );
 
+  // Only institutions in the current country with courses belong in the
+  // university filter — offering unis from the other country, or ones with
+  // no courses, would just produce empty result sets.
+  const UNIS_WITH_COURSES = useMemo(
+    () => UNIVERSITIES.filter((u) => u.courseCount > 0 && u.country === country),
+    [country],
+  );
+
   const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
 
   const chips = [
-    ...(country
-      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "") }]
+    ...(country !== "malaysia"
+      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") }]
       : []),
     ...levels.map((l) => ({
       key: `level-${l}`,
@@ -75,6 +81,18 @@ export default function Courses() {
     <>
       <FilterGroup label={c.filters}>
         <SearchField value={q} onChange={(v) => setValue("q", v)} placeholder={c.searchCoursePlaceholder} />
+      </FilterGroup>
+
+      <FilterGroup label={c.countryLabel}>
+        {CATALOGUE_COUNTRIES.map((cty) => (
+          <CheckRow
+            key={cty}
+            label={countryLabelMap[cty] ?? cty}
+            count={COURSE_COUNT_BY_COUNTRY[cty]}
+            checked={country === cty}
+            onToggle={() => setValue("country", cty)}
+          />
+        ))}
       </FilterGroup>
 
       <FilterGroup label={c.levelLabel}>

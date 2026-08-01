@@ -30,6 +30,7 @@ const ITEMS: Item[] = [
   { photo: "photos/malaysia-arrival-trio.jpg", aspect: 1080 / 1440, title: "Landed in Malaysia", destination: "Malaysia" },
   { photo: "photos/malaysia-visa-sunny.jpg", aspect: 1550 / 815, title: "Sunny Saleh", destination: "Malaysia" },
   { photo: "photos/china-visa-faija.jpg", aspect: 1, title: "Faija Binte Forkan", destination: "China", highlight: true },
+  { photo: "photos/IMG_1844.JPG", aspect: 1, title: "Jubaer Akand Nahid", destination: "Italy" },
 ];
 
 function useContainerWidth() {

@@ -4,8 +4,8 @@ import { assetPath } from "../lib/assetPath";
 
 function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" | "bn" }) {
   return (
-    <div className="w-56 shrink-0 rounded-2xl bg-white/[0.04] p-5 ring-1 ring-white/10">
-      <div className="aspect-square overflow-hidden rounded-xl bg-white/10">
+    <div className="w-56 shrink-0 rounded-2xl border hairline bg-paper p-5">
+      <div className="aspect-square overflow-hidden rounded-xl bg-parchment">
         {member.photo && (
           <img
             src={assetPath(member.photo)}
@@ -15,11 +15,11 @@ function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" 
         )}
       </div>
       <p className="label-caps mt-4 text-coral">{member.role[lang]}</p>
-      <p className="mt-1 font-display text-lg">{member.name}</p>
+      <p className="mt-1 font-display text-lg text-navy">{member.name}</p>
       {member.phone && (
         <a
           href={`tel:${member.phone.replace(/\s/g, "")}`}
-          className="mt-1 block text-sm text-white/50 hover:text-white"
+          className="mt-1 block text-sm text-ink/50 hover:text-coral"
         >
           {member.phone}
         </a>
@@ -37,15 +37,15 @@ export default function TeamSection() {
   const [ceo, ...rest] = TEAM;
 
   return (
-    <section className="border-y hairline bg-navy py-20 text-white">
+    <section className="border-y hairline bg-parchment/30 py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <p className="label-caps text-coral">{t.about.teamLead}</p>
+        <p className="label-caps text-ink/50">{t.about.teamLead}</p>
         <h2 className="mt-3 max-w-2xl font-display text-4xl md:text-5xl">{t.about.teamTitle}</h2>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60">{t.about.teamSub}</p>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink/60">{t.about.teamSub}</p>
 
         {/* Featured: CEO */}
-        <div className="mt-12 grid overflow-hidden rounded-2xl bg-white/[0.04] ring-1 ring-white/10 md:grid-cols-[minmax(0,300px)_1fr]">
-          <div className="aspect-[4/5] overflow-hidden bg-white/10 md:aspect-auto">
+        <div className="mt-12 grid overflow-hidden rounded-2xl border hairline bg-paper md:grid-cols-[minmax(0,300px)_1fr]">
+          <div className="aspect-[4/5] overflow-hidden bg-parchment md:aspect-auto">
             <img
               src={assetPath(ceo.photo!)}
               alt={ceo.name}
@@ -56,14 +56,14 @@ export default function TeamSection() {
             <p className="label-caps text-coral">{ceo.role[lang]}</p>
             <h3 className="mt-3 font-display text-3xl md:text-4xl">{ceo.name}</h3>
             {ceo.bio && (
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/65">{ceo.bio[lang]}</p>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-ink/65">{ceo.bio[lang]}</p>
             )}
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-1 text-sm text-white/50">
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink/50">
               <span>
                 {ceo.city}, {ceo.country}
               </span>
               {ceo.phone && (
-                <a href={`tel:${ceo.phone.replace(/\s/g, "")}`} className="hover:text-white">
+                <a href={`tel:${ceo.phone.replace(/\s/g, "")}`} className="hover:text-coral">
                   {ceo.phone}
                 </a>
               )}
@@ -72,7 +72,7 @@ export default function TeamSection() {
         </div>
 
         {/* The rest of the team, drifting in an infinite, self-scrolling row */}
-        <p className="label-caps mt-10 text-white/40">{t.about.teamMore}</p>
+        <p className="label-caps mt-10 text-ink/40">{t.about.teamMore}</p>
 
         <div
           className="relative mt-4 overflow-hidden"

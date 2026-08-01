@@ -4,6 +4,7 @@ import UniversityLogo from "../../components/catalogue/UniversityLogo";
 import { handleAssessmentLinkClick } from "../../lib/assessmentJump";
 import { buildWhatsAppUrl } from "../../lib/whatsapp";
 import WhatsAppIcon from "../../components/icons/WhatsAppIcon";
+import UniversityHighlights from "../../components/catalogue/UniversityHighlights";
 import {
   coursesForUniversity,
   durationLabel,
@@ -91,6 +92,8 @@ export default function UniversityDetail() {
         </div>
 
         <p className="mt-6 max-w-2xl text-xs leading-relaxed text-ink/40">{c.aboutFees}</p>
+
+        <UniversityHighlights uni={uni} />
       </section>
 
       {byLevel.length > 0 ? (

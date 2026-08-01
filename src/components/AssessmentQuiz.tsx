@@ -28,6 +28,15 @@ function localizeNumber(n: number, lang: string) {
     .join("");
 }
 
+function Spinner({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={`animate-spin ${className}`} fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" opacity="0.25" />
+      <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function matchedUniversities(destination: string | undefined) {
   if (destination === "malaysia") return { key: "malaysia" as const, list: MALAYSIA_UNIVERSITIES.slice(0, 3) };
   if (destination === "romania") return { key: "romania" as const, list: ROMANIA_UNIVERSITIES.slice(0, 3) };
@@ -111,8 +120,28 @@ export default function AssessmentQuiz() {
     // Opened synchronously, still inside the click's user-activation window,
     // so the browser won't treat it as an unrequested popup once we redirect
     // it below — after the `await`s past this point, window.open() on its
-    // own would get silently blocked.
+    // own would get silently blocked. It briefly shows a blank tab otherwise,
+    // which reads as broken and tempts people to close it before the Sheet/
+    // Telegram write even finishes, so it gets a loading page immediately.
     const waWindow = window.open("", "_blank");
+    if (waWindow) {
+      waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
+        <title>Abroad Net</title>
+        <style>
+          html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
+          .wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+          .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:20px;}
+          @keyframes spin{to{transform:rotate(360deg)}}
+          h1{font-size:20px;margin:0 0 8px;}
+          p{font-size:14px;color:rgba(28,23,64,0.6);max-width:320px;margin:0;}
+        </style>
+        </head><body><div class="wrap">
+          <div class="spinner"></div>
+          <h1>${t.apply.whatsappPreparingTitle}</h1>
+          <p>${t.apply.whatsappPreparingBody}</p>
+        </div></body></html>`);
+      waWindow.document.close();
+    }
 
     try {
       const email = contact.email.trim();
@@ -406,9 +435,12 @@ export default function AssessmentQuiz() {
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-whatsapp disabled:opacity-40">
+              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-whatsapp disabled:opacity-70">
                 {submitting ? (
-                  t.apply.submitting
+                  <>
+                    <Spinner className="h-5 w-5" />
+                    {t.apply.submitting}
+                  </>
                 ) : (
                   <>
                     <WhatsAppIcon className="h-5 w-5" />
@@ -444,13 +476,18 @@ export default function AssessmentQuiz() {
             <button
               onClick={handleContinue}
               disabled={!canContinue || submitting}
-              className="btn-primary disabled:opacity-40"
+              className="btn-primary inline-flex items-center gap-2 disabled:opacity-70"
             >
-              {step.kind === "contact"
-                ? submitting
-                  ? "..."
-                  : `${t.quiz.seeMyMatches} →`
-                : `${t.quiz.continue} →`}
+              {step.kind === "contact" && submitting ? (
+                <>
+                  <Spinner className="h-4 w-4" />
+                  {t.apply.submitting}
+                </>
+              ) : step.kind === "contact" ? (
+                `${t.quiz.seeMyMatches} →`
+              ) : (
+                `${t.quiz.continue} →`
+              )}
             </button>
           </div>
         )}

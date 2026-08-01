@@ -35,6 +35,13 @@ const STUDENT_PHOTOS = [
     title: "Md Rakibul Islam",
     destination: "Georgia",
   },
+  {
+    src: "photos/IMG_1844.JPG",
+    aspect: 1,
+    pos: { left: "80%", top: "62%" },
+    title: "Jubaer Akand Nahid",
+    destination: "Italy",
+  },
 ];
 // A percentage of the container's own width, not a fixed pixel size, so
 // cards shrink proportionally on mobile instead of overwhelming a narrow view.
@@ -105,9 +112,16 @@ const FLAGS: Record<string, JSX.Element> = {
       <circle cx="9" cy="6" r="4.2" fill="#F42A41" />
     </svg>
   ),
+  fco: (
+    <svg viewBox="0 0 30 20" className="h-3.5 w-5 rounded-[2px] border border-black/10">
+      <rect width="10" height="20" x="0" fill="#009246" />
+      <rect width="10" height="20" x="10" fill="white" />
+      <rect width="10" height="20" x="20" fill="#CE2B37" />
+    </svg>
+  ),
 };
 
-type DestKey = "tbs" | "otp" | "pek" | "kul";
+type DestKey = "tbs" | "otp" | "pek" | "kul" | "fco";
 
 function useMeasuredArcs(containerRef: React.RefObject<HTMLDivElement>, destKeys: DestKey[]) {
   const [paths, setPaths] = useState<Record<DestKey, string>>({} as Record<DestKey, string>);
@@ -198,6 +212,7 @@ function DestinationDrawer({ destKey, onClose }: { destKey: DestKey; onClose: ()
     otp: { label: t.hero.otp, to: "/destinations/romania", intro: t.romania.intro, unis: realCount(ROMANIA_UNIVERSITIES) },
     pek: { label: t.hero.pek, to: "/destinations/china", intro: t.china.intro, unis: realCount(CHINA_UNIVERSITIES) },
     kul: { label: t.hero.kul, to: "/destinations/malaysia", intro: t.malaysia.intro, unis: realCount(MALAYSIA_UNIVERSITIES) },
+    fco: { label: t.hero.fco, to: "/destinations/italy", intro: t.destination.comingSoonBody, unis: 0 },
   } as const;
   const data = map[destKey];
   const { code, country } = splitLabel(data.label);
@@ -275,7 +290,7 @@ function PhotoCard({ photo, rotate, onOpen }: { photo: (typeof STUDENT_PHOTOS)[n
   );
 }
 
-const PHOTO_ROTATIONS = ["-rotate-3", "rotate-2", "-rotate-2"];
+const PHOTO_ROTATIONS = ["-rotate-3", "rotate-2", "-rotate-2", "rotate-3"];
 
 function FlightRoutes() {
   const { t } = useLang();
@@ -289,6 +304,7 @@ function FlightRoutes() {
     { key: "otp", label: t.hero.otp, className: "left-[74%] top-[13%]" },
     { key: "pek", label: t.hero.pek, className: "left-[88%] top-[42%]" },
     { key: "tbs", label: t.hero.tbs, className: "left-[86%] top-[74%]" },
+    { key: "fco", label: t.hero.fco, className: "left-[58%] top-[62%]" },
   ];
   const dhk = splitLabel(t.hero.dhk);
   const paths = useMeasuredArcs(containerRef, destinations.map((d) => d.key));

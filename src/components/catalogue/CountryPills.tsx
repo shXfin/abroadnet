@@ -4,13 +4,13 @@ import { useCatalogueFilters } from "../../lib/useCatalogueFilters";
 
 /** Malaysia and Romania have real catalogue data; Georgia/China render as
  * disabled pills rather than disappearing, so the page reads as "more
- * coming" instead of "we only cover these two countries." Clicking a live
- * pill filters the current page to that country; clicking the active pill
- * again clears back to showing every country. */
+ * coming" instead of "we only cover these two countries." Exactly one
+ * country is always active — Malaysia by default when the URL carries no
+ * explicit choice, so the pill state always matches what's on screen. */
 export default function CountryPills() {
   const { t } = useLang();
   const { get, setValue } = useCatalogueFilters();
-  const selected = get("country");
+  const selected = get("country") || "malaysia";
 
   const countries = [
     { value: "malaysia", label: t.nav.malaysia, hasData: true },
@@ -41,7 +41,7 @@ export default function CountryPills() {
           <button
             key={country.value}
             type="button"
-            onClick={() => setValue("country", active ? "" : country.value)}
+            onClick={() => setValue("country", country.value)}
             className={`label-caps rounded-full border-2 px-3.5 py-1.5 transition-colors ${
               active ? "border-coral bg-coral/10 text-navy" : "border-ink/15 text-ink/50 hover:border-ink/30"
             }`}

@@ -70,6 +70,15 @@ export const COURSE_COUNT_BY_DEPARTMENT: Record<string, number> = COURSES.reduce
   Record<string, number>
 >((acc, c) => ({ ...acc, [c.department]: (acc[c.department] ?? 0) + 1 }), {});
 
+export const COURSE_COUNT_BY_COUNTRY: Record<string, number> = COURSES.reduce<Record<string, number>>(
+  (acc, c) => {
+    const uni = BY_ID.get(c.universityId);
+    if (!uni) return acc;
+    return { ...acc, [uni.country]: (acc[uni.country] ?? 0) + 1 };
+  },
+  {},
+);
+
 export const UNIVERSITY_COUNT_BY_LEVEL: Record<string, number> = UNIVERSITIES.reduce<
   Record<string, number>
 >((acc, u) => {
@@ -82,6 +91,10 @@ export const UNIVERSITY_COUNT_BY_LEVEL: Record<string, number> = UNIVERSITIES.re
 export const UNIVERSITY_COUNT_BY_CITY: Record<string, number> = UNIVERSITIES.reduce<
   Record<string, number>
 >((acc, u) => (u.city ? { ...acc, [u.city]: (acc[u.city] ?? 0) + 1 } : acc), {});
+
+export const UNIVERSITY_COUNT_BY_COUNTRY: Record<string, number> = UNIVERSITIES.reduce<
+  Record<string, number>
+>((acc, u) => ({ ...acc, [u.country]: (acc[u.country] ?? 0) + 1 }), {});
 
 function norm(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();

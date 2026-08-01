@@ -11,9 +11,11 @@ import {
   SearchField,
 } from "../../components/catalogue/Filters";
 import {
+  CATALOGUE_COUNTRIES,
   CITIES,
   UNIVERSITIES,
   UNIVERSITY_COUNT_BY_CITY,
+  UNIVERSITY_COUNT_BY_COUNTRY,
   UNIVERSITY_COUNT_BY_LEVEL,
   UNIVERSITY_LEVELS,
   filterUniversities,
@@ -31,7 +33,7 @@ export default function Universities() {
   const levels = getAll("level") as Level[];
   const cities = getAll("city");
   const partnersOnly = get("partners") === "1";
-  const country = get("country");
+  const country = get("country") || "malaysia";
 
   const results = useMemo(
     () => filterUniversities(UNIVERSITIES, { q, levels, cities, partnersOnly, country }),
@@ -41,8 +43,8 @@ export default function Universities() {
   const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
 
   const chips = [
-    ...(country
-      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "") }]
+    ...(country !== "malaysia"
+      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") }]
       : []),
     ...(partnersOnly
       ? [{ key: "partners", label: c.partnersOnly, onRemove: () => setValue("partners", "") }]
@@ -71,6 +73,18 @@ export default function Universities() {
             onToggle={() => setValue("partners", partnersOnly ? "" : "1")}
           />
         </div>
+      </FilterGroup>
+
+      <FilterGroup label={c.countryLabel}>
+        {CATALOGUE_COUNTRIES.map((cty) => (
+          <CheckRow
+            key={cty}
+            label={countryLabelMap[cty] ?? cty}
+            count={UNIVERSITY_COUNT_BY_COUNTRY[cty]}
+            checked={country === cty}
+            onToggle={() => setValue("country", cty)}
+          />
+        ))}
       </FilterGroup>
 
       <FilterGroup label={c.levelLabel}>
