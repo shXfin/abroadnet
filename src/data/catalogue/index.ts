@@ -87,16 +87,22 @@ function norm(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+/** Countries with real catalogue data, in display order. Romania/Georgia/China
+ * pills stay "coming soon" in the UI until they gain an entry here. */
+export const CATALOGUE_COUNTRIES: JoinedUniversity["country"][] = ["malaysia", "romania"];
+
 export type UniversityFilters = {
   q: string;
   levels: Level[];
   cities: string[];
   partnersOnly: boolean;
+  country?: string;
 };
 
 export function filterUniversities(list: JoinedUniversity[], f: UniversityFilters) {
   const q = norm(f.q);
   return list.filter((u) => {
+    if (f.country && u.country !== f.country) return false;
     if (f.partnersOnly && !u.isPartner) return false;
     if (f.levels.length && !f.levels.some((l) => u.levels.includes(l))) return false;
     if (f.cities.length && !f.cities.includes(u.city)) return false;
@@ -110,6 +116,7 @@ export type CourseFilters = {
   levels: Level[];
   departments: Department[];
   universityIds: string[];
+  country?: string;
 };
 
 export type CourseSort = "relevance" | "name" | "duration";
@@ -117,13 +124,12 @@ export type CourseSort = "relevance" | "name" | "duration";
 export function filterCourses(list: Course[], f: CourseFilters, sort: CourseSort = "relevance") {
   const q = norm(f.q);
   const out = list.filter((c) => {
+    const uni = BY_ID.get(c.universityId);
+    if (f.country && uni?.country !== f.country) return false;
     if (f.levels.length && !f.levels.includes(c.level)) return false;
     if (f.departments.length && !f.departments.includes(c.department)) return false;
     if (f.universityIds.length && !f.universityIds.includes(c.universityId)) return false;
-    if (q) {
-      const uni = BY_ID.get(c.universityId);
-      if (!norm(`${c.name.en} ${uni?.name.en ?? ""} ${c.campus ?? ""}`).includes(q)) return false;
-    }
+    if (q && !norm(`${c.name.en} ${uni?.name.en ?? ""} ${c.campus ?? ""}`).includes(q)) return false;
     return true;
   });
 

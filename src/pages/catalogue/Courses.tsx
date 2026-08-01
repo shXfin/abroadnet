@@ -40,13 +40,19 @@ export default function Courses() {
   const departments = getAll("dept") as Department[];
   const universityIds = getAll("uni");
   const sort = (get("sort") || "relevance") as CourseSort;
+  const country = get("country");
 
   const results = useMemo(
-    () => filterCourses(COURSES, { q, levels, departments, universityIds }, sort),
-    [q, levels.join(), departments.join(), universityIds.join(), sort],
+    () => filterCourses(COURSES, { q, levels, departments, universityIds, country }, sort),
+    [q, levels.join(), departments.join(), universityIds.join(), sort, country],
   );
 
+  const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
+
   const chips = [
+    ...(country
+      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "") }]
+      : []),
     ...levels.map((l) => ({
       key: `level-${l}`,
       label: levelLabel(l, lang),

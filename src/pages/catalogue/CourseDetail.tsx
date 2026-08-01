@@ -11,7 +11,7 @@ import {
   formatFeeRange,
   universityById,
 } from "../../data/catalogue";
-import { departmentLabel, levelLabel } from "../../data/catalogue/types";
+import { countryLabel, departmentLabel, levelLabel } from "../../data/catalogue/types";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -56,7 +56,11 @@ export default function CourseDetail() {
               <span className="block text-sm font-semibold text-navy group-hover:text-coral">
                 {uni.name.en}
               </span>
-              {uni.city && <span className="block text-xs text-ink/45">{uni.city}, Malaysia</span>}
+              {uni.city && (
+                <span className="block text-xs text-ink/45">
+                  {uni.city}, {countryLabel(uni.country)}
+                </span>
+              )}
             </span>
             <span className="text-ink/25 transition-transform group-hover:translate-x-1 group-hover:text-coral">
               →

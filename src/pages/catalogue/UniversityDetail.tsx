@@ -10,7 +10,7 @@ import {
   formatFeeRange,
   universityBySlug,
 } from "../../data/catalogue";
-import { LEVEL_ORDER, departmentLabel, levelLabel } from "../../data/catalogue/types";
+import { LEVEL_ORDER, countryLabel, departmentLabel, levelLabel } from "../../data/catalogue/types";
 
 export default function UniversityDetail() {
   const { slug } = useParams();
@@ -46,7 +46,9 @@ export default function UniversityDetail() {
               )}
             </div>
             <p className="mt-2 text-sm text-ink/60">
-              {uni.city ? `${uni.city}${uni.state && uni.state !== uni.city ? `, ${uni.state}` : ""}, Malaysia` : "Malaysia"}
+              {uni.city
+                ? `${uni.city}${uni.state && uni.state !== uni.city ? `, ${uni.state}` : ""}, ${countryLabel(uni.country)}`
+                : countryLabel(uni.country)}
             </p>
           </div>
         </div>

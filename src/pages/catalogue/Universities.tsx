@@ -31,13 +31,19 @@ export default function Universities() {
   const levels = getAll("level") as Level[];
   const cities = getAll("city");
   const partnersOnly = get("partners") === "1";
+  const country = get("country");
 
   const results = useMemo(
-    () => filterUniversities(UNIVERSITIES, { q, levels, cities, partnersOnly }),
-    [q, levels.join(), cities.join(), partnersOnly],
+    () => filterUniversities(UNIVERSITIES, { q, levels, cities, partnersOnly, country }),
+    [q, levels.join(), cities.join(), partnersOnly, country],
   );
 
+  const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
+
   const chips = [
+    ...(country
+      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "") }]
+      : []),
     ...(partnersOnly
       ? [{ key: "partners", label: c.partnersOnly, onRemove: () => setValue("partners", "") }]
       : []),

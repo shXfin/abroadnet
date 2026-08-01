@@ -67,16 +67,17 @@ export default function About() {
         </ul>
 
         <p className="label-caps mt-12 text-ink/50">{t.about.pressKicker}</p>
-        <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2">
+        <div className="mt-4 flex flex-wrap gap-4">
           {t.about.pressLinks.map((item) => (
             <a
               key={item.href}
               href={item.href}
               target="_blank"
               rel="noreferrer"
-              className="text-sm font-semibold text-coral underline decoration-coral/40 underline-offset-4 hover:decoration-coral"
+              className="group flex items-center gap-3 rounded-full border hairline bg-paper py-2 pl-2 pr-5 transition-colors hover:border-coral"
             >
-              {item.label} →
+              <img src={item.logo} alt="" className="h-8 w-8 shrink-0 rounded-full object-contain" />
+              <span className="text-sm font-semibold text-ink/80 group-hover:text-coral">{item.label} →</span>
             </a>
           ))}
         </div>

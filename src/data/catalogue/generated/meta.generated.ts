@@ -4,8 +4,8 @@
 
 export const CATALOGUE_META = {
   syncedAt: "2026-07-31",
-  universityCount: 50,
-  courseCount: 421,
-  citiesCovered: 14,
-  source: "fee-structure archive (231 PDFs, 974 pages)",
+  universityCount: 64,
+  courseCount: 708,
+  citiesCovered: 20,
+  source: "fee-structure archive (231 PDFs, 974 pages) + Romania course list",
 } as const;
