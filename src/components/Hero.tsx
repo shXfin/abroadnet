@@ -31,14 +31,14 @@ const STUDENT_PHOTOS = [
   {
     src: "photos/georgia-visa-rakibul-full.jpg",
     aspect: 1,
-    pos: { left: "62%", top: "82%" },
+    pos: { left: "57%", top: "68%" },
     title: "Md Rakibul Islam",
     destination: "Georgia",
   },
   {
     src: "photos/IMG_1844.JPG",
     aspect: 1,
-    pos: { left: "80%", top: "62%" },
+    pos: { left: "67%", top: "99%" },
     title: "Jubaer Akand Nahid",
     destination: "Italy",
   },
@@ -54,16 +54,6 @@ function realCount(list: string[]) {
 function splitLabel(label: string) {
   const [code, country] = label.split(" · ");
   return { code, country };
-}
-
-function CheckBadge({ className }: { className?: string }) {
-  return (
-    <span className={`flex items-center justify-center rounded-full bg-emerald-600 text-white ${className}`}>
-      <svg viewBox="0 0 20 20" className="h-2.5 w-2.5" fill="currentColor" aria-hidden="true">
-        <path d="M8 13.4 4.8 10.2l-1.4 1.4L8 16.2l9-9-1.4-1.4z" />
-      </svg>
-    </span>
-  );
 }
 
 function CloseIcon({ className }: { className?: string }) {
@@ -200,7 +190,6 @@ function DestinationBadge({
       <span className="[&>svg]:h-2.5 [&>svg]:w-[14px] sm:[&>svg]:h-3.5 sm:[&>svg]:w-5">{FLAGS[destKey]}</span>
       <span className="font-mono text-[8px] font-bold tracking-wide text-coral sm:text-[11px]">{code}</span>
       <span className="text-[7px] font-semibold text-navy/60 sm:text-[10px]">· {country}</span>
-      <CheckBadge className="h-2.5 w-2.5 shrink-0 sm:h-3.5 sm:w-3.5" />
     </button>
   );
 }
@@ -304,7 +293,7 @@ function FlightRoutes() {
     { key: "otp", label: t.hero.otp, className: "left-[74%] top-[13%]" },
     { key: "pek", label: t.hero.pek, className: "left-[88%] top-[42%]" },
     { key: "tbs", label: t.hero.tbs, className: "left-[86%] top-[74%]" },
-    { key: "fco", label: t.hero.fco, className: "left-[58%] top-[62%]" },
+    { key: "fco", label: t.hero.fco, className: "left-[88%] top-[102%]" },
   ];
   const dhk = splitLabel(t.hero.dhk);
   const paths = useMeasuredArcs(containerRef, destinations.map((d) => d.key));
