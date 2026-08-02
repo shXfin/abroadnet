@@ -1,4 +1,7 @@
+import { useRef } from "react";
 import { useLang } from "../i18n";
+
+const CASCADE_DELAY_MS = 130;
 
 /**
  * The whole "how this works" block: one heading covers both the step
@@ -13,22 +16,33 @@ import { useLang } from "../i18n";
  * makes sense within a row.
  *
  * Every circle is identical (no highlighted "step 1", no hover/cursor
- * affordance) — nothing here implies you're mid-journey or that a circle
- * is a button. Tapping one is a quiet fidget, not a feature: it replays a
- * quick scale/glow (.step-tap in index.css), discoverable by curiosity
- * rather than advertised. Same remove/reflow/add restart trick as
- * assessmentJump's flash, so repeat taps on the same circle still play.
+ * affordance) — nothing implies a circle is a button. Tapping one lights
+ * up every step after it in a staggered cascade, like a lit fuse running
+ * down the line — a quiet fidget, not a feature; there's no hidden info
+ * behind it. Same remove/reflow/add restart trick as assessmentJump's
+ * flash, so the same circle can be tapped again mid-cascade.
  */
-function handleTap(e: React.MouseEvent<HTMLSpanElement>) {
-  const el = e.currentTarget;
-  el.classList.remove("step-tap");
-  void el.offsetWidth;
-  el.classList.add("step-tap");
-}
-
 export default function JourneyTimeline() {
   const { t } = useLang();
   const steps = t.why.steps;
+  const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  function pulse(el: HTMLSpanElement | null) {
+    if (!el) return;
+    el.classList.remove("step-tap");
+    void el.offsetWidth;
+    el.classList.add("step-tap");
+  }
+
+  function handleTap(startIndex: number) {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    for (let i = startIndex; i < steps.length; i++) {
+      const delay = (i - startIndex) * CASCADE_DELAY_MS;
+      timers.current.push(setTimeout(() => pulse(circleRefs.current[i]), delay));
+    }
+  }
 
   return (
     <>
@@ -40,7 +54,8 @@ export default function JourneyTimeline() {
           <div key={step.label} className="relative">
             <div className="flex items-center">
               <span
-                onClick={handleTap}
+                ref={(el) => (circleRefs.current[i] = el)}
+                onClick={() => handleTap(i)}
                 className="z-10 flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full border-2 border-navy/25 bg-paper font-mono text-xs font-bold text-navy"
               >
                 {i + 1}
