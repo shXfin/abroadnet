@@ -5,13 +5,27 @@ import { useLang } from "../i18n";
  * breakdown and the destination grid that follows it (rendered by the
  * parent, Home.tsx), so the two never read as separate sections.
  *
- * Same numbered-circle-and-line idea as the original, but reflowing into a
- * wrapping grid instead of forcing a single row — the original's
- * `overflow-x-auto` meant a horizontal scroll on anything narrower than
- * ~900px, which is most phones. The connecting line only renders at the lg
- * breakpoint, where all 7 steps genuinely sit in one row; below that they
- * wrap onto multiple rows and a line only makes sense within a row.
+ * Numbered-circle-and-line layout, reflowing into a wrapping grid instead
+ * of forcing a single row — the original's `overflow-x-auto` meant a
+ * horizontal scroll on anything narrower than ~900px, which is most
+ * phones. The connecting line only renders at the lg breakpoint, where all
+ * 7 steps genuinely sit in one row; below that they wrap and a line only
+ * makes sense within a row.
+ *
+ * Every circle is identical (no highlighted "step 1", no hover/cursor
+ * affordance) — nothing here implies you're mid-journey or that a circle
+ * is a button. Tapping one is a quiet fidget, not a feature: it replays a
+ * quick scale/glow (.step-tap in index.css), discoverable by curiosity
+ * rather than advertised. Same remove/reflow/add restart trick as
+ * assessmentJump's flash, so repeat taps on the same circle still play.
  */
+function handleTap(e: React.MouseEvent<HTMLSpanElement>) {
+  const el = e.currentTarget;
+  el.classList.remove("step-tap");
+  void el.offsetWidth;
+  el.classList.add("step-tap");
+}
+
 export default function JourneyTimeline() {
   const { t } = useLang();
   const steps = t.why.steps;
@@ -26,15 +40,12 @@ export default function JourneyTimeline() {
           <div key={step.label} className="relative">
             <div className="flex items-center">
               <span
-                className={`z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${
-                  i === 0 ? "bg-coral text-white" : "border-2 border-navy/25 bg-paper text-navy"
-                }`}
+                onClick={handleTap}
+                className="z-10 flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full border-2 border-navy/25 bg-paper font-mono text-xs font-bold text-navy"
               >
                 {i + 1}
               </span>
-              <span
-                className={`hidden h-[2px] flex-1 lg:block ${i === steps.length - 1 ? "opacity-0" : "bg-navy/15"}`}
-              />
+              <span className={`hidden h-[2px] flex-1 bg-navy/15 lg:block ${i === steps.length - 1 ? "opacity-0" : ""}`} />
             </div>
             <p className="mt-4 font-display text-lg text-navy">{step.label}</p>
             <p className="mt-2 max-w-[180px] text-xs leading-relaxed text-ink/60">{step.copy}</p>

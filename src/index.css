@@ -210,6 +210,28 @@ em {
   animation: assessment-flash 1.1s ease-out 2;
 }
 
+/* A quiet fidget, not a feature: tapping a journey-step numeral gives it a
+ * quick scale-and-glow so the tap feels acknowledged, without the circle
+ * ever looking like a button (no cursor/hover affordance elsewhere). */
+@keyframes step-tap {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 90, 54, 0.45);
+  }
+  40% {
+    transform: scale(1.22);
+    box-shadow: 0 0 0 6px rgba(255, 90, 54, 0.12);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 90, 54, 0);
+  }
+}
+
+.step-tap {
+  animation: step-tap 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* Chat launcher: sits idle most of the time, then gives a quick wiggle +
  * ring pulse every few seconds so it actually gets noticed in the corner —
  * the rest of each cycle is a hold, so it doesn't feel restless. */
@@ -271,7 +293,8 @@ em {
   .animate-marquee,
   .animate-marquee-slow,
   .assessment-flash,
-  .chat-launcher-attn {
+  .chat-launcher-attn,
+  .step-tap {
     animation: none;
   }
 }
