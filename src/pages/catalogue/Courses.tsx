@@ -15,17 +15,13 @@ import {
   CATALOGUE_COUNTRIES,
   COURSES,
   COURSE_COUNT_BY_COUNTRY,
-  COURSE_COUNT_BY_DEPARTMENT,
-  COURSE_COUNT_BY_LEVEL,
-  COURSE_DEPARTMENTS,
-  COURSE_LEVELS,
   UNIVERSITIES,
   durationLabel,
   filterCourses,
   universityById,
   type CourseSort,
 } from "../../data/catalogue";
-import { departmentLabel, levelLabel, type Department, type Level } from "../../data/catalogue/types";
+import { LEVEL_ORDER, departmentLabel, levelLabel, type Department, type Level } from "../../data/catalogue/types";
 import { useCatalogueFilters } from "../../lib/useCatalogueFilters";
 
 export default function Courses() {
@@ -34,31 +30,50 @@ export default function Courses() {
   const { get, getAll, setValue, toggleValue, clearAll, activeCount } = useCatalogueFilters();
 
   const q = get("q");
-  const levels = getAll("level") as Level[];
-  const departments = getAll("dept") as Department[];
-  const universityIds = getAll("uni");
+  const rawLevels = getAll("level") as Level[];
+  const rawDepartments = getAll("dept") as Department[];
+  const rawUniversityIds = getAll("uni");
   const sort = (get("sort") || "relevance") as CourseSort;
   const country = get("country") || "malaysia";
+
+  // Level/department/university facets, their counts, AND the active
+  // selections must only reflect the selected country — otherwise picking
+  // Malaysia still lists (and can filter by) Romanian departments/unis, and
+  // a stale cross-country value left in the URL silently returns zero
+  // results instead of just being ignored.
+  const coursesInCountry = useMemo(
+    () => COURSES.filter((course) => universityById(course.universityId)?.country === country),
+    [country],
+  );
+  const levelsForCountry = LEVEL_ORDER.filter((l) => coursesInCountry.some((course) => course.level === l));
+  const countByLevel = coursesInCountry.reduce<Record<string, number>>(
+    (acc, course) => ({ ...acc, [course.level]: (acc[course.level] ?? 0) + 1 }),
+    {},
+  );
+  const departmentsForCountry = [...new Set(coursesInCountry.map((course) => course.department))].sort() as Department[];
+  const countByDepartment = coursesInCountry.reduce<Record<string, number>>(
+    (acc, course) => ({ ...acc, [course.department]: (acc[course.department] ?? 0) + 1 }),
+    {},
+  );
+  const UNIS_WITH_COURSES = useMemo(
+    () => UNIVERSITIES.filter((u) => u.courseCount > 0 && u.country === country),
+    [country],
+  );
+  const uniIdsForCountry = new Set(UNIS_WITH_COURSES.map((u) => u.id));
+
+  const levels = rawLevels.filter((l) => levelsForCountry.includes(l));
+  const departments = rawDepartments.filter((d) => departmentsForCountry.includes(d));
+  const universityIds = rawUniversityIds.filter((id) => uniIdsForCountry.has(id));
 
   const results = useMemo(
     () => filterCourses(COURSES, { q, levels, departments, universityIds, country }, sort),
     [q, levels.join(), departments.join(), universityIds.join(), sort, country],
   );
 
-  // Only institutions in the current country with courses belong in the
-  // university filter — offering unis from the other country, or ones with
-  // no courses, would just produce empty result sets.
-  const UNIS_WITH_COURSES = useMemo(
-    () => UNIVERSITIES.filter((u) => u.courseCount > 0 && u.country === country),
-    [country],
-  );
-
   const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
 
   const chips = [
-    ...(country !== "malaysia"
-      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") }]
-      : []),
+    { key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") },
     ...levels.map((l) => ({
       key: `level-${l}`,
       label: levelLabel(l, lang),
@@ -96,11 +111,11 @@ export default function Courses() {
       </FilterGroup>
 
       <FilterGroup label={c.levelLabel}>
-        {COURSE_LEVELS.map((l) => (
+        {levelsForCountry.map((l) => (
           <CheckRow
             key={l}
             label={levelLabel(l, lang)}
-            count={COURSE_COUNT_BY_LEVEL[l]}
+            count={countByLevel[l]}
             checked={levels.includes(l)}
             onToggle={() => toggleValue("level", l)}
           />
@@ -108,11 +123,11 @@ export default function Courses() {
       </FilterGroup>
 
       <FilterGroup label={c.deptLabel}>
-        {COURSE_DEPARTMENTS.map((d) => (
+        {departmentsForCountry.map((d) => (
           <CheckRow
             key={d}
             label={departmentLabel(d, lang)}
-            count={COURSE_COUNT_BY_DEPARTMENT[d]}
+            count={countByDepartment[d]}
             checked={departments.includes(d)}
             onToggle={() => toggleValue("dept", d)}
           />

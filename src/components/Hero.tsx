@@ -189,7 +189,7 @@ function DestinationBadge({
     >
       <span className="[&>svg]:h-2.5 [&>svg]:w-[14px] sm:[&>svg]:h-3.5 sm:[&>svg]:w-5">{FLAGS[destKey]}</span>
       <span className="font-mono text-[8px] font-bold tracking-wide text-coral sm:text-[11px]">{code}</span>
-      <span className="text-[7px] font-semibold text-navy/60 sm:text-[10px]">· {country}</span>
+      <span className="text-[7px] font-semibold text-navy/60 sm:text-[10px]">{country}</span>
     </button>
   );
 }
@@ -412,7 +412,7 @@ function FlightRoutes() {
         <span className="flex items-center gap-1 whitespace-nowrap rounded-full border hairline bg-white px-1.5 py-1 shadow-sm sm:gap-1.5 sm:px-3 sm:py-1.5">
           <span className="[&>svg]:h-2.5 [&>svg]:w-[14px] sm:[&>svg]:h-3.5 sm:[&>svg]:w-5">{FLAGS.dhk}</span>
           <span className="text-[7px] font-bold text-navy/70 sm:text-[10px]">
-            <span className="text-coral">{dhk.code}</span> · {dhk.country}
+            <span className="text-coral">{dhk.code}</span> {dhk.country}
           </span>
         </span>
       </div>

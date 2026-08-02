@@ -12,12 +12,8 @@ import {
 } from "../../components/catalogue/Filters";
 import {
   CATALOGUE_COUNTRIES,
-  CITIES,
   UNIVERSITIES,
-  UNIVERSITY_COUNT_BY_CITY,
   UNIVERSITY_COUNT_BY_COUNTRY,
-  UNIVERSITY_COUNT_BY_LEVEL,
-  UNIVERSITY_LEVELS,
   filterUniversities,
   formatFeeRange,
 } from "../../data/catalogue";
@@ -30,10 +26,31 @@ export default function Universities() {
   const { get, getAll, setValue, toggleValue, clearAll, activeCount } = useCatalogueFilters();
 
   const q = get("q");
-  const levels = getAll("level") as Level[];
-  const cities = getAll("city");
+  const rawLevels = getAll("level") as Level[];
+  const rawCities = getAll("city");
   const partnersOnly = get("partners") === "1";
   const country = get("country") || "malaysia";
+
+  // Level/city facets, their counts, AND the active selections themselves
+  // must only reflect the selected country — otherwise picking Malaysia
+  // still lists (and can filter by) Romanian cities, silently returning
+  // zero results once a stale cross-country value lingers in the URL.
+  const uniInCountry = useMemo(() => UNIVERSITIES.filter((u) => u.country === country), [country]);
+  const levelsForCountry = LEVEL_ORDER.filter((l) => uniInCountry.some((u) => u.levels.includes(l)));
+  const countByLevel = uniInCountry.reduce<Record<string, number>>((acc, u) => {
+    u.levels.forEach((l) => {
+      acc[l] = (acc[l] ?? 0) + 1;
+    });
+    return acc;
+  }, {});
+  const citiesForCountry = [...new Set(uniInCountry.map((u) => u.city).filter(Boolean))].sort();
+  const countByCity = uniInCountry.reduce<Record<string, number>>(
+    (acc, u) => (u.city ? { ...acc, [u.city]: (acc[u.city] ?? 0) + 1 } : acc),
+    {},
+  );
+
+  const levels = rawLevels.filter((l) => levelsForCountry.includes(l));
+  const cities = rawCities.filter((city) => citiesForCountry.includes(city));
 
   const results = useMemo(
     () => filterUniversities(UNIVERSITIES, { q, levels, cities, partnersOnly, country }),
@@ -43,9 +60,7 @@ export default function Universities() {
   const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
 
   const chips = [
-    ...(country !== "malaysia"
-      ? [{ key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") }]
-      : []),
+    { key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") },
     ...(partnersOnly
       ? [{ key: "partners", label: c.partnersOnly, onRemove: () => setValue("partners", "") }]
       : []),
@@ -88,11 +103,11 @@ export default function Universities() {
       </FilterGroup>
 
       <FilterGroup label={c.levelLabel}>
-        {UNIVERSITY_LEVELS.map((l) => (
+        {levelsForCountry.map((l) => (
           <CheckRow
             key={l}
             label={levelLabel(l, lang)}
-            count={UNIVERSITY_COUNT_BY_LEVEL[l]}
+            count={countByLevel[l]}
             checked={levels.includes(l)}
             onToggle={() => toggleValue("level", l)}
           />
@@ -100,11 +115,11 @@ export default function Universities() {
       </FilterGroup>
 
       <FilterGroup label={c.cityLabel}>
-        {CITIES.map((city) => (
+        {citiesForCountry.map((city) => (
           <CheckRow
             key={city}
             label={city}
-            count={UNIVERSITY_COUNT_BY_CITY[city]}
+            count={countByCity[city]}
             checked={cities.includes(city)}
             onToggle={() => toggleValue("city", city)}
           />

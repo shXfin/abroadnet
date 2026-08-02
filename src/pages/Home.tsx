@@ -16,27 +16,16 @@ import { useLang } from "../i18n";
 const TEAM_FACES = TEAM.filter((m) => m.photo).slice(0, 4);
 
 type FaqItem = { q: string; a: string };
+type FaqGroup = { key: string; label: string; items: FaqItem[] };
 
-/** A tabbed FAQ, not two stacked lists — the Malaysia-specific questions
- * (most-traveled route, so people ask about it most) live one tap away
- * instead of doubling the page's scroll length. */
-function FaqSection({
-  kicker,
-  title,
-  generalLabel,
-  generalItems,
-  malaysiaItems,
-  malaysiaLabel,
-}: {
-  kicker: string;
-  title: string;
-  generalLabel: string;
-  generalItems: FaqItem[];
-  malaysiaItems: FaqItem[];
-  malaysiaLabel: string;
-}) {
-  const [tab, setTab] = useState<"general" | "malaysia">("general");
-  const items = tab === "general" ? generalItems : malaysiaItems;
+/** A tabbed FAQ, not stacked lists — country-specific questions live one tap
+ * away instead of doubling the page's scroll length. Takes a plain list of
+ * groups rather than named general/malaysia props, so adding another
+ * country's FAQ later is a data change at the call site, not a prop-shape
+ * change here. Groups with no items are skipped by the caller. */
+function FaqSection({ kicker, title, groups }: { kicker: string; title: string; groups: FaqGroup[] }) {
+  const [tab, setTab] = useState(groups[0]?.key);
+  const items = groups.find((g) => g.key === tab)?.items ?? [];
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
@@ -45,23 +34,18 @@ function FaqSection({
           <p className="label-caps text-coral">{kicker}</p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{title}</h2>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setTab("general")}
-            className={`label-caps rounded-full border-2 px-5 py-2 transition-colors ${
-              tab === "general" ? "border-navy bg-navy text-white" : "border-navy/15 text-ink/60 hover:border-navy/30"
-            }`}
-          >
-            {generalLabel}
-          </button>
-          <button
-            onClick={() => setTab("malaysia")}
-            className={`label-caps rounded-full border-2 px-5 py-2 transition-colors ${
-              tab === "malaysia" ? "border-navy bg-navy text-white" : "border-navy/15 text-ink/60 hover:border-navy/30"
-            }`}
-          >
-            {malaysiaLabel}
-          </button>
+        <div className="flex flex-wrap gap-2">
+          {groups.map((g) => (
+            <button
+              key={g.key}
+              onClick={() => setTab(g.key)}
+              className={`label-caps rounded-full border-2 px-5 py-2 transition-colors ${
+                tab === g.key ? "border-navy bg-navy text-white" : "border-navy/15 text-ink/60 hover:border-navy/30"
+              }`}
+            >
+              {g.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -106,8 +90,6 @@ export default function Home() {
 
       {/* Facebook carousel, right beneath the hero */}
       <FacebookCarousel />
-
-      <PartnershipBanner />
 
       {/* The journey and where it leads, unified in one block */}
       <section id="routes" className="border-y hairline bg-parchment/30 py-20">
@@ -187,7 +169,7 @@ export default function Home() {
             <div className="grid gap-px bg-ink/15 sm:grid-cols-3">
               {[
                 { to: "/destinations/romania", code: "OTP", name: t.nav.romania, tag: t.routes.romaniaTag },
-                { to: "/destinations/georgia", code: "TBS", name: t.nav.georgia, tag: t.routes.georgiaTag },
+                { to: "/destinations/italy", code: "FCO", name: t.nav.italy, tag: t.routes.italyTag },
                 { to: "/destinations/china", code: "PEK", name: t.nav.china, tag: t.routes.chinaTag },
               ].map((route) => (
                 <Link
@@ -207,6 +189,14 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+
+            <Link
+              to="/destinations"
+              className="label-caps flex items-center justify-center gap-2 bg-paper px-6 py-5 text-ink/40 transition-colors hover:text-coral"
+            >
+              {t.routes.seeAllDestinations}
+              <span>→</span>
+            </Link>
           </div>
 
           {/* The "one counselor" promise, backed by real faces */}
@@ -234,13 +224,16 @@ export default function Home() {
         </div>
       </section>
 
+      <PartnershipBanner />
+
       <FaqSection
         kicker={t.homeFaq.kicker}
         title={t.homeFaq.title}
-        generalLabel={t.homeFaq.generalTab}
-        generalItems={t.homeFaq.items}
-        malaysiaItems={t.malaysia.faq}
-        malaysiaLabel={t.nav.malaysia}
+        groups={[
+          { key: "general", label: t.homeFaq.generalTab, items: t.homeFaq.items },
+          { key: "malaysia", label: t.nav.malaysia, items: t.malaysia.faq },
+          { key: "romania", label: t.nav.romania, items: t.romania.faq },
+        ].filter((g) => g.items.length > 0)}
       />
 
 
