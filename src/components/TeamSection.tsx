@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
@@ -35,6 +36,11 @@ function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" 
 export default function TeamSection() {
   const { t, lang } = useLang();
   const [ceo, ...rest] = TEAM;
+  const scroller = useRef<HTMLDivElement>(null);
+
+  function scrollBy(direction: 1 | -1) {
+    scroller.current?.scrollBy({ left: direction * 240, behavior: "smooth" });
+  }
 
   return (
     <section className="border-y hairline bg-parchment/30 py-20">
@@ -71,28 +77,38 @@ export default function TeamSection() {
           </div>
         </div>
 
-        {/* The rest of the team, drifting in an infinite, self-scrolling row */}
-        <p className="label-caps mt-10 text-ink/40">{t.about.teamMore}</p>
+        {/* The rest of the team. A real scrollable row with arrows — not a
+            CSS-animation marquee, since that silently freezes on some
+            Windows/browser combos and leaves the row looking stuck. */}
+        <div className="mt-10 flex items-end justify-between gap-6">
+          <p className="label-caps text-ink/60">{t.about.teamMore}</p>
+          <div className="flex shrink-0 items-center gap-3">
+            <button
+              onClick={() => scrollBy(-1)}
+              className="flex h-11 w-11 items-center justify-center border hairline text-lg transition-colors hover:border-coral hover:text-coral"
+              aria-label="Previous"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => scrollBy(1)}
+              className="flex h-11 w-11 items-center justify-center border hairline text-lg transition-colors hover:border-coral hover:text-coral"
+              aria-label="Next"
+            >
+              →
+            </button>
+          </div>
+        </div>
 
         <div
-          className="relative mt-4 overflow-hidden"
-          style={{
-            WebkitMaskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)",
-            maskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)",
-          }}
+          ref={scroller}
+          className="scrollbar-hide mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1"
         >
-          <div className="flex w-max gap-4 animate-marquee-slow hover:[animation-play-state:paused]">
-            <div className="flex gap-4">
-              {rest.map((member) => (
-                <TeamCard key={member.name} member={member} lang={lang} />
-              ))}
+          {rest.map((member) => (
+            <div key={member.name} className="snap-start">
+              <TeamCard member={member} lang={lang} />
             </div>
-            <div className="flex gap-4" aria-hidden="true">
-              {rest.map((member) => (
-                <TeamCard key={`${member.name}-dup`} member={member} lang={lang} />
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
