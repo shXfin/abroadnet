@@ -26,6 +26,12 @@ const icons = {
       <circle cx="12" cy="9.5" r="2.4" />
     </svg>
   ),
+  calendar: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3.5" y="5" width="17" height="16" rx="2" />
+      <path d="M3.5 9.5h17M8 3v4M16 3v4" />
+    </svg>
+  ),
 };
 
 /** A short, data-driven row of highlights on the university profile,
@@ -65,6 +71,12 @@ export default function UniversityHighlights({ uni }: { uni: JoinedUniversity })
       title: `${uni.city}, ${countryLabel(uni.country)}`,
       body: c.highlightLocationBody,
     },
+    uni.intakes &&
+      uni.intakes.length > 0 && {
+        icon: icons.calendar,
+        title: uni.intakes.join(" / "),
+        body: c.highlightIntakeBody,
+      },
   ].filter((x): x is { icon: JSX.Element; title: string; body: string } => Boolean(x));
 
   if (items.length === 0) return null;

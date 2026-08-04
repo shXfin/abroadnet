@@ -102,7 +102,7 @@ function norm(s: string) {
 
 /** Countries with real catalogue data, in display order. Romania/Georgia/China
  * pills stay "coming soon" in the UI until they gain an entry here. */
-export const CATALOGUE_COUNTRIES: JoinedUniversity["country"][] = ["malaysia", "romania"];
+export const CATALOGUE_COUNTRIES: JoinedUniversity["country"][] = ["malaysia", "romania", "italy"];
 
 export type UniversityFilters = {
   q: string;

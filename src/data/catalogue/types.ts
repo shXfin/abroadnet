@@ -120,7 +120,7 @@ export type University = {
    * the back-compat shim reproduces it verbatim. */
   legacyName?: string;
   shortName?: string;
-  country: "malaysia" | "romania";
+  country: "malaysia" | "romania" | "italy";
   city: string;
   state?: string;
   levels: Level[];
@@ -178,6 +178,7 @@ export type Course = {
 export const COUNTRY_LABELS: Record<University["country"], string> = {
   malaysia: "Malaysia",
   romania: "Romania",
+  italy: "Italy",
 };
 
 export function countryLabel(country: University["country"]): string {

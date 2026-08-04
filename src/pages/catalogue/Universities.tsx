@@ -57,7 +57,7 @@ export default function Universities() {
     [q, levels.join(), cities.join(), partnersOnly, country],
   );
 
-  const countryLabelMap: Record<string, string> = { malaysia: t.nav.malaysia, romania: t.nav.romania };
+  const countryLabelMap: Record<string, string> = Object.fromEntries(CATALOGUE_COUNTRIES.map((cty) => [cty, t.nav[cty]]));
 
   const chips = [
     { key: "country", label: countryLabelMap[country] ?? country, onRemove: () => setValue("country", "malaysia") },
