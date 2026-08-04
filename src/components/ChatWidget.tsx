@@ -102,7 +102,14 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {error && <p className="text-center text-xs text-coral">{t.chat.errorFallback}</p>}
+            {error && (
+              <div className="flex items-start gap-2.5">
+                <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 object-contain" />
+                <p className="max-w-[85%] rounded-2xl rounded-tl-sm border border-coral/25 bg-coral/10 px-3.5 py-2.5 text-sm leading-relaxed text-coral">
+                  {t.chat.errorFallback}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="border-t hairline bg-paper p-3">
