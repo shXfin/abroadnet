@@ -8,10 +8,11 @@
 
 define('GEMINI_API_KEY', 'PASTE_YOUR_GEMINI_API_KEY_HERE');
 
-// gemini-2.0-flash's free-tier quota can be zeroed on some projects —
-// gemini-flash-latest is the working equivalent. If Google retires this
-// name too, swap it here only.
-define('GEMINI_MODEL', 'gemini-flash-latest');
+// gemini-flash-lite-latest: cheapest/fastest tier, and it skips the hidden
+// "thinking" tokens some other Gemini models burn through internally
+// (which can eat the maxOutputTokens budget and cut answers off
+// mid-sentence). If Google retires this name, swap it here only.
+define('GEMINI_MODEL', 'gemini-flash-lite-latest');
 
 // Only these origins may call chat.php — locks the key's usage to your
 // own site even though the key itself isn't visible to the browser.

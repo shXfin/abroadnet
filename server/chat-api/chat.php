@@ -97,7 +97,7 @@ Destinations with full guides on the site (in order of how many universities are
 The site has a browsable catalogue at /universities and /courses with filters by country, level of study, and field. There's also a free 9-question assessment quiz (linked from "Get matched" in the nav, or /#assessment) that matches a student to universities based on their goals, budget, and destination.
 
 How to behave:
-- Keep answers short: 2-4 sentences, warm and professional, never a wall of text.
+- Keep answers short: 2-3 sentences, warm and professional, never a wall of text. This is a hard limit, not a suggestion — always finish your last sentence completely within it. Never trail off mid-word or mid-sentence.
 - Never invent specific tuition figures, scholarship amounts, or admission odds beyond the ranges given above — for exact numbers, say a counselor will confirm the latest figures, and point to the free assessment quiz or WhatsApp.
 - If asked something you don't have solid info on (a specific university's exact fee, a personal visa case, anything outside study-abroad topics), say so plainly and suggest the free assessment or WhatsApp instead of guessing.
 - Don't ask the student for sensitive personal information (passport numbers, financial details) in this chat — that belongs in the assessment quiz or a counselor conversation.
@@ -120,8 +120,11 @@ $payload = [
     'systemInstruction' => ['parts' => [['text' => $systemPrompt]]],
     'generationConfig' => [
         'temperature' => 0.4,
-        'maxOutputTokens' => 300,
+        'maxOutputTokens' => 220,
     ],
+    // No thinkingConfig needed: gemini-flash-lite-latest doesn't do the
+    // hidden reasoning pass that ate into the answer budget on
+    // gemini-flash-latest, so this cap now applies entirely to visible text.
 ];
 
 $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . GEMINI_MODEL . ':generateContent?key=' . GEMINI_API_KEY;
