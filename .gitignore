@@ -6,3 +6,7 @@ dist
 .env.local
 tsconfig.tsbuildinfo
 public/photos/_originals
+
+# Holds a live API key — lives only on the server (BahariHost), never in
+# this public repo. See CHATBOT_SETUP.md and config.example.php.
+server/chat-api/config.php

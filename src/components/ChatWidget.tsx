@@ -1,13 +1,56 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 
-/** Floating chat launcher + panel shell. Groundwork only: no assistant is
- * wired up yet (see project notes on the serverless + LLM plan) — this just
- * establishes the UI so the real thing can be dropped in without a redesign. */
+const CHAT_API_URL = "https://api.abroadnetedu.com/chat.php";
+
+type Message = { role: "user" | "assistant"; text: string };
+
+/** Floating chat launcher + panel. Talks to a PHP proxy on a BahariHost
+ * subdomain (see server/chat-api/) that holds the Gemini key server-side
+ * — this component never sees or sends any credential, just plain chat
+ * text over HTTPS. */
 export default function ChatWidget() {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, sending]);
+
+  async function handleSend() {
+    const text = input.trim();
+    if (!text || sending) return;
+
+    const nextMessages: Message[] = [...messages, { role: "user", text }];
+    setMessages(nextMessages);
+    setInput("");
+    setSending(true);
+    setError(false);
+
+    try {
+      const res = await fetch(CHAT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text,
+          history: nextMessages.slice(0, -1).map((m) => ({ role: m.role, text: m.text })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.reply) throw new Error(data.error || "no reply");
+      setMessages((prev) => [...prev, { role: "assistant", text: data.reply }]);
+    } catch {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <>
@@ -25,28 +68,61 @@ export default function ChatWidget() {
             </div>
           </div>
 
-          <div className="max-h-96 flex-1 overflow-y-auto bg-parchment/30 p-4">
+          <div ref={scrollRef} className="max-h-96 flex-1 overflow-y-auto bg-parchment/30 p-4 space-y-3">
             <div className="flex items-start gap-2.5">
               <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 object-contain" />
               <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-paper border hairline px-3.5 py-2.5 text-sm leading-relaxed text-ink/80">
                 {t.chat.greeting}
               </p>
             </div>
+
+            {messages.map((m, i) =>
+              m.role === "user" ? (
+                <div key={i} className="flex justify-end">
+                  <p className="max-w-[85%] rounded-2xl rounded-tr-sm bg-navy px-3.5 py-2.5 text-sm leading-relaxed text-white">
+                    {m.text}
+                  </p>
+                </div>
+              ) : (
+                <div key={i} className="flex items-start gap-2.5">
+                  <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 object-contain" />
+                  <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-paper border hairline px-3.5 py-2.5 text-sm leading-relaxed text-ink/80">
+                    {m.text}
+                  </p>
+                </div>
+              ),
+            )}
+
+            {sending && (
+              <div className="flex items-start gap-2.5">
+                <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 object-contain" />
+                <p className="rounded-2xl rounded-tl-sm bg-paper border hairline px-3.5 py-2.5 text-sm text-ink/50">
+                  {t.chat.thinking}
+                </p>
+              </div>
+            )}
+
+            {error && <p className="text-center text-xs text-coral">{t.chat.errorFallback}</p>}
           </div>
 
           <div className="border-t hairline bg-paper p-3">
-            <p className="mb-2 px-1 text-xs leading-relaxed text-ink/40">{t.chat.comingSoon}</p>
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                disabled
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSend();
+                }}
                 placeholder={t.chat.placeholder}
-                className="flex-1 rounded-full border hairline bg-parchment/40 px-4 py-2.5 text-sm text-ink/50 placeholder:text-ink/40 disabled:cursor-not-allowed"
+                disabled={sending}
+                className="flex-1 rounded-full border hairline bg-parchment/40 px-4 py-2.5 text-sm text-ink placeholder:text-ink/40 focus:border-coral focus:outline-none disabled:cursor-not-allowed"
               />
               <button
-                disabled
-                aria-label={t.chat.placeholder}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy/30 text-white disabled:cursor-not-allowed"
+                onClick={handleSend}
+                disabled={sending || !input.trim()}
+                aria-label={t.chat.send}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-white transition-colors hover:bg-coral disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 12h16M14 6l6 6-6 6" />

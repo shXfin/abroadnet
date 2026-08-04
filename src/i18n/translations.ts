@@ -1091,10 +1091,12 @@ const en = {
     launcherLabel: "Chat with us",
     title: "Abroad Net Assistant",
     subtitle: "Usually replies right away",
-    greeting: "Hi! I'm the Abroad Net assistant. Ask me about studying in Malaysia, Romania, Georgia, or China: costs, requirements, intakes, anything.",
-    comingSoon: "This assistant is being trained on our full course and visa guides. It'll be live here shortly.",
+    greeting: "Hi! I'm the Abroad Net assistant. Ask me about studying in Malaysia, Italy, China, or Romania: costs, requirements, intakes, anything.",
     placeholder: "Type your question...",
+    send: "Send message",
     close: "Close chat",
+    thinking: "Thinking...",
+    errorFallback: "Something went wrong. Please try again, or message us on WhatsApp.",
   },
 };
 
@@ -2189,10 +2191,12 @@ const bn: typeof en = {
     launcherLabel: "আমাদের সাথে চ্যাট করুন",
     title: "অ্যাব্রোড নেট অ্যাসিস্ট্যান্ট",
     subtitle: "সাধারণত সাথে সাথেই উত্তর দেয়",
-    greeting: "হ্যালো! আমি অ্যাব্রোড নেটের অ্যাসিস্ট্যান্ট। মালয়েশিয়া, রোমানিয়া, জর্জিয়া বা চীনে পড়াশোনা নিয়ে যা জানতে চান, জিজ্ঞাসা করুন, খরচ, যোগ্যতা, ইনটেক, সবকিছু।",
-    comingSoon: "এই অ্যাসিস্ট্যান্টকে আমাদের সব কোর্স ও ভিসা গাইডের উপর প্রশিক্ষণ দেওয়া হচ্ছে। খুব শীঘ্রই এখানে চালু হয়ে যাবে।",
+    greeting: "হ্যালো! আমি অ্যাব্রোড নেটের অ্যাসিস্ট্যান্ট। মালয়েশিয়া, ইতালি, চীন বা রোমানিয়ায় পড়াশোনা নিয়ে যা জানতে চান, জিজ্ঞাসা করুন, খরচ, যোগ্যতা, ইনটেক, সবকিছু।",
     placeholder: "আপনার প্রশ্ন লিখুন...",
+    send: "মেসেজ পাঠান",
     close: "চ্যাট বন্ধ করুন",
+    thinking: "ভাবছি...",
+    errorFallback: "কিছু ভুল হয়েছে। আবার চেষ্টা করুন, বা হোয়াটসঅ্যাপে যোগাযোগ করুন।",
   },
 };
 
