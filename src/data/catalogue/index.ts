@@ -105,7 +105,7 @@ function norm(s: string) {
 /** Ordered by how many universities each country actually has, not
  * alphabetically or by when it was added — Italy has more listed than
  * Romania, so it sits ahead of it everywhere this drives display order. */
-export const CATALOGUE_COUNTRIES: JoinedUniversity["country"][] = ["malaysia", "italy", "romania"];
+export const CATALOGUE_COUNTRIES: JoinedUniversity["country"][] = ["malaysia", "italy", "china", "romania"];
 
 export type UniversityFilters = {
   q: string;

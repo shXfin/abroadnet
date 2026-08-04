@@ -135,9 +135,9 @@ export default function Layout() {
   const destinations = [
     { to: "/destinations/malaysia", label: t.nav.malaysia },
     { to: "/destinations/italy", label: t.nav.italy },
+    { to: "/destinations/china", label: t.nav.china },
     { to: "/destinations/romania", label: t.nav.romania },
     { to: "/destinations/georgia", label: t.nav.georgia },
-    { to: "/destinations/china", label: t.nav.china },
   ];
 
   return (

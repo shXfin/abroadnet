@@ -44,9 +44,12 @@ export const GEORGIA_UNIVERSITIES = [
   "TODO: confirmed partner university",
 ];
 
-// TODO: confirm China partner universities with the consultancy.
 export const CHINA_UNIVERSITIES = [
-  "TODO: confirmed partner university",
-  "TODO: confirmed partner university",
-  "TODO: confirmed partner university",
+  "Tsinghua University",
+  "Peking University",
+  "Fudan University",
+  "Shanghai Jiao Tong University",
+  "Zhejiang University",
+  "Wuhan University",
+  "Nanjing University",
 ];

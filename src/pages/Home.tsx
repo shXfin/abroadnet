@@ -169,8 +169,8 @@ export default function Home() {
             <div className="grid gap-px bg-ink/15 sm:grid-cols-3">
               {[
                 { to: "/destinations/italy", code: "FCO", name: t.nav.italy, tag: t.routes.italyTag },
-                { to: "/destinations/romania", code: "OTP", name: t.nav.romania, tag: t.routes.romaniaTag },
                 { to: "/destinations/china", code: "PEK", name: t.nav.china, tag: t.routes.chinaTag },
+                { to: "/destinations/romania", code: "OTP", name: t.nav.romania, tag: t.routes.romaniaTag },
               ].map((route) => (
                 <Link
                   key={route.code}
@@ -233,6 +233,7 @@ export default function Home() {
           { key: "general", label: t.homeFaq.generalTab, items: t.homeFaq.items },
           { key: "malaysia", label: t.nav.malaysia, items: t.malaysia.faq },
           { key: "italy", label: t.nav.italy, items: t.italy.faq },
+          { key: "china", label: t.nav.china, items: t.china.faq },
           { key: "romania", label: t.nav.romania, items: t.romania.faq },
         ].filter((g) => g.items.length > 0)}
       />

@@ -5,9 +5,9 @@ import { COMING_SOON_DESTINATIONS } from "../../data/comingSoonDestinations";
 const LIVE_DESTINATIONS = [
   { to: "/destinations/malaysia", nameKey: "malaysia" as const },
   { to: "/destinations/italy", nameKey: "italy" as const },
+  { to: "/destinations/china", nameKey: "china" as const },
   { to: "/destinations/romania", nameKey: "romania" as const },
   { to: "/destinations/georgia", nameKey: "georgia" as const },
-  { to: "/destinations/china", nameKey: "china" as const },
 ];
 
 const CONTINENTS = ["Europe", "Asia", "Oceania"] as const;

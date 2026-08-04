@@ -5,16 +5,23 @@ import { useLang } from "../i18n";
 import { assetPath } from "../lib/assetPath";
 import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 import { PARTNER_ID_BY_LEGACY_NAME } from "../data/catalogue/partners";
+import { UNIVERSITIES as RAW_UNIVERSITIES } from "../data/catalogue/generated/universities.generated";
 
-/** Only Malaysia has a catalogue entry today — this stays undefined for the
- * other destinations' partner names and the tile just renders as plain text.
- * Deliberately doesn't import the full catalogue index: that would pull all
- * 50 universities + 421 courses into this eagerly-loaded component's bundle
- * instead of the lazy /universities and /courses chunks. Catalogue ids are
- * asserted equal to slugs at generation time, so the id doubles as the slug
- * without needing the dataset here. */
+/** Imports the universities file directly rather than going through
+ * `data/catalogue/index.ts` — that module also re-exports the ~400KB
+ * courses file, which would pull the whole catalogue into this
+ * eagerly-loaded component's bundle instead of the lazy /universities and
+ * /courses chunks. Universities-only is ~50KB and worth it: every
+ * destination's partner list used to only resolve for Malaysia, because
+ * this fell back to the Malaysia-only partner map and nothing else. Names
+ * are matched by exact `name.en` text now that ids are asserted equal to
+ * slugs for every country, not just Malaysia's curated 16. */
+const SLUG_BY_NAME: Record<string, string> = Object.fromEntries(
+  RAW_UNIVERSITIES.map((u) => [u.name.en, u.slug]),
+);
+
 function catalogueSlugFor(legacyName: string): string | undefined {
-  return PARTNER_ID_BY_LEGACY_NAME[legacyName];
+  return PARTNER_ID_BY_LEGACY_NAME[legacyName] ?? SLUG_BY_NAME[legacyName];
 }
 
 type Props = {
