@@ -8,8 +8,10 @@
 
 define('GEMINI_API_KEY', 'PASTE_YOUR_GEMINI_API_KEY_HERE');
 
-// Free-tier Gemini model. If Google retires this name, swap it here only.
-define('GEMINI_MODEL', 'gemini-2.0-flash');
+// gemini-2.0-flash's free-tier quota can be zeroed on some projects —
+// gemini-flash-latest is the working equivalent. If Google retires this
+// name too, swap it here only.
+define('GEMINI_MODEL', 'gemini-flash-latest');
 
 // Only these origins may call chat.php — locks the key's usage to your
 // own site even though the key itself isn't visible to the browser.

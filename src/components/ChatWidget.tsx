@@ -58,7 +58,7 @@ export default function ChatWidget() {
         <div
           role="dialog"
           aria-label={t.chat.title}
-          className="fixed bottom-[calc(11rem+env(safe-area-inset-bottom))] right-4 z-[60] flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border hairline bg-paper shadow-[0_30px_60px_-20px_rgba(28,23,64,0.35)] lg:bottom-[13rem] lg:right-8"
+          className="fixed bottom-[calc(11rem+env(safe-area-inset-bottom))] right-4 z-[60] flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border hairline bg-paper shadow-[0_30px_60px_-20px_rgba(28,23,64,0.35)] lg:bottom-[7rem] lg:right-8"
         >
           <div className="flex items-center gap-3 bg-navy px-4 py-3.5 text-white">
             <img src={assetPath("icons/chat-mascot.png")} alt="" aria-hidden="true" className="h-9 w-9 object-contain" />
