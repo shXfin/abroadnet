@@ -28,6 +28,28 @@ function ScrollToTop() {
   return null;
 }
 
+/** mailto: only does anything if the visitor's OS/browser has a default
+ * mail client configured — with none set, clicking it is silently a
+ * no-op, which reads as "the link is broken." Still attempts mailto (it's
+ * the right outcome when a client IS configured) but also copies the
+ * address to the clipboard every time, so there's always a way to actually
+ * get the email into a compose window somewhere. */
+function CopyableEmail({ email, className }: { email: string; className?: string }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleClick() {
+    navigator.clipboard?.writeText(email).catch(() => {});
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <a href={`mailto:${email}`} onClick={handleClick} className={className}>
+      {copied ? "Copied to clipboard" : email}
+    </a>
+  );
+}
+
 function LangToggle({ light = false }: { light?: boolean }) {
   const { lang, setLang } = useLang();
   const base = light ? "text-white/60" : "text-ink/50";
@@ -273,9 +295,7 @@ export default function Layout() {
           </div>
 
           <div className="mt-10 grid gap-3 border-t border-white/15 pt-8 text-sm text-white/70 sm:grid-cols-3">
-            <a href={`mailto:${t.footer.email}`} className="hover:text-white">
-              {t.footer.email}
-            </a>
+            <CopyableEmail email={t.footer.email} className="hover:text-white" />
             <a href="tel:+8801634353682" className="hover:text-white">
               {t.footer.phone}
             </a>
