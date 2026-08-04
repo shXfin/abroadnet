@@ -28,6 +28,16 @@ export const ROMANIA_UNIVERSITIES = [
   "Danubius University",
 ];
 
+export const ITALY_UNIVERSITIES = [
+  "University of Bologna",
+  "Sapienza University of Rome",
+  "Politecnico di Milano",
+  "Bocconi University",
+  "University of Padua",
+  "University of Turin",
+  "University of Naples Federico II",
+];
+
 export const GEORGIA_UNIVERSITIES = [
   "Alte University", // confirmed: real visa success
   "TODO: confirmed partner university",

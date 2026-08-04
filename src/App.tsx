@@ -22,6 +22,7 @@ function RouteFallback() {
   return <div className="min-h-[70vh]" aria-busy="true" />;
 }
 import Malaysia from "./pages/destinations/Malaysia";
+import Italy from "./pages/destinations/Italy";
 import Romania from "./pages/destinations/Romania";
 import Georgia from "./pages/destinations/Georgia";
 import China from "./pages/destinations/China";
@@ -33,6 +34,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="destinations" element={<DestinationsIndex />} />
         <Route path="destinations/malaysia" element={<Malaysia />} />
+        <Route path="destinations/italy" element={<Italy />} />
         <Route path="destinations/romania" element={<Romania />} />
         <Route path="destinations/georgia" element={<Georgia />} />
         <Route path="destinations/china" element={<China />} />

@@ -16,8 +16,8 @@ export default function CountryPills() {
 
   const countries = [
     { value: "malaysia", label: t.nav.malaysia },
-    { value: "romania", label: t.nav.romania },
     { value: "italy", label: t.nav.italy },
+    { value: "romania", label: t.nav.romania },
     { value: "georgia", label: t.nav.georgia },
     { value: "china", label: t.nav.china },
   ] as const;

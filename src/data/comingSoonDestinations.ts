@@ -9,7 +9,6 @@ export type ComingSoonDestination = {
 // guide for — real content (tuition, eligibility, documents) goes up once
 // we have a source to build it from, same as Malaysia/Romania/Georgia/China.
 export const COMING_SOON_DESTINATIONS: ComingSoonDestination[] = [
-  { slug: "italy", nameEn: "Italy", nameBn: "ইতালি", continent: "Europe" },
   { slug: "hungary", nameEn: "Hungary", nameBn: "হাঙ্গেরি", continent: "Europe" },
   { slug: "netherlands", nameEn: "Netherlands", nameBn: "নেদারল্যান্ডস", continent: "Europe" },
   { slug: "iceland", nameEn: "Iceland", nameBn: "আইসল্যান্ড", continent: "Europe" },
