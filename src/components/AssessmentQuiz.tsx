@@ -141,25 +141,31 @@ export default function AssessmentQuiz() {
     const waWindow = window.open("", "_blank");
     if (waWindow) {
       // This is a completely separate raw document, not part of the built
-      // app, so it doesn't inherit the app's own viewport meta tag — without
-      // one here, mobile browsers render it at desktop width and shrink it
-      // down, making everything tiny. Easy to miss since it only shows for
-      // the second or two before the WhatsApp redirect.
-      waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
+      // app, so it doesn't inherit the app's own <html lang>, fonts, or
+      // viewport meta tag. Without the viewport tag mobile browsers render
+      // it at desktop width and shrink it down. Without lang="bn" and a
+      // Bengali-capable font in the stack, Bengali text can fall back to a
+      // font with no Bengali glyphs and render as boxes. Both fixed here,
+      // plus a manual way back in case the WhatsApp redirect is slow or
+      // silently blocked, so nobody's stuck looking at a spinner forever.
+      const siteUrl = window.location.origin;
+      waWindow.document.write(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Abroad Net</title>
         <style>
-          html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
+          html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Bengali",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
           .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 24px;}
           .spinner{width:44px;height:44px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:24px;}
           @keyframes spin{to{transform:rotate(360deg)}}
           h1{font-size:22px;margin:0 0 12px;line-height:1.3;}
           p{font-size:15px;line-height:1.5;color:rgba(28,23,64,0.65);max-width:340px;margin:0;}
+          a.back{margin-top:28px;font-size:14px;font-weight:600;color:#1C1740;text-decoration:none;border-bottom:1px solid rgba(28,23,64,0.3);padding-bottom:2px;}
         </style>
         </head><body><div class="wrap">
           <div class="spinner"></div>
           <h1>${t.apply.whatsappPreparingTitle}</h1>
           <p>${t.apply.whatsappPreparingBody}</p>
+          <a class="back" href="${siteUrl}">${t.apply.whatsappBackToSite}</a>
         </div></body></html>`);
       waWindow.document.close();
     }

@@ -1,8 +1,20 @@
-import { MALAYSIA_UNIVERSITIES } from "../data/universities";
+import {
+  MALAYSIA_UNIVERSITIES,
+  ITALY_UNIVERSITIES,
+  CHINA_UNIVERSITIES,
+  ROMANIA_UNIVERSITIES,
+} from "../data/universities";
 
-/** Marquee of partner universities. */
+/** Marquee of partner universities, across all four active destinations
+ * rather than Malaysia alone, so the strip reflects the full catalogue. */
 export default function Ticker() {
-  const row = MALAYSIA_UNIVERSITIES.map((uni) => (
+  const ALL_UNIVERSITIES = [
+    ...MALAYSIA_UNIVERSITIES,
+    ...ITALY_UNIVERSITIES,
+    ...CHINA_UNIVERSITIES,
+    ...ROMANIA_UNIVERSITIES,
+  ];
+  const row = ALL_UNIVERSITIES.map((uni) => (
     <span key={uni} className="flex items-center gap-6 pr-6">
       <span className="whitespace-nowrap font-display text-lg">{uni}</span>
       <span className="text-coral">·</span>

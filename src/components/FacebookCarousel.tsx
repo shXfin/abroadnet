@@ -2,25 +2,33 @@ import { useEffect, useRef } from "react";
 import { useLang } from "../i18n";
 
 /**
- * Facebook reel/video embeds. Add post/video URLs from the page and they render
- * as tall frames in the carousel, e.g.:
+ * Facebook reel embeds, plus the occasional YouTube video slotted in by id.
+ * Add post URLs from the page (or a { kind: "youtube", id } entry) and they
+ * render as tall frames in the carousel, e.g.:
  *   "https://www.facebook.com/abroadnet25/videos/1234567890"
  */
-const VIDEO_URLS: string[] = [
-  "https://www.facebook.com/reel/1513538156853389",
-  "https://www.facebook.com/reel/1243813271069198",
-  "https://www.facebook.com/reel/1029349623150062",
+type VideoItem = { kind: "facebook"; url: string } | { kind: "youtube"; id: string };
+
+const VIDEOS: VideoItem[] = [
+  { kind: "facebook", url: "https://www.facebook.com/reel/1513538156853389" },
+  { kind: "youtube", id: "CXGw26QsWIM" },
+  { kind: "facebook", url: "https://www.facebook.com/reel/1029349623150062" },
 ];
 
 // Reels are vertical (9:16) — pass matching width/height to the plugin itself
 // so Facebook renders the player natively instead of letterboxing it inside a
-// mismatched box.
+// mismatched box. The YouTube slot keeps the same box size so the row stays
+// visually uniform even though that source video is standard widescreen.
 const REEL_WIDTH = 315;
 const REEL_HEIGHT = 560;
 
 function fbVideoEmbed(url: string) {
   // Browsers only allow autoplay when muted, so autoplay implies mute here.
   return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=${REEL_WIDTH}&height=${REEL_HEIGHT}&autoplay=true&mute=true`;
+}
+
+function youtubeEmbed(id: string) {
+  return `https://www.youtube-nocookie.com/embed/${id}`;
 }
 
 export default function FacebookCarousel() {
@@ -74,19 +82,23 @@ export default function FacebookCarousel() {
         </div>
 
         <div ref={scroller} className="scrollbar-hide mt-10 flex snap-x snap-mandatory gap-8 overflow-x-auto pb-4">
-          {VIDEO_URLS.map((url) => (
-            <div key={url} className="shrink-0 snap-start">
-              <iframe
-                src={fbVideoEmbed(url)}
-                title="Abroad Net video"
-                width={REEL_WIDTH}
-                height={REEL_HEIGHT}
-                className="border hairline bg-white"
-                allow="encrypted-media"
-                allowFullScreen
-              />
-            </div>
-          ))}
+          {VIDEOS.map((video) => {
+            const key = video.kind === "facebook" ? video.url : video.id;
+            const src = video.kind === "facebook" ? fbVideoEmbed(video.url) : youtubeEmbed(video.id);
+            return (
+              <div key={key} className="shrink-0 snap-start">
+                <iframe
+                  src={src}
+                  title="Abroad Net video"
+                  width={REEL_WIDTH}
+                  height={REEL_HEIGHT}
+                  className="border hairline bg-white"
+                  allow="encrypted-media; autoplay"
+                  allowFullScreen
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
