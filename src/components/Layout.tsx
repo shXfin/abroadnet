@@ -5,6 +5,7 @@ import MobileTabBar from "./MobileTabBar";
 import ChatWidget from "./ChatWidget";
 import { useLang } from "../i18n";
 import { jumpToAssessmentNow, handleAssessmentLinkClick } from "../lib/assessmentJump";
+import { buildWhatsAppUrl } from "../lib/whatsapp";
 
 const MAP_DIRECTIONS_URL = "https://maps.app.goo.gl/bMD9JZ9HhSWj1iyY7";
 
@@ -290,6 +291,14 @@ export default function Layout() {
                 <Link to="/success-stories" className="text-white/80 hover:text-white">
                   {t.nav.successStories}
                 </Link>
+                <a
+                  href={buildWhatsAppUrl(t.about.joinUsMessage)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white/80 hover:text-white"
+                >
+                  {t.footer.careers}
+                </a>
               </div>
             </div>
           </div>

@@ -154,6 +154,7 @@ const en = {
     email: "info@abroadnetedu.com",
     phone: "+880 1634-353682",
     address: "510, Majid Villa, GT Road (North), Chairman Ghat, Chandpur",
+    careers: "Careers",
   },
   malaysia: {
     country: "Malaysia",
@@ -1015,6 +1016,10 @@ const en = {
     teamSub: "A small, senior team who have made this journey themselves, backed by consultants across four countries.",
     teamMore: "The wider team",
     teamMoreSub: "The counselors, media, and content people your application actually passes through: not a call center, real people you'll recognize.",
+    joinUsKicker: "We're hiring",
+    joinUsTitle: "Want to work with us?",
+    joinUsPhotoHint: "Your photo could go here",
+    joinUsMessage: "Hi, I saw the \"want to work with us\" spot on your team page and I'm interested in joining Abroad Net.",
   },
   apply: {
     kicker: "Application form",
@@ -1263,6 +1268,7 @@ const bn: typeof en = {
     email: "info@abroadnetedu.com",
     phone: "+৮৮০ ১৬৩৪-৩৫৩৬৮২",
     address: "৫১০, মজিদ ভিলা, জিটি রোড (উত্তর), চেয়ারম্যান ঘাট, চাঁদপুর",
+    careers: "ক্যারিয়ার",
   },
   malaysia: {
     country: "মালয়েশিয়া",
@@ -2124,6 +2130,10 @@ const bn: typeof en = {
     teamSub: "ছোট কিন্তু অভিজ্ঞ একটি টিম, যারা নিজেরাই এই পথ পাড়ি দিয়েছেন, সাথে চারটি দেশে ছড়িয়ে থাকা কাউন্সেলররা।",
     teamMore: "বাকি টিম",
     teamMoreSub: "যাদের হাত দিয়ে আসলে আপনার আবেদন যায়, কাউন্সেলর, মিডিয়া ও কনটেন্ট টিম। কোনো কল সেন্টার না, চেনা মানুষ।",
+    joinUsKicker: "আমরা নিয়োগ দিচ্ছি",
+    joinUsTitle: "আমাদের সাথে কাজ করতে চান?",
+    joinUsPhotoHint: "আপনার ছবি এখানে থাকতে পারে",
+    joinUsMessage: "হ্যালো, আপনাদের টিম পেজে \"আমাদের সাথে কাজ করতে চান\" অংশটি দেখলাম এবং আমি Abroad Net-এ যোগ দিতে আগ্রহী।",
   },
   apply: {
     kicker: "আবেদন ফর্ম",

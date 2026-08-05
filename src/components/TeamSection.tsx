@@ -1,6 +1,7 @@
 import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
+import { buildWhatsAppUrl } from "../lib/whatsapp";
 
 // Flat, image-forward, no border/shadow "card" chrome — closer to how
 // Apple's own leadership grid presents people: the photo carries the
@@ -29,6 +30,28 @@ function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" 
         </a>
       )}
     </div>
+  );
+}
+
+// An open seat in the same grid, same footprint as a real card, so it reads
+// as "one of us, not yet hired" rather than a banner bolted on the side.
+// Dashed border is the universal "upload/placeholder" visual, borrowed on
+// purpose so it's instantly legible as an empty slot waiting for a photo.
+function JoinUsCard({ t }: { t: ReturnType<typeof useLang>["t"] }) {
+  const waUrl = buildWhatsAppUrl(t.about.joinUsMessage);
+  return (
+    <a href={waUrl} target="_blank" rel="noreferrer" className="group block">
+      <div className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-ink/25 bg-transparent text-center transition-colors group-hover:border-coral">
+        <span className="text-3xl text-ink/30 transition-colors group-hover:text-coral">+</span>
+        <span className="px-4 text-xs leading-snug text-ink/40 transition-colors group-hover:text-coral">
+          {t.about.joinUsPhotoHint}
+        </span>
+      </div>
+      <p className="label-caps mt-4 text-coral">{t.about.joinUsKicker}</p>
+      <p className="mt-1 font-display text-lg text-navy transition-colors group-hover:text-coral">
+        {t.about.joinUsTitle}
+      </p>
+    </a>
   );
 }
 
@@ -89,6 +112,7 @@ export default function TeamSection() {
           {rest.map((member) => (
             <TeamCard key={member.name} member={member} lang={lang} />
           ))}
+          <JoinUsCard t={t} />
         </div>
       </div>
     </section>

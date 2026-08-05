@@ -180,7 +180,12 @@ async function syncCourses() {
 
       return {
         id: cid,
-        slug: cid.split(":")[1],
+        // Must stay university-prefixed like `id` itself — the bare
+        // course-name half collides constantly (every university's
+        // "Diploma in Accounting" would share one slug), and courseBySlug()
+        // just returns whichever one happens to appear first, silently
+        // showing the wrong university on other colleges' course pages.
+        slug: cid.replace(/:/g, "-"),
         universityId: c.university_id,
         name: { en: c.name_en, bn: c.name_en },
         level: c.level,
