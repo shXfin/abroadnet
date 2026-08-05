@@ -3,10 +3,15 @@ import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
 
+// A warm gold, used only here — the point is to mark this specific row as
+// "people worth celebrating," a step up from the coral/navy used everywhere
+// else, not a new brand color to spread around the rest of the site.
+const GOLD = "#B8860B";
+
 function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" | "bn" }) {
   return (
-    <div className="w-56 shrink-0 rounded-2xl border hairline bg-paper p-5">
-      <div className="aspect-square overflow-hidden rounded-xl bg-parchment">
+    <div className="w-60 shrink-0 rounded-2xl border hairline bg-paper p-5 shadow-[0_8px_20px_-12px_rgba(28,23,64,0.25)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_28px_-14px_rgba(184,134,11,0.35)]">
+      <div className="aspect-square overflow-hidden rounded-xl bg-parchment ring-1 ring-inset ring-[#B8860B]/15">
         {member.photo && (
           <img
             src={assetPath(member.photo)}
@@ -15,7 +20,9 @@ function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" 
           />
         )}
       </div>
-      <p className="label-caps mt-4 text-coral">{member.role[lang]}</p>
+      <p className="label-caps mt-4" style={{ color: GOLD }}>
+        {member.role[lang]}
+      </p>
       <p className="mt-1 font-display text-lg text-navy">{member.name}</p>
       {member.phone && (
         <a
@@ -79,9 +86,18 @@ export default function TeamSection() {
 
         {/* The rest of the team. A real scrollable row with arrows — not a
             CSS-animation marquee, since that silently freezes on some
-            Windows/browser combos and leaves the row looking stuck. */}
-        <div className="mt-10 flex items-end justify-between gap-6">
-          <p className="label-caps text-ink/60">{t.about.teamMore}</p>
+            Windows/browser combos and leaves the row looking stuck. Framed
+            a step above the site's usual coral/navy treatment: these are
+            the people behind the work, so the row gets a gold accent and a
+            fade at the edges instead of cards clipping hard against the
+            container boundary. */}
+        <div className="mt-14 flex items-end justify-between gap-6">
+          <div>
+            <span className="inline-block h-px w-10" style={{ backgroundColor: GOLD }} />
+            <p className="label-caps mt-3 tracking-[0.2em]" style={{ color: GOLD }}>
+              {t.about.teamMore}
+            </p>
+          </div>
           <div className="flex shrink-0 items-center gap-3">
             <button
               onClick={() => scrollBy(-1)}
@@ -101,14 +117,22 @@ export default function TeamSection() {
         </div>
 
         <div
-          ref={scroller}
-          className="scrollbar-hide mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1"
+          className="relative -mx-6 mt-5 px-6"
+          style={{
+            WebkitMaskImage: "linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)",
+            maskImage: "linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)",
+          }}
         >
-          {rest.map((member) => (
-            <div key={member.name} className="snap-start">
-              <TeamCard member={member} lang={lang} />
-            </div>
-          ))}
+          <div
+            ref={scroller}
+            className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto py-1"
+          >
+            {rest.map((member) => (
+              <div key={member.name} className="snap-start">
+                <TeamCard member={member} lang={lang} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
