@@ -140,15 +140,21 @@ export default function AssessmentQuiz() {
     // write even finishes, so it gets a loading page immediately.
     const waWindow = window.open("", "_blank");
     if (waWindow) {
+      // This is a completely separate raw document, not part of the built
+      // app, so it doesn't inherit the app's own viewport meta tag — without
+      // one here, mobile browsers render it at desktop width and shrink it
+      // down, making everything tiny. Easy to miss since it only shows for
+      // the second or two before the WhatsApp redirect.
       waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Abroad Net</title>
         <style>
           html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
-          .wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
-          .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:20px;}
+          .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 24px;}
+          .spinner{width:44px;height:44px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:24px;}
           @keyframes spin{to{transform:rotate(360deg)}}
-          h1{font-size:20px;margin:0 0 8px;}
-          p{font-size:14px;color:rgba(28,23,64,0.6);max-width:320px;margin:0;}
+          h1{font-size:22px;margin:0 0 12px;line-height:1.3;}
+          p{font-size:15px;line-height:1.5;color:rgba(28,23,64,0.65);max-width:340px;margin:0;}
         </style>
         </head><body><div class="wrap">
           <div class="spinner"></div>

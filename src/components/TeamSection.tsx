@@ -1,23 +1,20 @@
-import { useRef } from "react";
 import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
 
-// On-brand, no third accent color competing with coral: the portrait itself
-// carries the "these people matter" weight — full color and lifted on
-// hover/tap, muted to grayscale at rest so the row reads as one considered
-// gallery rather than a strip of random snapshots. This is the same trick
-// agency/studio "team" pages use to make a photo grid feel curated instead
-// of like a phone camera roll.
+// Flat, image-forward, no border/shadow "card" chrome — closer to how
+// Apple's own leadership grid presents people: the photo carries the
+// section, name and role sit quietly underneath. Full color always; these
+// are real community members, not a moody studio shoot.
 function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" | "bn" }) {
   return (
-    <div className="group w-60 shrink-0 rounded-2xl border hairline bg-paper p-5 shadow-[0_8px_20px_-12px_rgba(28,23,64,0.2)] transition-transform hover:-translate-y-1">
+    <div>
       <div className="aspect-square overflow-hidden rounded-xl bg-parchment">
         {member.photo && (
           <img
             src={assetPath(member.photo)}
             alt={member.name}
-            className="h-full w-full object-cover object-center grayscale transition-all duration-300 group-hover:grayscale-0 group-hover:scale-105"
+            className="h-full w-full object-cover object-center"
           />
         )}
       </div>
@@ -42,11 +39,6 @@ function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" 
 export default function TeamSection() {
   const { t, lang } = useLang();
   const [ceo, ...rest] = TEAM;
-  const scroller = useRef<HTMLDivElement>(null);
-
-  function scrollBy(direction: 1 | -1) {
-    scroller.current?.scrollBy({ left: direction * 240, behavior: "smooth" });
-  }
 
   return (
     <section className="border-y hairline bg-parchment/30 py-20">
@@ -83,53 +75,20 @@ export default function TeamSection() {
           </div>
         </div>
 
-        {/* The rest of the team. A real scrollable row with arrows — not a
-            CSS-animation marquee, since that silently freezes on some
-            Windows/browser combos and leaves the row looking stuck. Given
-            real heading weight (not a small caption) and a one-line intro,
-            same as the CEO block above, so it reads as a second feature
-            rather than an afterthought below it. Fade at the edges instead
-            of cards clipping hard against the container boundary. */}
-        <div className="mt-16 flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h3 className="font-display text-3xl font-bold text-navy md:text-4xl">{t.about.teamMore}</h3>
-            <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.about.teamMoreSub}</p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <button
-              onClick={() => scrollBy(-1)}
-              className="flex h-11 w-11 items-center justify-center border hairline text-lg transition-colors hover:border-coral hover:text-coral"
-              aria-label="Previous"
-            >
-              ←
-            </button>
-            <button
-              onClick={() => scrollBy(1)}
-              className="flex h-11 w-11 items-center justify-center border hairline text-lg transition-colors hover:border-coral hover:text-coral"
-              aria-label="Next"
-            >
-              →
-            </button>
-          </div>
+        {/* The rest of the team, as a wrapping grid rather than a scroller —
+            no card ever slices at an edge because nothing scrolls; every
+            card is always shown in full. auto-fill means this scales with
+            the roster on its own: add 3 people or 30, it just grows more
+            rows at the same card size, no layout changes needed. */}
+        <div className="mt-16">
+          <h3 className="font-display text-3xl font-bold text-navy md:text-4xl">{t.about.teamMore}</h3>
+          <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.about.teamMoreSub}</p>
         </div>
 
-        <div
-          className="relative -mx-6 mt-5 px-6"
-          style={{
-            WebkitMaskImage: "linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)",
-            maskImage: "linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)",
-          }}
-        >
-          <div
-            ref={scroller}
-            className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto py-1"
-          >
-            {rest.map((member) => (
-              <div key={member.name} className="snap-start">
-                <TeamCard member={member} lang={lang} />
-              </div>
-            ))}
-          </div>
+        <div className="mt-8 grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-x-6 gap-y-10 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+          {rest.map((member) => (
+            <TeamCard key={member.name} member={member} lang={lang} />
+          ))}
         </div>
       </div>
     </section>
