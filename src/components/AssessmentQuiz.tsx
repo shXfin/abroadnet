@@ -7,6 +7,7 @@ import {
   ROMANIA_UNIVERSITIES,
   GEORGIA_UNIVERSITIES,
   CHINA_UNIVERSITIES,
+  ITALY_UNIVERSITIES,
 } from "../data/universities";
 import { checkLeadDuplicate } from "../lib/leadChecks";
 import { combineCountryCode, rememberSubmission } from "../lib/submissionGuards";
@@ -37,15 +38,27 @@ function Spinner({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
+// Placeholder entries (e.g. Georgia's still-TODO seats) must never reach a
+// student's screen — filter them out rather than showing "TODO: ...".
+function realOnly(list: string[]) {
+  return list.filter((name) => !name.startsWith("TODO"));
+}
+
+/** Keyed strictly by the destination the student actually picked — a match
+ * list from an unrelated country is worse than no list at all. "other" (or
+ * any destination without curated partners) is marked unavailable instead
+ * of silently substituting a different country's universities. */
 function matchedUniversities(destination: string | undefined) {
-  if (destination === "malaysia") return { key: "malaysia" as const, list: MALAYSIA_UNIVERSITIES.slice(0, 3) };
-  if (destination === "romania") return { key: "romania" as const, list: ROMANIA_UNIVERSITIES.slice(0, 3) };
-  if (destination === "georgia") return { key: "georgia" as const, list: GEORGIA_UNIVERSITIES.slice(0, 3) };
-  if (destination === "china") return { key: "china" as const, list: CHINA_UNIVERSITIES.slice(0, 3) };
-  return {
-    key: "both" as const,
-    list: [MALAYSIA_UNIVERSITIES[0], ROMANIA_UNIVERSITIES[0], GEORGIA_UNIVERSITIES[0]],
+  const byDestination: Record<string, { key: string; source: string[] }> = {
+    malaysia: { key: "malaysia", source: MALAYSIA_UNIVERSITIES },
+    romania: { key: "romania", source: ROMANIA_UNIVERSITIES },
+    georgia: { key: "georgia", source: GEORGIA_UNIVERSITIES },
+    china: { key: "china", source: CHINA_UNIVERSITIES },
+    italy: { key: "italy", source: ITALY_UNIVERSITIES },
   };
+  const match = destination ? byDestination[destination] : undefined;
+  const list = match ? realOnly(match.source).slice(0, 3) : [];
+  return { key: (match?.key ?? "other") as string, list, unavailable: list.length === 0 };
 }
 
 /** The 9-step lead-gen assessment. Embedded inline on the homepage (second
@@ -63,6 +76,7 @@ export default function AssessmentQuiz() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState("");
+  const [waUrl, setWaUrl] = useState("");
 
   function answerLabel(stepId: string, value: string | undefined) {
     if (!value) return "";
@@ -90,29 +104,18 @@ export default function AssessmentQuiz() {
     setStepIndex((i) => Math.max(0, i - 1));
   }
 
+  // A single click on "Show my matches" now does everything: dup-check,
+  // save the lead to Sheets, build the WhatsApp message, and advance to the
+  // results screen — the student no longer has to click a second button
+  // just to get their data actually recorded. The old flow only saved to
+  // Sheets on a *second* "Continue on WhatsApp" click, so anyone who saw
+  // their matches and left never made it into the sheet at all.
   async function handleContinue() {
-    if (step.kind === "contact") {
-      setSubmitting(true);
-      setSubmitError(false);
-      setSubmitErrorMessage("");
-      try {
-        const email = contact.email.trim();
-        const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
-        const phone = combineCountryCode(activeCountryCode, contact.phone.trim());
-        const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
-        if (duplicateStatus === "duplicate") {
-          setSubmitError(true);
-          setSubmitErrorMessage(t.quiz.duplicateError);
-          return;
-        }
-      } finally {
-        setSubmitting(false);
-      }
+    if (step.kind !== "contact") {
+      setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
+      return;
     }
-    setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
-  }
 
-  async function handleSubmitApplication() {
     setSubmitting(true);
     setSubmitError(false);
     setSubmitErrorMessage("");
@@ -121,8 +124,8 @@ export default function AssessmentQuiz() {
     // so the browser won't treat it as an unrequested popup once we redirect
     // it below — after the `await`s past this point, window.open() on its
     // own would get silently blocked. It briefly shows a blank tab otherwise,
-    // which reads as broken and tempts people to close it before the Sheet/
-    // Telegram write even finishes, so it gets a loading page immediately.
+    // which reads as broken and tempts people to close it before the Sheet
+    // write even finishes, so it gets a loading page immediately.
     const waWindow = window.open("", "_blank");
     if (waWindow) {
       waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
@@ -186,7 +189,6 @@ export default function AssessmentQuiz() {
       }
 
       rememberSubmission({ email, phone });
-      setSubmitted(true);
 
       const destination =
         answers.destination === "other" ? otherInfo.destination.trim() : answerLabel("destination", answers.destination);
@@ -203,12 +205,17 @@ export default function AssessmentQuiz() {
       ]
         .filter((line) => !line.endsWith(": "))
         .join("\n");
-      const waUrl = buildWhatsAppUrl(message);
+      const url = buildWhatsAppUrl(message);
+      setWaUrl(url);
       if (waWindow) {
-        waWindow.location.href = waUrl;
+        waWindow.location.href = url;
       } else {
-        window.location.href = waUrl;
+        // Popup was blocked — the fallback "Continue on WhatsApp" button on
+        // the results screen (using the same `url`) covers this case.
       }
+
+      setSubmitted(true);
+      setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
     } catch {
       waWindow?.close();
       setSubmitError(true);
@@ -218,22 +225,35 @@ export default function AssessmentQuiz() {
     }
   }
 
+  // Fallback only: re-opens the same WhatsApp message without re-submitting
+  // to Sheets (that already happened in handleContinue above), for anyone
+  // whose auto-opened tab got closed or blocked.
+  function reopenWhatsApp() {
+    if (waUrl) window.open(waUrl, "_blank");
+  }
+
   const match = matchedUniversities(answers.destination);
-  const destinationLabelMap = {
+  const destinationLabelMap: Record<string, string> = {
     malaysia: t.nav.malaysia,
     romania: t.nav.romania,
     georgia: t.nav.georgia,
     china: t.nav.china,
-    both: `${t.nav.malaysia} / ${t.nav.romania} / ${t.nav.georgia}`,
-  } as const;
-  const destinationLabel = destinationLabelMap[match.key];
+    italy: t.nav.italy,
+  };
+  const destinationLabel =
+    answers.destination === "other"
+      ? otherInfo.destination.trim() || answerLabel("destination", answers.destination)
+      : destinationLabelMap[match.key] ?? answerLabel("destination", answers.destination);
+
+  const isSending = step.kind === "contact" && submitting;
+  const visualStage = isSending ? "sending" : step.kind === "summary" && submitted ? "done" : "default";
 
   return (
     <div className="grid gap-6 md:grid-cols-[280px_1fr]">
-      <QuizVisual />
+      <QuizVisual stage={visualStage} />
 
       <div id="assessment-card" className="rounded-2xl border hairline bg-paper p-6 md:p-8">
-        {step.kind !== "summary" && (
+        {step.kind !== "summary" && !isSending && (
           <>
             <div className="flex items-center justify-between">
               <p className="label-caps text-coral">{t.quiz.kicker}</p>
@@ -252,6 +272,14 @@ export default function AssessmentQuiz() {
               ))}
             </div>
           </>
+        )}
+
+        {isSending && (
+          <div className="flex min-h-[320px] flex-col items-center justify-center py-10 text-center">
+            <Spinner className="h-10 w-10 text-coral" />
+            <h2 className="mt-6 max-w-xs font-display text-2xl md:text-3xl">{t.quiz.sendingTitle}</h2>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink/60">{t.quiz.sendingBody}</p>
+          </div>
         )}
 
         {step.kind === "single" && (
@@ -310,7 +338,7 @@ export default function AssessmentQuiz() {
           </div>
         )}
 
-        {step.kind === "contact" && (
+        {step.kind === "contact" && !isSending && (
           <div className="mt-8">
             <h2 className="font-display text-3xl md:text-4xl">{step.question}</h2>
             <p className="mt-2 text-xs font-semibold uppercase tracking-[0.28em] text-ink/40">{t.apply.requiredNote}</p>
@@ -388,71 +416,53 @@ export default function AssessmentQuiz() {
           </div>
         )}
 
+        {/* One results screen, shown only once the lead is already saved and
+            WhatsApp already opened (handleContinue does both before we ever
+            land here) — no second "did you mean to submit?" click required. */}
         {step.kind === "summary" && submitted && (
-          <div className="py-2 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-coral/30 bg-coral/10 text-2xl text-coral motion-safe:animate-pulse">
-              ✓
-            </div>
-            <p className="label-caps mt-8 text-coral">{t.apply.doneKicker}</p>
-            <h2 className="mx-auto mt-4 max-w-xl font-display text-4xl md:text-5xl">{t.apply.doneTitle}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">{t.apply.doneSub}</p>
-            <div className="mx-auto mt-6 flex w-fit items-center gap-2 text-coral/80">
-              <span className="h-2 w-2 rounded-full bg-coral motion-safe:animate-pulse" />
-              <span className="h-2 w-8 rounded-full bg-coral/35 motion-safe:animate-pulse [animation-delay:150ms]" />
-              <span className="h-2 w-2 rounded-full bg-coral motion-safe:animate-pulse [animation-delay:300ms]" />
-            </div>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link to="/success-stories" className="btn-primary">
-                {t.apply.doneStudents} →
-              </Link>
-              <a
-                href="https://www.facebook.com/abroadnet25/"
-                target="_blank"
-                rel="noreferrer"
-                className="btn-ghost"
-              >
-                {t.apply.doneFacebook}
-              </a>
-            </div>
-          </div>
-        )}
-
-        {step.kind === "summary" && !submitted && (
           <div>
-            <p className="label-caps text-coral">{t.quiz.resultsKicker}</p>
+            <div className="text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-coral/30 bg-coral/10 text-xl text-coral">
+                ✓
+              </div>
+              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-coral">{t.quiz.sentConfirmation}</p>
+            </div>
+
+            <p className="label-caps mt-10 text-coral">{t.quiz.resultsKicker}</p>
             <h2 className="mt-3 font-display text-4xl md:text-5xl">
               {t.quiz.resultsTitle} <em>{destinationLabel}</em>
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-ink/60">{t.quiz.resultsSub}</p>
 
             <p className="label-caps mt-8 text-ink/50">{t.quiz.resultsUniKicker}</p>
-            <ul className="mt-3 grid gap-px border hairline bg-ink/15 sm:grid-cols-3">
-              {match.list.map((uni) => (
-                <li key={uni} className="bg-paper p-5 font-display text-lg">
-                  {uni}
-                </li>
-              ))}
-            </ul>
+            {match.unavailable ? (
+              <p className="mt-3 max-w-md rounded-lg bg-parchment/60 px-4 py-3 text-sm leading-relaxed text-ink/60">
+                {t.quiz.resultsUniUnavailable}
+              </p>
+            ) : (
+              <ul className="mt-3 grid gap-px border hairline bg-ink/15 sm:grid-cols-3">
+                {match.list.map((uni) => (
+                  <li key={uni} className="bg-paper p-5 font-display text-lg">
+                    {uni}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <button type="button" onClick={handleSubmitApplication} disabled={submitting} className="btn-whatsapp disabled:opacity-70">
-                {submitting ? (
-                  <>
-                    <Spinner className="h-5 w-5" />
-                    {t.apply.submitting}
-                  </>
-                ) : (
-                  <>
-                    <WhatsAppIcon className="h-5 w-5" />
-                    {t.quiz.submitApplication} →
-                  </>
-                )}
+              <button type="button" onClick={reopenWhatsApp} className="btn-whatsapp">
+                <WhatsAppIcon className="h-5 w-5" />
+                {t.quiz.submitApplication} →
               </button>
+              <Link to="/success-stories" className="btn-ghost">
+                {t.apply.doneStudents} →
+              </Link>
               <button
                 type="button"
                 onClick={() => {
                   setSubmitError(false);
                   setSubmitErrorMessage("");
+                  setSubmitted(false);
                   setStepIndex(0);
                 }}
                 className="btn-ghost"
@@ -460,11 +470,10 @@ export default function AssessmentQuiz() {
                 {t.quiz.editAnswers}
               </button>
             </div>
-            {submitError && <p className="mt-3 text-sm text-coral">{submitErrorMessage || t.quiz.contactError}</p>}
           </div>
         )}
 
-        {step.kind !== "summary" && (
+        {step.kind !== "summary" && !isSending && (
           <div className="mt-10 flex items-center justify-between">
             {stepIndex > 0 ? (
               <button onClick={goBack} className="text-sm font-semibold text-ink/50 hover:text-ink">
@@ -478,12 +487,7 @@ export default function AssessmentQuiz() {
               disabled={!canContinue || submitting}
               className="btn-primary inline-flex items-center gap-2 disabled:opacity-70"
             >
-              {step.kind === "contact" && submitting ? (
-                <>
-                  <Spinner className="h-4 w-4" />
-                  {t.apply.submitting}
-                </>
-              ) : step.kind === "contact" ? (
+              {step.kind === "contact" ? (
                 `${t.quiz.seeMyMatches} →`
               ) : (
                 `${t.quiz.continue} →`

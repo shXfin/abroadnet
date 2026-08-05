@@ -6,8 +6,9 @@ import { useLang } from "../../i18n";
  * the hero map) instead of a stock illustrated character, so it stays
  * recognizably Abroad Net rather than borrowed from a reference site.
  */
-export default function QuizVisual() {
+export default function QuizVisual({ stage = "default" }: { stage?: "default" | "sending" | "done" }) {
   const { t } = useLang();
+  const caption = stage === "sending" ? t.quiz.titleSending : stage === "done" ? t.quiz.titleDone : t.quiz.title;
 
   return (
     <div className="relative hidden h-full min-h-[420px] flex-col justify-between overflow-hidden rounded-2xl bg-navy p-8 text-white md:flex">
@@ -35,7 +36,7 @@ export default function QuizVisual() {
         <span className="text-lg font-extrabold">abroad</span>
       </div>
 
-      <p className="relative max-w-[220px] text-2xl font-bold leading-snug">{t.quiz.title}</p>
+      <p className="relative max-w-[220px] text-2xl font-bold leading-snug">{caption}</p>
     </div>
   );
 }
