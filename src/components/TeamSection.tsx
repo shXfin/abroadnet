@@ -91,12 +91,12 @@ export default function TeamSection() {
             the people behind the work, so the row gets a gold accent and a
             fade at the edges instead of cards clipping hard against the
             container boundary. */}
-        <div className="mt-14 flex items-end justify-between gap-6">
+        <div className="mt-14 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <span className="inline-block h-px w-10" style={{ backgroundColor: GOLD }} />
-            <p className="label-caps mt-3 tracking-[0.2em]" style={{ color: GOLD }}>
+            <span className="inline-block h-1 w-14 rounded-full" style={{ backgroundColor: GOLD }} />
+            <h3 className="mt-3 font-display text-3xl font-bold md:text-4xl" style={{ color: GOLD }}>
               {t.about.teamMore}
-            </p>
+            </h3>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <button

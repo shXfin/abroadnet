@@ -111,19 +111,17 @@ export default function AssessmentQuiz() {
   // Sheets on a *second* "Continue on WhatsApp" click, so anyone who saw
   // their matches and left never made it into the sheet at all.
   //
-  // Two things students reported feeling wrong here, both fixed below:
-  // - A WhatsApp tab used to pop open before the duplicate check even ran,
-  //   so a duplicate entry would flash a new tab open and then close it —
-  //   looked like it "just went somewhere" without checking anything first.
-  //   Now the dup-check runs BEFORE any tab is opened, so nothing happens
-  //   until we actually know the submission is valid.
-  // - Once valid, the WhatsApp tab used to redirect immediately, stealing
-  //   focus the instant the click fired — a student could get pulled into
-  //   WhatsApp before ever laying eyes on their own results screen back
-  //   here. Now the results render on this page FIRST, and only after a
-  //   short pause does the (already-open, already-focused-away) tab
-  //   quietly finish navigating to WhatsApp — so the recommendation is
-  //   guaranteed to be visible before the WhatsApp handoff completes.
+  // A student reported feeling like tapping "Show my matches" jumped
+  // straight to a new page with no duplicate check happening first. The
+  // check genuinely does run before the Sheets write either way — but real
+  // browsers only allow window.open() to succeed when it's called
+  // synchronously inside the click itself; delay it past even one `await`
+  // (to run the dup-check first) and Chrome silently blocks it as an
+  // unrequested popup. That's a hard constraint, not a preference — tried
+  // reordering it once already and broke the auto-open entirely. So the
+  // WhatsApp tab still opens immediately, but its own loading screen now
+  // says "Checking your details..." to be honest about what's actually
+  // happening in that first moment, instead of implying nothing is.
   async function handleContinue() {
     if (step.kind !== "contact") {
       setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
@@ -134,6 +132,32 @@ export default function AssessmentQuiz() {
     setSubmitError(false);
     setSubmitErrorMessage("");
 
+    // Opened synchronously, still inside the click's user-activation window,
+    // so the browser won't treat it as an unrequested popup once we redirect
+    // it below — after the `await`s past this point, window.open() on its
+    // own would get silently blocked. It briefly shows a blank tab otherwise,
+    // which reads as broken and tempts people to close it before the Sheet
+    // write even finishes, so it gets a loading page immediately.
+    const waWindow = window.open("", "_blank");
+    if (waWindow) {
+      waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
+        <title>Abroad Net</title>
+        <style>
+          html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
+          .wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+          .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:20px;}
+          @keyframes spin{to{transform:rotate(360deg)}}
+          h1{font-size:20px;margin:0 0 8px;}
+          p{font-size:14px;color:rgba(28,23,64,0.6);max-width:320px;margin:0;}
+        </style>
+        </head><body><div class="wrap">
+          <div class="spinner"></div>
+          <h1>${t.apply.whatsappPreparingTitle}</h1>
+          <p>${t.apply.whatsappPreparingBody}</p>
+        </div></body></html>`);
+      waWindow.document.close();
+    }
+
     try {
       const email = contact.email.trim();
       const activeCountryCode = countryCode === "other" ? customCountryCode.trim() : countryCode;
@@ -141,38 +165,17 @@ export default function AssessmentQuiz() {
 
       const duplicateStatus = await checkLeadDuplicate(FORM_ENDPOINT, { email, phone });
       if (duplicateStatus === "duplicate") {
+        waWindow?.close();
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.duplicateError);
         return;
       }
 
       if (!FORM_ENDPOINT) {
+        waWindow?.close();
         setSubmitError(true);
         setSubmitErrorMessage(t.quiz.contactError);
         return;
-      }
-
-      // Opened only now, after the dup-check passed — still well within the
-      // click's transient user-activation window, so it won't get treated
-      // as an unrequested popup.
-      const waWindow = window.open("", "_blank");
-      if (waWindow) {
-        waWindow.document.write(`<!doctype html><html><head><meta charset="utf-8">
-          <title>Abroad Net</title>
-          <style>
-            html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F5F1EA;color:#1C1740;}
-            .wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
-            .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(28,23,64,0.15);border-top-color:#FF6B4A;animation:spin 0.8s linear infinite;margin-bottom:20px;}
-            @keyframes spin{to{transform:rotate(360deg)}}
-            h1{font-size:20px;margin:0 0 8px;}
-            p{font-size:14px;color:rgba(28,23,64,0.6);max-width:320px;margin:0;}
-          </style>
-          </head><body><div class="wrap">
-            <div class="spinner"></div>
-            <h1>${t.apply.whatsappPreparingTitle}</h1>
-            <p>${t.apply.whatsappPreparingBody}</p>
-          </div></body></html>`);
-        waWindow.document.close();
       }
 
       const res = await fetch(FORM_ENDPOINT, {
@@ -217,22 +220,19 @@ export default function AssessmentQuiz() {
       const url = buildWhatsAppUrl(message);
       setWaUrl(url);
 
+      // Redirected immediately, not after a delay — Chrome blocks a
+      // window.open()'d tab's navigation outright once it decides too much
+      // time has passed since the click, so "wait a bit so they see the
+      // results first" isn't a safe option here (confirmed: it broke the
+      // auto-open, showing "Pop-ups blocked" instead). The results below
+      // still render on this same page and stay there — switching back to
+      // this tab always shows them, whenever the student does it.
+      if (waWindow) {
+        waWindow.location.href = url;
+      }
+
       setSubmitted(true);
       setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
-      window.focus();
-
-      // Give the student a couple of seconds looking at their own results
-      // on this page before the background tab quietly finishes its trip
-      // to WhatsApp — it's still the same auto-open behavior, just not
-      // instant enough to yank attention away before they've seen anything.
-      window.setTimeout(() => {
-        try {
-          if (waWindow && !waWindow.closed) waWindow.location.href = url;
-        } catch {
-          // Tab was closed or navigated away by the student — the
-          // "Continue on WhatsApp" fallback button covers this case.
-        }
-      }, 2200);
     } catch {
       setSubmitError(true);
       setSubmitErrorMessage(t.quiz.contactError);
