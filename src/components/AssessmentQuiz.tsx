@@ -159,14 +159,14 @@ export default function AssessmentQuiz() {
           @keyframes spin{to{transform:rotate(360deg)}}
           h1{font-size:22px;margin:0 0 12px;line-height:1.3;}
           p{font-size:15px;line-height:1.5;color:rgba(28,23,64,0.65);max-width:340px;margin:0;}
-          a.back{margin-top:28px;display:inline-flex;align-items:center;font-size:14px;font-weight:600;color:#1C1740;text-decoration:none;border:1.5px solid rgba(28,23,64,0.2);border-radius:999px;padding:10px 20px;transition:border-color 0.15s;}
-          a.back:hover{border-color:#FF6B4A;}
+          .back{margin-top:28px;display:inline-flex;align-items:center;font-family:inherit;font-size:14px;font-weight:600;color:#1C1740;background:none;text-decoration:none;border:1.5px solid rgba(28,23,64,0.2);border-radius:999px;padding:10px 20px;cursor:pointer;transition:border-color 0.15s;}
+          .back:hover{border-color:#FF6B4A;}
         </style>
         </head><body><div class="wrap">
           <div class="spinner"></div>
           <h1>${t.apply.whatsappPreparingTitle}</h1>
           <p>${t.apply.whatsappPreparingBody}</p>
-          <a class="back" href="${siteUrl}">${t.apply.whatsappBackToSite}</a>
+          <button class="back" onclick="if(window.opener&&!window.opener.closed){window.opener.focus();window.close();}else{window.location.href='${siteUrl}';}">${t.apply.whatsappBackToSite}</button>
         </div></body></html>`);
       waWindow.document.close();
     }

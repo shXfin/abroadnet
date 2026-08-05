@@ -25,7 +25,13 @@ export default {
         },
       },
       animation: {
-        marquee: "marquee 36s linear infinite",
+        // 36s was tuned for the 16 Malaysia-only names this used to carry.
+        // The ticker now carries 37 (Malaysia + Italy + China + Romania),
+        // so the duration is scaled up by the same ~2.3x to keep the
+        // per-name pace (and reading speed) exactly what it was before —
+        // otherwise the same 36s has to cover more distance and everything
+        // just feels rushed.
+        marquee: "marquee 82s linear infinite",
         "marquee-slow": "marquee 50s linear infinite",
       },
     },
