@@ -3,26 +3,25 @@ import { useLang } from "../i18n";
 import { TEAM } from "../data/team";
 import { assetPath } from "../lib/assetPath";
 
-// A warm gold, used only here — the point is to mark this specific row as
-// "people worth celebrating," a step up from the coral/navy used everywhere
-// else, not a new brand color to spread around the rest of the site.
-const GOLD = "#B8860B";
-
+// On-brand, no third accent color competing with coral: the portrait itself
+// carries the "these people matter" weight — full color and lifted on
+// hover/tap, muted to grayscale at rest so the row reads as one considered
+// gallery rather than a strip of random snapshots. This is the same trick
+// agency/studio "team" pages use to make a photo grid feel curated instead
+// of like a phone camera roll.
 function TeamCard({ member, lang }: { member: (typeof TEAM)[number]; lang: "en" | "bn" }) {
   return (
-    <div className="w-60 shrink-0 rounded-2xl border hairline bg-paper p-5 shadow-[0_8px_20px_-12px_rgba(28,23,64,0.25)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_28px_-14px_rgba(184,134,11,0.35)]">
-      <div className="aspect-square overflow-hidden rounded-xl bg-parchment ring-1 ring-inset ring-[#B8860B]/15">
+    <div className="group w-60 shrink-0 rounded-2xl border hairline bg-paper p-5 shadow-[0_8px_20px_-12px_rgba(28,23,64,0.2)] transition-transform hover:-translate-y-1">
+      <div className="aspect-square overflow-hidden rounded-xl bg-parchment">
         {member.photo && (
           <img
             src={assetPath(member.photo)}
             alt={member.name}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-center grayscale transition-all duration-300 group-hover:grayscale-0 group-hover:scale-105"
           />
         )}
       </div>
-      <p className="label-caps mt-4" style={{ color: GOLD }}>
-        {member.role[lang]}
-      </p>
+      <p className="label-caps mt-4 text-coral">{member.role[lang]}</p>
       <p className="mt-1 font-display text-lg text-navy">{member.name}</p>
       {member.phone && (
         <a
@@ -86,17 +85,15 @@ export default function TeamSection() {
 
         {/* The rest of the team. A real scrollable row with arrows — not a
             CSS-animation marquee, since that silently freezes on some
-            Windows/browser combos and leaves the row looking stuck. Framed
-            a step above the site's usual coral/navy treatment: these are
-            the people behind the work, so the row gets a gold accent and a
-            fade at the edges instead of cards clipping hard against the
-            container boundary. */}
-        <div className="mt-14 flex flex-wrap items-end justify-between gap-6">
+            Windows/browser combos and leaves the row looking stuck. Given
+            real heading weight (not a small caption) and a one-line intro,
+            same as the CEO block above, so it reads as a second feature
+            rather than an afterthought below it. Fade at the edges instead
+            of cards clipping hard against the container boundary. */}
+        <div className="mt-16 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <span className="inline-block h-1 w-14 rounded-full" style={{ backgroundColor: GOLD }} />
-            <h3 className="mt-3 font-display text-3xl font-bold md:text-4xl" style={{ color: GOLD }}>
-              {t.about.teamMore}
-            </h3>
+            <h3 className="font-display text-3xl font-bold text-navy md:text-4xl">{t.about.teamMore}</h3>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/60">{t.about.teamMoreSub}</p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <button

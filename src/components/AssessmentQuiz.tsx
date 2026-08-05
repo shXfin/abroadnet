@@ -468,7 +468,7 @@ export default function AssessmentQuiz() {
             <div className="mt-8 flex flex-wrap gap-4">
               <button type="button" onClick={reopenWhatsApp} className="btn-whatsapp">
                 <WhatsAppIcon className="h-5 w-5" />
-                {t.quiz.submitApplication} →
+                {t.quiz.reopenWhatsApp}
               </button>
               <Link to="/success-stories" className="btn-ghost">
                 {t.apply.doneStudents} →
