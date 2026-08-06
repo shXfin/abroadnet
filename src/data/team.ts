@@ -59,7 +59,12 @@ export const TEAM: TeamMember[] = [
   },
   {
     name: "Mehedi Hasan Supto",
-    role: { en: "Media Manager, EU", bn: "মিডিয়া ম্যানেজার, ইউরোপ" },
+    role: { en: "Head of IT", bn: "হেড অফ আইটি" },
     photo: "photos/team-mehedi.jpg",
+  },
+  {
+    name: "Mohammad Al Amin",
+    role: { en: "Head of HR", bn: "হেড অফ এইচআর" },
+    photo: "photos/team-alamin.jpg",
   },
 ];
