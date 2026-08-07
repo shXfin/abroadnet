@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import DestinationSteps from "../../components/DestinationSteps";
 import { CHINA_UNIVERSITIES } from "../../data/universities";
 import { useLang } from "../../i18n";
@@ -205,13 +206,19 @@ function ChinaExtras() {
 export default function China() {
   const { t } = useLang();
   return (
-    <DestinationSteps
-      country={t.china.country}
-      code="PEK"
-      intro={t.china.intro}
-      steps={t.china.steps}
-      partnerUniversities={CHINA_UNIVERSITIES}
-      extra={<ChinaExtras />}
-    />
+    <>
+      <Helmet>
+        <title>Study in China: Tsinghua, Peking University & Chinese Scholarship</title>
+        <meta name="description" content="Study in China: 25 universities including Tsinghua & Peking University. Chinese Government Scholarship (CSC), strong in engineering & medicine, main intake September. Bangladeshi students." />
+      </Helmet>
+      <DestinationSteps
+        country={t.china.country}
+        code="PEK"
+        intro={t.china.intro}
+        steps={t.china.steps}
+        partnerUniversities={CHINA_UNIVERSITIES}
+        extra={<ChinaExtras />}
+      />
+    </>
   );
 }

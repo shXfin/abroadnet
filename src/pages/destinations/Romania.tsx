@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import DestinationSteps from "../../components/DestinationSteps";
 import { ROMANIA_UNIVERSITIES } from "../../data/universities";
 import { useLang } from "../../i18n";
@@ -205,13 +206,19 @@ function RomaniaExtras() {
 export default function Romania() {
   const { t } = useLang();
   return (
-    <DestinationSteps
-      country={t.romania.country}
-      code="OTP"
-      intro={t.romania.intro}
-      steps={t.romania.steps}
-      partnerUniversities={ROMANIA_UNIVERSITIES}
-      extra={<RomaniaExtras />}
-    />
+    <>
+      <Helmet>
+        <title>Study in Romania: EU Degree, Affordable Tuition for Bangladeshi Students</title>
+        <meta name="description" content="Study in Romania: 13 universities, EU degree, affordable tuition, main intake October. University of Bucharest, Babeș-Bolyai, Politehnica. Admission guidance for Bangladeshi students." />
+      </Helmet>
+      <DestinationSteps
+        country={t.romania.country}
+        code="OTP"
+        intro={t.romania.intro}
+        steps={t.romania.steps}
+        partnerUniversities={ROMANIA_UNIVERSITIES}
+        extra={<RomaniaExtras />}
+      />
+    </>
   );
 }

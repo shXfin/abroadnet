@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import DestinationSteps from "../../components/DestinationSteps";
 import { ITALY_UNIVERSITIES } from "../../data/universities";
 import { useLang } from "../../i18n";
@@ -205,13 +206,19 @@ function ItalyExtras() {
 export default function Italy() {
   const { t } = useLang();
   return (
-    <DestinationSteps
-      country={t.italy.country}
-      code="FCO"
-      intro={t.italy.intro}
-      steps={t.italy.steps}
-      partnerUniversities={ITALY_UNIVERSITIES}
-      extra={<ItalyExtras />}
-    />
+    <>
+      <Helmet>
+        <title>Study in Italy: Free Tuition Universities for Bangladeshi Students</title>
+        <meta name="description" content="Study in Italy: 30 universities, free/subsidized tuition via EU scholarships, EU degree, main intake September. Admission guidance for Bangladeshi students." />
+      </Helmet>
+      <DestinationSteps
+        country={t.italy.country}
+        code="FCO"
+        intro={t.italy.intro}
+        steps={t.italy.steps}
+        partnerUniversities={ITALY_UNIVERSITIES}
+        extra={<ItalyExtras />}
+      />
+    </>
   );
 }

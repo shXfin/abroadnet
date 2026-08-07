@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import DestinationSteps from "../../components/DestinationSteps";
 import { MALAYSIA_UNIVERSITIES } from "../../data/universities";
 import { useLang } from "../../i18n";
@@ -274,7 +275,12 @@ function MalaysiaExtras() {
 export default function Malaysia() {
   const { t } = useLang();
   return (
-    <DestinationSteps
+    <>
+      <Helmet>
+        <title>Study in Malaysia: 16 Partner Universities for Bangladeshi Students</title>
+        <meta name="description" content="Study in Malaysia: 16 partner universities, affordable tuition, English-taught degrees, multiple intakes yearly. Complete admission guidance for Bangladeshi students." />
+      </Helmet>
+      <DestinationSteps
       country={t.malaysia.country}
       code="KUL"
       intro={t.malaysia.intro}
@@ -283,5 +289,6 @@ export default function Malaysia() {
       extra={<MalaysiaExtras />}
       heroImage="photos/malaysia-mahsa-visit.jpg"
     />
+    </>
   );
 }
