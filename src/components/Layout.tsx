@@ -316,6 +316,7 @@ export default function Layout() {
           <div className="mt-8 flex flex-col justify-between gap-3 border-t border-white/15 pt-6 text-xs text-white/50 md:flex-row">
             <p>
               &copy; {new Date().getFullYear()} {t.footer.copyright}
+              <span className="ml-3 text-white/20 inline-block">Tech by <a href="https://arafath.me" className="underline hover:text-white/40">@arafath_shafin</a></span>
             </p>
             <div className="flex gap-6">
               <a
