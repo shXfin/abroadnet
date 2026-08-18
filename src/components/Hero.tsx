@@ -495,11 +495,11 @@ export default function Hero() {
             <Link
               to="/#assessment"
               onClick={handleAssessmentLinkClick}
-              className="group inline-flex items-center rounded-full bg-navy py-2 pl-7 pr-2 shadow-[0_10px_30px_-12px_rgba(28,23,64,0.55)] transition-transform hover:-translate-y-0.5"
+              className="assessment-flash group inline-flex items-center rounded-full bg-navy py-3 pl-8 pr-3 shadow-[0_16px_40px_-10px_rgba(28,23,64,0.65)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_50px_-10px_rgba(28,23,64,0.75)] active:translate-y-0"
             >
-              <span className="text-base font-bold text-white md:text-lg">{t.hero.ctaPrimary}</span>
-              <span className="ml-4 flex items-center gap-1.5 rounded-full bg-coral py-2.5 pl-3 pr-4 text-xs font-bold uppercase tracking-caps text-white transition-colors group-hover:bg-white group-hover:text-coral">
-                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+              <span className="text-lg font-bold text-white md:text-xl">{t.hero.ctaPrimary}</span>
+              <span className="ml-5 flex items-center gap-2 rounded-full bg-coral py-3 pl-4 pr-5 text-xs font-bold uppercase tracking-caps text-white transition-all group-hover:bg-white group-hover:text-coral group-hover:scale-105">
+                <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor" aria-hidden="true">
                   <path d="M10 1.5l1.9 5.3 5.3 1.9-5.3 1.9L10 16l-1.9-5.4L2.8 8.7l5.3-1.9z" />
                 </svg>
                 {t.hero.ctaSecondary}
