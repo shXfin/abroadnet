@@ -4,7 +4,6 @@ const DEFAULT_SPREADSHEET_ID = "10KlI1SjOTcnN6VJejkPlRXQ5j69mf8byEq0WItM8Zbk";
 
 const HEADERS = [
   "timestamp",
-  "formType",
   "source",
   "language",
   "name",
@@ -63,7 +62,6 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
-      payload.formType || "",
       payload.source || "website-assessment",
       payload.language || "",
       payload.name || "",
@@ -148,16 +146,16 @@ function checkReviewStatus_(params) {
   }
 
   if (String(lead[CALL_DONE_COL] || "").trim().toUpperCase() !== "TRUE") {
-    return { ok: true, status: "call_pending", name: lead[4] };
+    return { ok: true, status: "call_pending", name: lead[3] };
   }
 
   const feedbackSheet = getFeedbackSheet_();
   ensureHeaders_(feedbackSheet, FEEDBACK_HEADERS);
   if (findFeedbackRow_(feedbackSheet, normalizedPhone, email)) {
-    return { ok: true, status: "already_reviewed", name: lead[4] };
+    return { ok: true, status: "already_reviewed", name: lead[3] };
   }
 
-  return { ok: true, status: "eligible", name: lead[4] };
+  return { ok: true, status: "eligible", name: lead[3] };
 }
 
 function submitReview_(payload) {
