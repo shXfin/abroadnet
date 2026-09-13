@@ -291,6 +291,9 @@ export default function Layout() {
                 <Link to="/success-stories" className="text-white/80 hover:text-white">
                   {t.nav.successStories}
                 </Link>
+                <Link to="/feedback" className="text-white/80 hover:text-white">
+                  {t.review.navLabel}
+                </Link>
                 <a
                   href={buildWhatsAppUrl(t.about.joinUsMessage)}
                   target="_blank"

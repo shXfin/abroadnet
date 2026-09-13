@@ -8,6 +8,7 @@ import FacebookCarousel from "../components/FacebookCarousel";
 import TestimonialsMarquee from "../components/TestimonialsMarquee";
 import PartnershipBanner from "../components/PartnershipBanner";
 import JourneyTimeline from "../components/JourneyTimeline";
+import ReviewsWall from "../components/ReviewsWall";
 import { TEAM } from "../data/team";
 import { MALAYSIA_UNIVERSITIES } from "../data/universities";
 import { assetPath } from "../lib/assetPath";
@@ -223,6 +224,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <ReviewsWall />
 
       <PartnershipBanner />
 

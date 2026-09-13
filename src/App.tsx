@@ -8,6 +8,7 @@ import Apply from "./pages/Apply";
 import BookSession from "./pages/BookSession";
 import Onboarding from "./pages/Onboarding";
 import Linguaskill from "./pages/Linguaskill";
+import Feedback from "./pages/Feedback";
 import ComingSoon from "./pages/destinations/ComingSoon";
 import DestinationsIndex from "./pages/destinations/DestinationsIndex";
 // Split out: the catalogue carries ~470 records of data, which measured at
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="onboarding" element={<Onboarding />} />
         <Route path="book-session" element={<BookSession />} />
         <Route path="linguaskill" element={<Linguaskill />} />
+        <Route path="feedback" element={<Feedback />} />
         <Route path="destinations/:slug" element={<ComingSoon />} />
       </Route>
     </Routes>
