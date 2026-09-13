@@ -92,6 +92,7 @@ function doGet(e) {
   try {
     const params = (e && e.parameter) || {};
 
+
     if (params.action === "checkReviewStatus") {
       return jsonpOrJson_(params.callback, checkReviewStatus_(params));
     }
@@ -333,4 +334,5 @@ function jsonpOrJson_(callback, payload) {
   }
   return json_(payload);
 }
+
 
