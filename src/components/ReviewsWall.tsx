@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import { getApprovedReviews, type ApprovedReview } from "../lib/reviewApi";
 
@@ -32,9 +33,16 @@ export default function ReviewsWall() {
   if (reviews.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
-      <p className="label-caps text-coral">{t.review.wallKicker}</p>
-      <h2 className="mt-3 font-display text-3xl md:text-4xl">{t.review.wallTitle}</h2>
+    <section id="reviews" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-20">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="label-caps text-coral">{t.review.wallKicker}</p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{t.review.wallTitle}</h2>
+        </div>
+        <Link to="/feedback" className="btn-primary shrink-0">
+          {t.review.dropYourReview}
+        </Link>
+      </div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {reviews.map((review, i) => (
