@@ -252,7 +252,7 @@ function findLeadRow_(sheet, normalizedPhone, email) {
   rows.forEach((row) => {
     const rowEmail = String(row[4] || "").trim().toLowerCase();
     const rowPhone = String(row[6] || "").trim();
-    if (rowPhone === normalizedPhone || rowEmail === email) match = row;
+    if ((normalizedPhone && rowPhone === normalizedPhone) || (email && rowEmail === email)) match = row;
   });
   return match;
 }
@@ -265,7 +265,7 @@ function findFeedbackRow_(sheet, normalizedPhone, email) {
   return rows.find((row) => {
     const rowEmail = String(row[2] || "").trim().toLowerCase();
     const rowPhone = normalizePhone_(row[3]);
-    return rowPhone === normalizedPhone || rowEmail === email;
+    return (normalizedPhone && rowPhone === normalizedPhone) || (email && rowEmail === email);
   }) || null;
 }
 
