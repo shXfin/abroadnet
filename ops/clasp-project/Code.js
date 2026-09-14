@@ -4,7 +4,6 @@ const DEFAULT_SPREADSHEET_ID = "10KlI1SjOTcnN6VJejkPlRXQ5j69mf8byEq0WItM8Zbk";
 
 const HEADERS = [
   "timestamp",
-  "formType",
   "source",
   "language",
   "name",
@@ -63,7 +62,6 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
-      payload.formType || "",
       payload.source || "website-assessment",
       payload.language || "",
       payload.name || "",
@@ -93,6 +91,11 @@ function doPost(e) {
 function doGet(e) {
   try {
     const params = (e && e.parameter) || {};
+
+
+    if (params.action === "fixAllLegacyShiftsAndCleanup") {
+      return jsonpOrJson_(params.callback, fixAllLegacyShiftsAndCleanup_());
+    }
 
     if (params.action === "checkReviewStatus") {
       return jsonpOrJson_(params.callback, checkReviewStatus_(params));
@@ -148,16 +151,16 @@ function checkReviewStatus_(params) {
   }
 
   if (String(lead[CALL_DONE_COL] || "").trim().toUpperCase() !== "TRUE") {
-    return { ok: true, status: "call_pending", name: lead[4] };
+    return { ok: true, status: "call_pending", name: lead[3] };
   }
 
   const feedbackSheet = getFeedbackSheet_();
   ensureHeaders_(feedbackSheet, FEEDBACK_HEADERS);
   if (findFeedbackRow_(feedbackSheet, normalizedPhone, email)) {
-    return { ok: true, status: "already_reviewed", name: lead[4] };
+    return { ok: true, status: "already_reviewed", name: lead[3] };
   }
 
-  return { ok: true, status: "eligible", name: lead[4] };
+  return { ok: true, status: "eligible", name: lead[3] };
 }
 
 function submitReview_(payload) {
@@ -217,6 +220,41 @@ function getApprovedReviews_() {
 function getLeadSheet_() {
   const spreadsheet = getSpreadsheet_();
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
+}
+
+// TEMP one-time bulk fix — repairs every legacy row shifted by the old
+// formType column (signature: column B blank), then removes leftover
+// @example.com test/debug rows now that email sits at a consistent column.
+// Remove this function and its dispatch line after running once.
+function fixAllLegacyShiftsAndCleanup_() {
+  const leadSheet = getLeadSheet_();
+  const lastRow = leadSheet.getLastRow();
+  let shifted = 0;
+  let removedLeads = 0;
+
+  if (lastRow >= 2) {
+    const range = leadSheet.getRange(2, 1, lastRow - 1, 18);
+    const rows = range.getValues();
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row[1] === "") {
+        // timestamp + 15 shifted fields (source..intake) + blank notes + callDone
+        rows[i] = [row[0], ...row.slice(2, 17), "", row[17]];
+        shifted++;
+      }
+    }
+    range.setValues(rows);
+
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const email = String(rows[i][4] || "").toLowerCase();
+      if (email.endsWith("@example.com")) {
+        leadSheet.deleteRow(i + 2);
+        removedLeads++;
+      }
+    }
+  }
+
+  return { ok: true, shifted: shifted, removedLeads: removedLeads };
 }
 
 function getFeedbackSheet_() {
@@ -335,3 +373,5 @@ function jsonpOrJson_(callback, payload) {
   }
   return json_(payload);
 }
+
+

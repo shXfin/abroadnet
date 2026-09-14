@@ -85,6 +85,8 @@ export default function Home() {
         </div>
       </section>
 
+      <ReviewsWall />
+
       <TestimonialsMarquee />
 
       <Ticker />
@@ -224,8 +226,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      <ReviewsWall />
 
       <PartnershipBanner />
 
