@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useLang } from "../i18n";
 import { checkReviewStatus, submitReview, type ReviewStatus } from "../lib/reviewApi";
 import { buildWhatsAppUrl } from "../lib/whatsapp";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 const ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
 
@@ -100,9 +101,16 @@ export default function Feedback() {
         ) : null}
 
         {stage === "not_found" && (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <p className="text-sm text-ink/70">{t.review.notFound}</p>
-            <button onClick={() => setStage("lookup")} className="label-caps text-coral hover:opacity-70">
+            <Link
+              to="/#assessment"
+              onClick={handleAssessmentLinkClick}
+              className="btn-primary inline-flex"
+            >
+              {t.review.notFoundCta}
+            </Link>
+            <button onClick={() => setStage("lookup")} className="block label-caps text-coral hover:opacity-70">
               ← {t.review.lookupButton}
             </button>
           </div>

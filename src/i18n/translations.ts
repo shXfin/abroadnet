@@ -165,6 +165,7 @@ const en = {
     lookupButton: "Check",
     checking: "Checking...",
     notFound: "We couldn't find your assessment. Please check the email or phone number you used to sign up.",
+    notFoundCta: "Take the free assessment",
     callPending: "Thanks for your patience, {name}. You'll be able to leave a review once your consultation is complete.",
     callPendingWhatsapp: "Ask us on WhatsApp",
     callPendingWhatsappMessage: "Hi, this is {name}. I completed my Abroad Net assessment, when's my free 1:1 consultation call?",
@@ -179,6 +180,7 @@ const en = {
     wallTitle: "What students say after their free 1:1 session",
     wallKicker: "Real students, real sessions",
     heroTeaserLabel: "students rate their free session",
+    dropYourReview: "Drop your review →",
   },
   malaysia: {
     country: "Malaysia",
@@ -1303,6 +1305,7 @@ const bn: typeof en = {
     lookupButton: "চেক করুন",
     checking: "চেক করা হচ্ছে...",
     notFound: "আমরা আপনার অ্যাসেসমেন্ট খুঁজে পাইনি। অনুগ্রহ করে সঠিক ইমেইল বা ফোন নম্বর দিন।",
+    notFoundCta: "ফ্রি অ্যাসেসমেন্ট করুন",
     callPending: "ধৈর্যের জন্য ধন্যবাদ, {name}। কনসালটেশন শেষ হলেই আপনি রিভিউ দিতে পারবেন।",
     callPendingWhatsapp: "হোয়াটসঅ্যাপে জিজ্ঞাসা করুন",
     callPendingWhatsappMessage: "হাই, আমি {name}। আমি অ্যাব্রোড নেট অ্যাসেসমেন্ট সম্পন্ন করেছি, আমার ফ্রি ওয়ান-টু-ওয়ান কনসালটেশন কল কবে হবে?",
@@ -1317,6 +1320,7 @@ const bn: typeof en = {
     wallTitle: "ফ্রি ওয়ান-টু-ওয়ান সেশনের পর শিক্ষার্থীরা কী বলছেন",
     wallKicker: "আসল শিক্ষার্থী, আসল সেশন",
     heroTeaserLabel: "শিক্ষার্থী তাদের ফ্রি সেশন রেট করেছেন",
+    dropYourReview: "আপনার রিভিউ দিন →",
   },
   malaysia: {
     country: "মালয়েশিয়া",
