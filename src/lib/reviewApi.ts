@@ -1,4 +1,7 @@
 const CHECK_TIMEOUT_MS = 8000;
+// Apps Script cold-starts can genuinely take longer than that — give the
+// reviews fetch specifically more room before giving up.
+const REVIEWS_TIMEOUT_MS = 20000;
 
 export type ReviewStatus = "not_found" | "call_pending" | "already_reviewed" | "eligible" | "unknown";
 
@@ -10,13 +13,13 @@ function isBrowser() {
 
 /** Same JSONP idiom as leadChecks.ts — the Apps Script endpoint only speaks
  * JSONP for GET, so a plain fetch can't read the response. */
-function jsonp<T>(endpoint: string, params: Record<string, string>, fallback: T): Promise<T> {
+function jsonp<T>(endpoint: string, params: Record<string, string>, fallback: T, timeoutMs = CHECK_TIMEOUT_MS): Promise<T> {
   if (!endpoint || !isBrowser()) return Promise.resolve(fallback);
 
   return new Promise((resolve) => {
     const callbackName = `__abroadnetReviewApi_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     const script = document.createElement("script");
-    const timer = window.setTimeout(() => finish(fallback), CHECK_TIMEOUT_MS);
+    const timer = window.setTimeout(() => finish(fallback), timeoutMs);
 
     function finish(result: T) {
       window.clearTimeout(timer);
@@ -82,12 +85,14 @@ function fetchAndCache(endpoint: string): Promise<ApprovedReview[]> {
     reviewsRequest = jsonp<{ ok?: boolean; reviews?: ApprovedReview[] }>(
       endpoint,
       { action: "getApprovedReviews" },
-      {}
+      {},
+      REVIEWS_TIMEOUT_MS
     )
-      .then((result) => result.reviews ?? [])
-      .then((reviews) => {
-        writeSessionCache(reviews);
-        return reviews;
+      .then((result) => {
+        // Only a genuine response gets cached — a timeout/error fallback
+        // (no "ok") must never be mistaken for "confirmed zero reviews".
+        if (result.ok) writeSessionCache(result.reviews ?? []);
+        return result.reviews ?? [];
       })
       .finally(() => {
         reviewsRequest = null;
