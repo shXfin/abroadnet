@@ -15,11 +15,13 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-/** Only renders once real approved reviews come back — an empty state here
- * would just be a section-shaped hole on the homepage. */
+/** Renders a skeleton while the (often slow) Apps Script fetch is in
+ * flight, so the section reserves its real height instead of popping in
+ * and shoving everything below it down. Collapses to nothing only once we
+ * actually know there's nothing to show. */
 export default function ReviewsWall() {
   const { t } = useLang();
-  const [reviews, setReviews] = useState<ApprovedReview[]>([]);
+  const [reviews, setReviews] = useState<ApprovedReview[] | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -30,6 +32,20 @@ export default function ReviewsWall() {
       cancelled = true;
     };
   }, []);
+
+  if (reviews === null) {
+    return (
+      <section className="mx-auto max-w-6xl px-6 py-20" aria-hidden="true">
+        <div className="h-4 w-40 animate-pulse rounded bg-ink/10" />
+        <div className="mt-3 h-9 w-96 max-w-full animate-pulse rounded bg-ink/10" />
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-36 animate-pulse rounded-2xl border hairline bg-ink/5" />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   if (reviews.length === 0) return null;
 
@@ -58,8 +74,10 @@ export default function ReviewsWall() {
         {reviews.map((review, i) => (
           <div key={i} className="rounded-2xl border hairline bg-white p-6">
             <Stars rating={review.rating} />
-            {review.comment && <p className="mt-4 text-sm leading-relaxed text-ink/70">{review.comment}</p>}
-            <p className="mt-4 text-sm font-semibold text-navy">{review.name}</p>
+            {review.comment && (
+              <p className="mt-4 text-base font-semibold leading-relaxed text-navy">{review.comment}</p>
+            )}
+            <p className="mt-4 text-sm text-ink/50">{review.name}</p>
           </div>
         ))}
       </div>

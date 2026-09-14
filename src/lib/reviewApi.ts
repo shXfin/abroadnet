@@ -51,13 +51,60 @@ export async function checkReviewStatus(endpoint: string, identity: { email: str
 
 export type ApprovedReview = { name: string; rating: number; comment: string };
 
-export async function getApprovedReviews(endpoint: string): Promise<ApprovedReview[]> {
-  const result = await jsonp<{ ok?: boolean; reviews?: ApprovedReview[] }>(
-    endpoint,
-    { action: "getApprovedReviews" },
-    {}
-  );
-  return result.reviews ?? [];
+const REVIEWS_CACHE_KEY = "abroadnet-approved-reviews";
+let reviewsRequest: Promise<ApprovedReview[]> | null = null;
+
+function readSessionCache(): ApprovedReview[] | null {
+  if (!isBrowser()) return null;
+  try {
+    const raw = window.sessionStorage.getItem(REVIEWS_CACHE_KEY);
+    return raw ? (JSON.parse(raw) as ApprovedReview[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSessionCache(reviews: ApprovedReview[]) {
+  if (!isBrowser()) return;
+  try {
+    window.sessionStorage.setItem(REVIEWS_CACHE_KEY, JSON.stringify(reviews));
+  } catch {
+    // storage unavailable or full — fine, it's just a speed optimization
+  }
+}
+
+/** Every caller on the page (hero badge, reviews wall) shares one in-flight
+ * request instead of each hitting the slow Apps Script endpoint separately,
+ * and a session-cached copy renders instantly on a refresh while a fresh
+ * fetch quietly updates it underneath. */
+function fetchAndCache(endpoint: string): Promise<ApprovedReview[]> {
+  if (!reviewsRequest) {
+    reviewsRequest = jsonp<{ ok?: boolean; reviews?: ApprovedReview[] }>(
+      endpoint,
+      { action: "getApprovedReviews" },
+      {}
+    )
+      .then((result) => result.reviews ?? [])
+      .then((reviews) => {
+        writeSessionCache(reviews);
+        return reviews;
+      })
+      .finally(() => {
+        reviewsRequest = null;
+      });
+  }
+  return reviewsRequest;
+}
+
+export function getApprovedReviews(endpoint: string): Promise<ApprovedReview[]> {
+  const cached = readSessionCache();
+  if (cached) {
+    // Stale-while-revalidate: this reload gets the instant cached copy,
+    // and a quiet background refresh keeps the cache fresh for the next one.
+    fetchAndCache(endpoint);
+    return Promise.resolve(cached);
+  }
+  return fetchAndCache(endpoint);
 }
 
 export async function submitReview(
