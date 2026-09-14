@@ -11,6 +11,16 @@ function isBrowser() {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
+/** Firing a slow request while the page is still loading keeps the browser
+ * tab's loading spinner alive until it settles — bad for perceived speed
+ * and for how crawlers read page-load state. Deferring it past the page's
+ * own load event keeps this fetch from ever counting toward that. */
+function afterPageLoad(): Promise<void> {
+  if (!isBrowser()) return Promise.resolve();
+  if (document.readyState === "complete") return Promise.resolve();
+  return new Promise((resolve) => window.addEventListener("load", () => resolve(), { once: true }));
+}
+
 /** Same JSONP idiom as leadChecks.ts — the Apps Script endpoint only speaks
  * JSONP for GET, so a plain fetch can't read the response. */
 function jsonp<T>(endpoint: string, params: Record<string, string>, fallback: T, timeoutMs = CHECK_TIMEOUT_MS): Promise<T> {
@@ -82,12 +92,15 @@ function writeSessionCache(reviews: ApprovedReview[]) {
  * fetch quietly updates it underneath. */
 function fetchAndCache(endpoint: string): Promise<ApprovedReview[]> {
   if (!reviewsRequest) {
-    reviewsRequest = jsonp<{ ok?: boolean; reviews?: ApprovedReview[] }>(
-      endpoint,
-      { action: "getApprovedReviews" },
-      {},
-      REVIEWS_TIMEOUT_MS
-    )
+    reviewsRequest = afterPageLoad()
+      .then(() =>
+        jsonp<{ ok?: boolean; reviews?: ApprovedReview[] }>(
+          endpoint,
+          { action: "getApprovedReviews" },
+          {},
+          REVIEWS_TIMEOUT_MS
+        )
+      )
       .then((result) => {
         // Only a genuine response gets cached — a timeout/error fallback
         // (no "ok") must never be mistaken for "confirmed zero reviews".
