@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AbroadMark from "./AbroadMark";
 import AssessmentQuiz from "./AssessmentQuiz";
+import ReviewTrustBadge from "./ReviewTrustBadge";
 import { useLang } from "../i18n";
 import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 import { assetPath } from "../lib/assetPath";
@@ -505,6 +506,7 @@ export default function Hero() {
                 {t.hero.ctaSecondary}
               </span>
             </Link>
+            <ReviewTrustBadge />
           </div>
 
           {/* Deliberately not a second pill. The hero keeps one dominant

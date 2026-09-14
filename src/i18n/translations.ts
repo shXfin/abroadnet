@@ -176,8 +176,9 @@ const en = {
     submit: "Submit review",
     submitting: "Submitting...",
     submitted: "Thank you! Your review has been submitted.",
-    wallTitle: "What our students say",
-    wallKicker: "In their own words",
+    wallTitle: "What students say after their free 1:1 session",
+    wallKicker: "Real students, real sessions",
+    heroTeaserLabel: "students rate their free session",
   },
   malaysia: {
     country: "Malaysia",
@@ -1313,8 +1314,9 @@ const bn: typeof en = {
     submit: "রিভিউ জমা দিন",
     submitting: "জমা দেওয়া হচ্ছে...",
     submitted: "ধন্যবাদ! আপনার রিভিউ জমা হয়েছে।",
-    wallTitle: "শিক্ষার্থীরা কী বলছেন",
-    wallKicker: "তাদের নিজের ভাষায়",
+    wallTitle: "ফ্রি ওয়ান-টু-ওয়ান সেশনের পর শিক্ষার্থীরা কী বলছেন",
+    wallKicker: "আসল শিক্ষার্থী, আসল সেশন",
+    heroTeaserLabel: "শিক্ষার্থী তাদের ফ্রি সেশন রেট করেছেন",
   },
   malaysia: {
     country: "মালয়েশিয়া",

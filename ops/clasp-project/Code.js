@@ -93,10 +93,6 @@ function doGet(e) {
     const params = (e && e.parameter) || {};
 
 
-    if (params.action === "fixAllLegacyShiftsAndCleanup") {
-      return jsonpOrJson_(params.callback, fixAllLegacyShiftsAndCleanup_());
-    }
-
     if (params.action === "checkReviewStatus") {
       return jsonpOrJson_(params.callback, checkReviewStatus_(params));
     }
@@ -222,40 +218,6 @@ function getLeadSheet_() {
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
 }
 
-// TEMP one-time bulk fix — repairs every legacy row shifted by the old
-// formType column (signature: column B blank), then removes leftover
-// @example.com test/debug rows now that email sits at a consistent column.
-// Remove this function and its dispatch line after running once.
-function fixAllLegacyShiftsAndCleanup_() {
-  const leadSheet = getLeadSheet_();
-  const lastRow = leadSheet.getLastRow();
-  let shifted = 0;
-  let removedLeads = 0;
-
-  if (lastRow >= 2) {
-    const range = leadSheet.getRange(2, 1, lastRow - 1, 18);
-    const rows = range.getValues();
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      if (row[1] === "") {
-        // timestamp + 15 shifted fields (source..intake) + blank notes + callDone
-        rows[i] = [row[0], ...row.slice(2, 17), "", row[17]];
-        shifted++;
-      }
-    }
-    range.setValues(rows);
-
-    for (let i = rows.length - 1; i >= 0; i--) {
-      const email = String(rows[i][4] || "").toLowerCase();
-      if (email.endsWith("@example.com")) {
-        leadSheet.deleteRow(i + 2);
-        removedLeads++;
-      }
-    }
-  }
-
-  return { ok: true, shifted: shifted, removedLeads: removedLeads };
-}
 
 function getFeedbackSheet_() {
   const spreadsheet = getSpreadsheet_();
@@ -290,7 +252,7 @@ function findLeadRow_(sheet, normalizedPhone, email) {
   rows.forEach((row) => {
     const rowEmail = String(row[4] || "").trim().toLowerCase();
     const rowPhone = String(row[6] || "").trim();
-    if (rowPhone === normalizedPhone || rowEmail === email) match = row;
+    if ((normalizedPhone && rowPhone === normalizedPhone) || (email && rowEmail === email)) match = row;
   });
   return match;
 }
@@ -303,7 +265,7 @@ function findFeedbackRow_(sheet, normalizedPhone, email) {
   return rows.find((row) => {
     const rowEmail = String(row[2] || "").trim().toLowerCase();
     const rowPhone = normalizePhone_(row[3]);
-    return rowPhone === normalizedPhone || rowEmail === email;
+    return (normalizedPhone && rowPhone === normalizedPhone) || (email && rowEmail === email);
   }) || null;
 }
 
