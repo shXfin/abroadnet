@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import { getApprovedReviews, type ApprovedReview } from "../lib/reviewApi";
+import { handleAssessmentLinkClick } from "../lib/assessmentJump";
 
 const ENDPOINT = import.meta.env.VITE_LEAD_ENDPOINT ?? "";
 
@@ -39,9 +40,18 @@ export default function ReviewsWall() {
           <p className="label-caps text-coral">{t.review.wallKicker}</p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{t.review.wallTitle}</h2>
         </div>
-        <Link to="/feedback" className="btn-primary shrink-0">
-          {t.review.dropYourReview}
-        </Link>
+        <div className="flex shrink-0 flex-wrap gap-3">
+          <Link
+            to="/#assessment"
+            onClick={handleAssessmentLinkClick}
+            className="label-caps flex items-center gap-2 rounded-full border-2 border-navy/15 px-5 py-2.5 text-navy transition-colors hover:border-navy/30"
+          >
+            {t.review.notFoundCta}
+          </Link>
+          <Link to="/feedback" className="btn-primary">
+            {t.review.dropYourReview}
+          </Link>
+        </div>
       </div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
