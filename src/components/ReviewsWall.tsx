@@ -56,7 +56,7 @@ export default function ReviewsWall() {
           <p className="label-caps text-coral">{t.review.wallKicker}</p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl md:text-4xl">{t.review.wallTitle}</h2>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-3">
+        <div className="flex w-full flex-wrap gap-3 md:w-auto md:shrink-0">
           <Link
             to="/#assessment"
             onClick={handleAssessmentLinkClick}
